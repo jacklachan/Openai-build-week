@@ -14,6 +14,7 @@ export interface PlanRequest {
   travelers: TravelerProfile[];
   constraints: TripConstraints;
   priorTrip?: Trip;
+  editCommand?: string;
 }
 
 interface ResponsesClient {
@@ -36,6 +37,7 @@ You must use search_places and get_route to ground the plan, estimate_budget for
 Never invent place ids, route duration, or budget math. Do not call commit_plan until estimate_budget has returned the exact budget for the proposed trip.
 Every activity needs a specific rationale, satisfies one or more traveler ids, and a tension when it materially costs a traveler something.
 When preferences conflict, write at least one explicit, named tradeoff in trip.tradeoffs.
+If priorTrip and editCommand are supplied, treat the command as a veto or requested revision. Produce a revised plan with version exactly priorTrip.version + 1 and explain the changed compromise.
 The commit_plan schema requires every optional field to be present. Use null only where an optional field is absent.
 Keep the result within budgetCeiling when one is supplied.`;
 
