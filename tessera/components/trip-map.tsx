@@ -125,10 +125,9 @@ export function TripMap() {
   }, [scriptUrl]);
 
   return (
-    <div className="mapScene" aria-label="Aerial Tokyo trip map">
+    <div className="mapScene mapSurface" aria-label="Aerial Tokyo trip map">
       <div ref={containerRef} className="mapCanvas" />
-      {mapState !== "ready" ? <div className="mapFallback" aria-hidden="true" /> : null}
-      <div className="mapShade" aria-hidden="true" />
+      {mapState !== "ready" ? <div className="mapFallback flatMapFallback" aria-hidden="true" /> : null}
       {mapState === "missing-key" || mapState === "error" ? (
         <p className="mapNotice">{getMapFallbackMessage(mapState)}</p>
       ) : null}

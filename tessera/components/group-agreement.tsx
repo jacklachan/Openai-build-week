@@ -1,5 +1,6 @@
-import type { Trip } from "../lib/types";
 import type { AgreementEntry, VetoPreview } from "../lib/studio";
+import type { Trip } from "../lib/types";
+import { getBudgetState } from "./presentation";
 
 interface GroupAgreementProps {
   agreement: AgreementEntry[];
@@ -17,10 +18,6 @@ function formatCurrency(value: number, currency: string) {
   }).format(value);
 }
 
-function getTravelerStyle(id: string) {
-  return `avatar avatar-${id}`;
-}
-
 export function GroupAgreement({
   agreement,
   preview,
@@ -28,104 +25,75 @@ export function GroupAgreement({
   trip,
   onTogglePreview,
 }: GroupAgreementProps) {
-  const budgetCeiling = trip.budget.ceiling ?? trip.budget.total;
-  const budgetRatio = Math.min(100, Math.round((trip.budget.total / budgetCeiling) * 100));
-  const priya = agreement.find((entry) => entry.traveler.id === "priya")?.traveler;
+  const budgetState = getBudgetState(trip.budget);
+  const budgetCeiling = trip.budget.ceiling;
+  const currency = trip.constraints.currency;
 
   return (
-    <aside className="agreementRail" aria-labelledby="agreement-title">
-      <div className="agreementHeading">
-        <div>
-          <p className="eyebrow">Live consensus</p>
-          <h1 id="agreement-title">Group Agreement</h1>
-        </div>
-        <span className="agreementStatus">In balance</span>
-      </div>
+    <aside className="agreementTranscript" aria-labelledby="agreement-title">
+      <header className="transcriptHeading">
+        <p className="sectionKicker">GROUP AGREEMENT</p>
+        <h2 id="agreement-title">Negotiation transcript</h2>
+      </header>
 
-      <div className="agreementList">
+      <div className="transcriptTurns">
         {agreement.map(({ concession, mustDo, traveler }) => (
-          <article className="agreementCard" key={traveler.id}>
-            <div className="travelerHeading">
-              <span className={getTravelerStyle(traveler.id)} aria-hidden="true">
-                {traveler.name.charAt(0)}
-              </span>
-              <div>
-                <h2>{traveler.name}</h2>
-                <div className="travelerTags">
-                  <span>{traveler.interests[0]}</span>
-                  <span>{traveler.pace} pace</span>
-                </div>
-              </div>
-            </div>
-            <dl className="agreementPromises">
-              <div>
-                <dt>
-                  <span className="checkMark" aria-hidden="true">✓</span>
-                  Must-do
-                </dt>
-                <dd>{mustDo}</dd>
-              </div>
-              <div>
-                <dt>
-                  <span className="tradeMark" aria-hidden="true">↳</span>
-                  Concession
-                </dt>
-                <dd>{concession}</dd>
-              </div>
-            </dl>
+          <article className="transcriptTurn" key={traveler.id}>
+            <p className="transcriptSpeaker">TRAVELER // {traveler.name.toUpperCase()}</p>
+            <p className="transcriptBody">{mustDo}</p>
+            <p className="transcriptSpeaker">SYSTEM // CONCESSION</p>
+            <p className="transcriptBody dataLeftRule">{concession}</p>
           </article>
         ))}
       </div>
 
-      <section className="budgetSummary" aria-label="Group budget">
-        <div className="budgetTopline">
-          <span>Group budget</span>
-          <span>{budgetRatio}% committed</span>
-        </div>
-        <p>
-          <strong>{formatCurrency(trip.budget.total, trip.constraints.currency)}</strong>
-          <span> / {formatCurrency(budgetCeiling, trip.constraints.currency)}</span>
-        </p>
-        <div className="budgetTrack" aria-hidden="true">
-          <span style={{ width: `${budgetRatio}%` }} />
-        </div>
-      </section>
-
-      <section className={`vetoCard${showPreview ? " isPreviewing" : ""}`} aria-live="polite">
-        <div className="vetoHeading">
-          <span className="vetoShield" aria-hidden="true">✦</span>
-          <div>
-            <p>{priya?.name ?? "A traveler"} vetoes the early start</p>
-            <span>Protecting slow mornings</span>
-          </div>
-          <button type="button" onClick={onTogglePreview}>
-            {showPreview ? "Reset" : "Preview change"}
-          </button>
-        </div>
-        {showPreview ? (
-          <div className="vetoRoute">
-            <div>
-              <span>Before</span>
-              <strong>{preview.removedActivity}</strong>
-              <small>Day 2 · {preview.beforeTime}</small>
-            </div>
-            <span className="routeArrow" aria-hidden="true">→</span>
-            <div>
-              <span>Proposed</span>
-              <strong>{preview.replacement}</strong>
-              <small>Day 2 · {preview.afterTime}</small>
-            </div>
-          </div>
+      <section className="budgetBar" aria-label="Group budget">
+        {budgetState.kind === "neutral" || budgetCeiling === undefined ? (
+          <>
+            <p className="budgetLabels">SPENT</p>
+            <data className="budgetValue" value={trip.budget.total}>
+              {formatCurrency(trip.budget.total, currency)}
+            </data>
+            <div className="budgetTrack budgetTrack-neutral" aria-hidden="true" />
+          </>
         ) : (
-          <p className="vetoHint">Preview a later Day 2 start before applying a revision.</p>
+          <>
+            <p className="budgetLabels">SPENT // CEILING // DELTA</p>
+            <p className="budgetValues">
+              <data value={trip.budget.total}>{formatCurrency(trip.budget.total, currency)}</data>
+              <span aria-hidden="true">{" // "}</span>
+              <data value={budgetCeiling}>{formatCurrency(budgetCeiling, currency)}</data>
+              <span aria-hidden="true">{" // "}</span>
+              <data value={budgetState.delta}>{formatCurrency(budgetState.delta, currency)}</data>
+            </p>
+            <div className={`budgetTrack budgetTrack-${budgetState.kind}`} aria-hidden="true">
+              <span style={{ width: `${budgetState.ratio}%` }} />
+            </div>
+          </>
         )}
       </section>
 
-      <div className="planComposer">
-        <label className="srOnly" htmlFor="plan-request">Plan chat connects to the trip logic</label>
-        <input id="plan-request" disabled placeholder="Plan chat connects here" />
-        <span aria-hidden="true">↑</span>
-      </div>
+      <section className="vetoPanel" aria-live="polite">
+        <p className="vetoLabel">VETO // DAY 02</p>
+        <p className="vetoSummary">
+          {showPreview ? "Vetoed // later start proposed" : "Preview a later start proposal"}
+        </p>
+        <button className="signalButton" type="button" onClick={onTogglePreview}>
+          {showPreview ? "Vetoed" : "Veto"}
+        </button>
+        {showPreview ? (
+          <div className="vetoPreview">
+            <p>
+              {`BEFORE // ${preview.removedActivity} // `}
+              <data value={preview.beforeTime}>{preview.beforeTime}</data>
+            </p>
+            <p>
+              {`PROPOSED // ${preview.replacement} // `}
+              <data value={preview.afterTime}>{preview.afterTime}</data>
+            </p>
+          </div>
+        ) : null}
+      </section>
     </aside>
   );
 }

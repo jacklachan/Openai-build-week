@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import { AtlasMotion } from "./atlas-motion";
-import { AtlasStatus } from "./atlas-status";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { TradeoffPanel } from "./tradeoff-panel";
@@ -63,6 +62,7 @@ function RouteOverlay({
 }) {
   const selectedPlan = hasPlanningWorkspace(trip) ? getSelectedDay(trip, selectedDay) : undefined;
   const routeStops = selectedPlan?.activities?.slice(0, 3) ?? [];
+  const hasSelectedRoute = selectedPlan?.day === selectedDay;
 
   return (
     <div
@@ -71,7 +71,10 @@ function RouteOverlay({
       data-selected-activity={selectedActivityId ?? undefined}
     >
       <svg className="routeLine" viewBox="0 0 500 340" aria-hidden="true" preserveAspectRatio="none">
-        <path d="M92 266 C180 236, 162 167, 284 175 S349 93, 427 74" />
+        <path
+          className={`inkRoute${hasSelectedRoute ? " dataSelectedRoute" : ""}`}
+          d="M92 266 C180 236, 162 167, 284 175 S349 93, 427 74"
+        />
       </svg>
       {routeStops.map((activity, index) => {
         const displayedActivity =
@@ -80,8 +83,8 @@ function RouteOverlay({
             : activity;
 
         return (
-          <div className={`routeStop stop-${index + 1}`} key={activity.id}>
-            <span className="routePin">{index + 1}</span>
+          <div className={`routeStop squareMarkerStop stop-${index + 1}`} key={activity.id}>
+            <span className="routePin squareMarker">{index + 1}</span>
             <div>
               <strong>{displayedActivity.title}</strong>
               <small>Day {selectedDay} · {displayedActivity.startTime ?? "Flexible"}</small>
@@ -210,7 +213,6 @@ export function TripStudio({ trip }: TripStudioProps) {
             <section className="mapWorkspace" aria-label="Tokyo itinerary map">
               <TripMap />
               <AtlasMotion />
-              <AtlasStatus trip={activeTrip} />
               <RouteOverlay
                 trip={activeTrip}
                 selectedDay={selectedDay}
@@ -223,9 +225,11 @@ export function TripStudio({ trip }: TripStudioProps) {
                 <span>⌾</span>
               </div>
               <ItineraryTray
+                selectedActivityId={selectedActivityId}
                 selectedDay={selectedDay}
                 trip={activeTrip}
                 vetoPreview={showPreview ? vetoPreview : undefined}
+                onSelectActivity={setSelectedActivityId}
                 onSelectDay={selectDay}
               />
             </section>
