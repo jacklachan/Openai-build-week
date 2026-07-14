@@ -18,6 +18,8 @@ test("derives the seeded agreement and veto preview", () => {
   assert.equal(getSelectedDay(trip, 2)?.day, 2);
   assert.equal(agreement[1].traveler.name, "Priya");
   assert.match(agreement[1].concession, /early/i);
+  assert.match(agreement[0].concession, /^Ravi accepts/i);
+  assert.match(agreement[2].concession, /^Mei gets/i);
   assert.equal(preview.removedActivity, "Mount Takao summit trail");
   assert.equal(preview.beforeTime, "08:30");
   assert.equal(preview.afterTime, "10:30");

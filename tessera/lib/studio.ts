@@ -25,6 +25,9 @@ export function getSelectedDay(trip: Trip, day: number): DayPlan | undefined {
 export function getAgreementEntries(trip: Trip): AgreementEntry[] {
   return trip.travelers.map((traveler) => ({
     concession:
+      trip.tradeoffs.find((tradeoff) =>
+        tradeoff.toLocaleLowerCase().startsWith(traveler.name.toLocaleLowerCase()),
+      ) ??
       trip.tradeoffs.find((tradeoff) => tradeoff.includes(traveler.name)) ??
       "Keeps the group plan balanced.",
     mustDo: traveler.mustDo[0] ?? "A shared Tokyo moment",
