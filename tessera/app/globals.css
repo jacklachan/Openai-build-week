@@ -78,7 +78,8 @@ button {
   align-content: center;
   min-height: 100vh;
   padding: 4rem clamp(1rem, 4vw, 4rem);
-  border-top: var(--rule-bold) solid var(--rule);
+  background: var(--ink);
+  border-top: var(--rule-bold) solid var(--data);
 }
 
 .landingKicker,
@@ -113,22 +114,24 @@ button {
 
 .landingKicker {
   margin-bottom: 1.5rem;
+  color: var(--bone);
 }
 
 .landingHero h1 {
   max-width: 11ch;
   margin: 0;
-  color: var(--ink);
+  color: var(--paper);
   font-size: clamp(2.75rem, 7vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.075em;
   line-height: 0.88;
+  text-transform: uppercase;
 }
 
 .landingSubhead {
   max-width: 44rem;
   margin: 1.5rem 0 0;
-  color: var(--ink-2);
+  color: var(--bone);
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.4;
 }
@@ -219,7 +222,7 @@ button {
 
 .planForm label {
   grid-column: 1 / -1;
-  color: var(--ink-2);
+  color: var(--bone);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -229,11 +232,17 @@ button {
 
 .planForm input {
   min-width: 0;
-  padding: 0.8rem;
+  padding: 0.8rem 0 0.5rem;
+  color: var(--bone);
+  background: none;
+  border: 0;
+  border-bottom: var(--rule-thin) solid var(--bone);
+}
+
+.planForm button {
   color: var(--ink);
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--rule);
-  border-radius: var(--radius);
+  background: var(--bone);
+  border-color: var(--bone);
 }
 
 .planForm button,
@@ -251,8 +260,9 @@ button {
 }
 
 .planForm button:hover:not(:disabled) {
-  color: var(--ink);
-  background: var(--bone);
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--bone);
 }
 
 .planForm button:disabled,

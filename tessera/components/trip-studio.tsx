@@ -167,7 +167,7 @@ export function TripStudio({ trip }: TripStudioProps) {
           <p className="landingKicker">TESSERA // GROUP TRIP NEGOTIATOR</p>
           <h1 id="landing-title">Build one trip everyone can live with.</h1>
           <p className="landingSubhead">
-            Tell us where you are going. We make the tradeoffs clear before the group commits.
+            Everyone wants something different. Get a plan that says who gave up what.
           </p>
           <TravelerChips phase={isGenerating ? "generating" : "landing"} trip={trip} />
           {phase === "error" ? (

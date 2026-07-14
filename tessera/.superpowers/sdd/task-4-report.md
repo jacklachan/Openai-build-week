@@ -26,6 +26,14 @@
 | `rg -n "slate-|zinc-|gray-|indigo-|violet-" app components` | No matches (expected `rg` exit 1) |
 | Palette/prohibited-style self-check | Only the locked token block contains hex values; no rgba/opacity/gradient/shadow/filter/blur/transparent declarations found |
 | `git diff --check` | No whitespace errors |
+
+## Landing repair — TDD evidence
+
+- Added `tests/landing-hero.test.ts` before production edits. It server-renders the seeded `TripStudio` and requires the exact approved subhead; it also reads `app/globals.css` and requires `background: var(--ink)` in the base `.landingHero` rule.
+- RED: `npx tsx --test tests/landing-hero.test.ts` failed both assertions after the selector was tightened to the base rule: the old subhead rendered, and `.landingHero` lacked the ink ground. No production source changed before this failure.
+- GREEN: after the focused copy and stylesheet repair, the same command passed 2/2.
+- Final verification: `npm run test:ui` passed 21/21, `npm run lint` passed, `npm run build` passed, and both required source rails returned no matches (expected `rg` exit 1).
+- Scope: the repair only changes the approved landing subhead, the landing hero/form CSS, the focused regression test, and this report. It preserves the existing token, motion, focus, and plan-flow behavior.
 | `npm run test:ui` | Pass — 19 tests, 0 failures |
 | `npm run lint` | Pass |
 | `npm run build` | Pass — production compilation, TypeScript, and static generation completed |
