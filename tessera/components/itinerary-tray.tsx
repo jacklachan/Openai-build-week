@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { VetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 import { getActivityTone, getTimelineDays } from "./presentation";
@@ -46,7 +47,7 @@ export function ItineraryTray({
 
       {activities.length ? (
         <ol className="activityTimeline">
-          {activities.map((activity) => {
+          {activities.map((activity, index) => {
             const displayedActivity =
               vetoPreview && activity.id === "mount-takao"
                 ? { ...activity, startTime: vetoPreview.afterTime, title: vetoPreview.replacement }
@@ -54,7 +55,11 @@ export function ItineraryTray({
             const isSelected = activity.id === selectedActivityId;
 
             return (
-              <li className="activityTimelineRow" key={activity.id}>
+              <li
+                className="activityTimelineRow"
+                key={activity.id}
+                style={{ "--timeline-index": index } as CSSProperties}
+              >
                 {displayedActivity.startTime ? (
                   <time className="timelineHour" dateTime={displayedActivity.startTime}>
                     {displayedActivity.startTime}
