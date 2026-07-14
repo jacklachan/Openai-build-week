@@ -1,0 +1,20 @@
+{
+  "travelers": [
+    {
+      "id": "a",
+      "name": "A",
+      "pace": "slow",
+      "interests": ["food"],
+      "dietary": [],
+      "accessibility": [],
+      "mustDo": ["Dinner"],
+      "dealbreakers": []
+    }
+  ],
+  "constraints": {
+    "destination": "Tokyo",
+    "days": 1,
+    "currency": "USD",
+    "budgetCeiling": 1000
+  }
+}
