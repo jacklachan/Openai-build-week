@@ -706,6 +706,13 @@ button {
   margin-top: 9px;
 }
 
+.vetoHint {
+  margin: 9px 0 0;
+  color: #8e7b67;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
 .vetoRoute > div {
   display: grid;
   gap: 2px;
@@ -762,14 +769,17 @@ button {
   color: #a19fa1;
 }
 
-.planComposer button {
+.planComposer input:disabled {
+  cursor: not-allowed;
+}
+
+.planComposer span {
   display: grid;
   place-items: center;
   width: 21px;
   height: 21px;
-  color: white;
-  background: #263a94;
-  border: 0;
+  color: #777984;
+  background: #e8e8e7;
   border-radius: 50%;
   font-weight: 700;
 }

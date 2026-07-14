@@ -10,6 +10,8 @@ type GoogleMapsNamespace = {
   importLibrary?: (library: string) => Promise<unknown>;
 };
 
+type MapState = "loading" | "ready" | "missing-key" | "error";
+
 declare global {
   interface Window {
     google?: {
@@ -25,6 +27,15 @@ export function getMapScriptUrl(browserKey: string): string | null {
   }
 
   return `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(browserKey)}&v=weekly`;
+}
+
+/** Gives the setup state an honest explanation for either map failure mode. */
+export function getMapFallbackMessage(state: "missing-key" | "error"): string {
+  if (state === "missing-key") {
+    return "Add NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY for the live Tokyo 3D map.";
+  }
+
+  return "The Tokyo 3D map could not be loaded. Check the browser key and Maps API configuration.";
 }
 
 function loadGoogleMaps(url: string): Promise<void> {
@@ -64,8 +75,8 @@ function loadGoogleMaps(url: string): Promise<void> {
 export function TripMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptUrl = getMapScriptUrl(process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY ?? "");
-  const [mapState, setMapState] = useState<"loading" | "ready" | "fallback">(() =>
-    scriptUrl ? "loading" : "fallback",
+  const [mapState, setMapState] = useState<MapState>(() =>
+    scriptUrl ? "loading" : "missing-key",
   );
 
   useEffect(() => {
@@ -101,7 +112,7 @@ export function TripMap() {
         }
       } catch {
         if (!cancelled) {
-          setMapState("fallback");
+          setMapState("error");
         }
       }
     }
@@ -118,10 +129,8 @@ export function TripMap() {
       <div ref={containerRef} className="mapCanvas" />
       {mapState !== "ready" ? <div className="mapFallback" aria-hidden="true" /> : null}
       <div className="mapShade" aria-hidden="true" />
-      {mapState === "fallback" ? (
-        <p className="mapNotice">
-          Add <code>NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY</code> for the live Tokyo 3D map.
-        </p>
+      {mapState === "missing-key" || mapState === "error" ? (
+        <p className="mapNotice">{getMapFallbackMessage(mapState)}</p>
       ) : null}
       {mapState === "loading" ? <p className="mapLoading">Loading Tokyo in 3D…</p> : null}
     </div>

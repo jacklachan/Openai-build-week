@@ -102,27 +102,29 @@ export function GroupAgreement({
             {showPreview ? "Reset" : "Preview change"}
           </button>
         </div>
-        <div className="vetoRoute">
-          <div>
-            <span>Before</span>
-            <strong>{preview.removedActivity}</strong>
-            <small>Day 2 · {preview.beforeTime}</small>
+        {showPreview ? (
+          <div className="vetoRoute">
+            <div>
+              <span>Before</span>
+              <strong>{preview.removedActivity}</strong>
+              <small>Day 2 · {preview.beforeTime}</small>
+            </div>
+            <span className="routeArrow" aria-hidden="true">→</span>
+            <div>
+              <span>Proposed</span>
+              <strong>{preview.replacement}</strong>
+              <small>Day 2 · {preview.afterTime}</small>
+            </div>
           </div>
-          <span className="routeArrow" aria-hidden="true">→</span>
-          <div>
-            <span>{showPreview ? "Proposed" : "After"}</span>
-            <strong>{preview.replacement}</strong>
-            <small>Day 2 · {preview.afterTime}</small>
-          </div>
-        </div>
+        ) : (
+          <p className="vetoHint">Preview a later Day 2 start before applying a revision.</p>
+        )}
       </section>
 
       <div className="planComposer">
-        <label className="srOnly" htmlFor="plan-request">Ask Tessera to adjust the plan</label>
-        <input id="plan-request" placeholder="Ask TESSERA to adjust the plan…" />
-        <button type="button" onClick={onTogglePreview} aria-label="Preview a plan adjustment">
-          ↑
-        </button>
+        <label className="srOnly" htmlFor="plan-request">Plan chat connects to the trip logic</label>
+        <input id="plan-request" disabled placeholder="Plan chat connects here" />
+        <span aria-hidden="true">↑</span>
       </div>
     </aside>
   );

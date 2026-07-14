@@ -6,7 +6,7 @@ import {
   getSelectedDay,
   getVetoPreview,
 } from "../lib/studio";
-import { getMapScriptUrl } from "../components/trip-map";
+import { getMapFallbackMessage, getMapScriptUrl } from "../components/trip-map";
 import type { Trip } from "../lib/types";
 
 const trip = seedTrip as Trip;
@@ -36,4 +36,9 @@ test("creates a safe Google Maps script URL only when a browser key exists", () 
     getMapScriptUrl("key with space"),
     "https://maps.googleapis.com/maps/api/js?key=key%20with%20space&v=weekly",
   );
+});
+
+test("distinguishes an absent map key from a real map loading error", () => {
+  assert.match(getMapFallbackMessage("missing-key"), /NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY/);
+  assert.match(getMapFallbackMessage("error"), /could not be loaded/i);
 });

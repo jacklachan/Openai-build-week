@@ -4,7 +4,12 @@ import { useState } from "react";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { TripMap } from "./trip-map";
-import { getAgreementEntries, getSelectedDay, getVetoPreview } from "../lib/studio";
+import {
+  getAgreementEntries,
+  getSelectedDay,
+  getVetoPreview,
+  type VetoPreview,
+} from "../lib/studio";
 import type { Trip } from "../lib/types";
 
 interface TripStudioProps {
@@ -21,7 +26,15 @@ function TesseraMark() {
   );
 }
 
-function RouteOverlay({ trip, selectedDay }: { trip: Trip; selectedDay: number }) {
+function RouteOverlay({
+  trip,
+  selectedDay,
+  vetoPreview,
+}: {
+  trip: Trip;
+  selectedDay: number;
+  vetoPreview?: VetoPreview;
+}) {
   const selectedPlan = getSelectedDay(trip, selectedDay);
   const routeStops = selectedPlan?.activities.slice(0, 3) ?? [];
 
@@ -30,15 +43,22 @@ function RouteOverlay({ trip, selectedDay }: { trip: Trip; selectedDay: number }
       <svg className="routeLine" viewBox="0 0 500 340" aria-hidden="true" preserveAspectRatio="none">
         <path d="M92 266 C180 236, 162 167, 284 175 S349 93, 427 74" />
       </svg>
-      {routeStops.map((activity, index) => (
+      {routeStops.map((activity, index) => {
+        const displayedActivity =
+          vetoPreview && activity.id === "mount-takao"
+            ? { ...activity, startTime: vetoPreview.afterTime, title: vetoPreview.replacement }
+            : activity;
+
+        return (
         <div className={`routeStop stop-${index + 1}`} key={activity.id}>
           <span className="routePin">{index + 1}</span>
           <div>
-            <strong>{activity.title}</strong>
-            <small>Day {selectedDay} · {activity.startTime ?? "Flexible"}</small>
+            <strong>{displayedActivity.title}</strong>
+            <small>Day {selectedDay} · {displayedActivity.startTime ?? "Flexible"}</small>
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -47,6 +67,7 @@ export function TripStudio({ trip }: TripStudioProps) {
   const [selectedDay, setSelectedDay] = useState(trip.days[0]?.day ?? 1);
   const [showPreview, setShowPreview] = useState(false);
   const destination = trip.constraints.destination.split(",")[0] ?? trip.constraints.destination;
+  const vetoPreview = getVetoPreview(trip);
 
   return (
     <main className="studioShell">
@@ -72,18 +93,27 @@ export function TripStudio({ trip }: TripStudioProps) {
       <div className="studioWorkspace">
         <section className="mapWorkspace" aria-label="Tokyo itinerary map">
           <TripMap />
-          <RouteOverlay trip={trip} selectedDay={selectedDay} />
+          <RouteOverlay
+            trip={trip}
+            selectedDay={selectedDay}
+            vetoPreview={showPreview ? vetoPreview : undefined}
+          />
           <div className="mapControls" aria-label="Map display controls">
             <span>2D</span>
             <span>◇</span>
             <span>⌾</span>
           </div>
-          <ItineraryTray selectedDay={selectedDay} trip={trip} onSelectDay={setSelectedDay} />
+          <ItineraryTray
+            selectedDay={selectedDay}
+            trip={trip}
+            vetoPreview={showPreview ? vetoPreview : undefined}
+            onSelectDay={setSelectedDay}
+          />
         </section>
 
         <GroupAgreement
           agreement={getAgreementEntries(trip)}
-          preview={getVetoPreview(trip)}
+          preview={vetoPreview}
           showPreview={showPreview}
           trip={trip}
           onTogglePreview={() => setShowPreview((visible) => !visible)}

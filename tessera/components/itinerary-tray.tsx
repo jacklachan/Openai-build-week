@@ -1,8 +1,10 @@
 import type { Trip } from "../lib/types";
+import type { VetoPreview } from "../lib/studio";
 
 interface ItineraryTrayProps {
   selectedDay: number;
   trip: Trip;
+  vetoPreview?: VetoPreview;
   onSelectDay: (day: number) => void;
 }
 
@@ -20,11 +22,15 @@ function activityVisual(category: string) {
   return visuals[category] ?? { glyph: "•", tone: "slate" };
 }
 
-export function ItineraryTray({ selectedDay, trip, onSelectDay }: ItineraryTrayProps) {
+export function ItineraryTray({ selectedDay, trip, vetoPreview, onSelectDay }: ItineraryTrayProps) {
   return (
     <nav className="itineraryTray" aria-label="Trip itinerary by day">
       {trip.days.map((day) => {
-        const feature = day.activities[0];
+        const firstActivity = day.activities[0];
+        const feature =
+          firstActivity && vetoPreview && day.day === 2
+            ? { ...firstActivity, startTime: vetoPreview.afterTime, title: vetoPreview.replacement }
+            : firstActivity;
         const visual = activityVisual(feature?.category ?? "");
         const isSelected = selectedDay === day.day;
 
