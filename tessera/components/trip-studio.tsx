@@ -41,6 +41,15 @@ function formatPlanError(message: string) {
   return message.replace(/[.]+$/, "");
 }
 
+export function getPlanSelection(trip: Trip) {
+  const firstDay = Array.isArray(trip.days) ? trip.days[0] : undefined;
+
+  return {
+    activityId: Array.isArray(firstDay?.activities) ? firstDay.activities[0]?.id ?? null : null,
+    day: firstDay?.day ?? 1,
+  };
+}
+
 function RouteOverlay({
   trip,
   selectedDay,
@@ -85,13 +94,14 @@ function RouteOverlay({
 }
 
 export function TripStudio({ trip }: TripStudioProps) {
+  const initialSelection = getPlanSelection(trip);
   const [activeTrip, setActiveTrip] = useState(trip);
   const [destination, setDestination] = useState(trip.constraints.destination);
   const [phase, setPhase] = useState<StudioPhase>("landing");
   const [source, setSource] = useState<PlanSource | null>(null);
-  const [selectedDay, setSelectedDay] = useState(trip.days[0]?.day ?? 1);
+  const [selectedDay, setSelectedDay] = useState(initialSelection.day);
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
-    trip.days[0]?.activities[0]?.id ?? null,
+    initialSelection.activityId,
   );
   const [showPreview, setShowPreview] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -121,11 +131,11 @@ export function TripStudio({ trip }: TripStudioProps) {
         throw new Error(payload.error ?? "Unable to generate a plan");
       }
 
-      const firstDay = payload.trip.days?.[0];
+      const selection = getPlanSelection(payload.trip);
 
       setActiveTrip(payload.trip);
-      setSelectedDay(firstDay?.day ?? 1);
-      setSelectedActivityId(firstDay?.activities[0]?.id ?? null);
+      setSelectedDay(selection.day);
+      setSelectedActivityId(selection.activityId);
       setShowPreview(false);
       setSource(payload.source);
       setPhase("ready");

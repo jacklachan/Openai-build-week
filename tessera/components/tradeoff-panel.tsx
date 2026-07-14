@@ -1,4 +1,4 @@
-import { getActivityTone, type ActivityTone } from "./presentation";
+import { getTravelerTone, type ActivityTone } from "./presentation";
 import type { AgreementEntry } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
@@ -8,20 +8,12 @@ interface TradeoffPanelProps {
   trip: Trip;
 }
 
-function getEntryTone(trip: Trip, entry: AgreementEntry): ActivityTone {
-  const travelerName = entry.traveler.name.toLowerCase();
-  const activities = Array.isArray(trip.days)
-    ? trip.days.flatMap((day) => (Array.isArray(day.activities) ? day.activities : []))
-    : [];
-  const matchingActivities = activities.filter(
-    ({ satisfies, tension }) =>
-      satisfies.includes(entry.traveler.id) || tension?.toLowerCase().includes(travelerName),
-  );
-  const activity =
-    matchingActivities.find((candidate) => getActivityTone(candidate) === "tension") ??
-    matchingActivities[0];
+export function getTradeoffEntryTone(trip: Trip, entry: AgreementEntry): ActivityTone {
+  if (!Array.isArray(trip.days) || !trip.days.every((day) => Array.isArray(day.activities))) {
+    return "neutral";
+  }
 
-  return activity ? getActivityTone(activity) : "neutral";
+  return getTravelerTone(trip, entry.traveler.id);
 }
 
 function getNetLabel(tone: ActivityTone) {
@@ -46,7 +38,7 @@ export function TradeoffPanel({ agreement, tradeoffs, trip }: TradeoffPanelProps
           <span role="columnheader">NET</span>
         </div>
         {agreement.map((entry, index) => {
-          const tone = getEntryTone(trip, entry);
+          const tone = getTradeoffEntryTone(trip, entry);
 
           return (
             <div className="tradeoffLedgerRow" key={entry.traveler.id} role="row">
