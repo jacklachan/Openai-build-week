@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tessera
 
-## Getting Started
+**Tessera turns conflicting group-trip preferences into an inspectable agreement.**
 
-First, run the development server:
+Instead of generating an itinerary for one person, Tessera models what each traveler needs, names the compromises, keeps the group within budget, and re-negotiates the plan when someone vetoes it.
+
+This project is an entry for the OpenAI Build Week Challenge in the **Apps for Your Life** track.
+
+## The demo scenario
+
+The included zero-cost Tokyo scenario has three friends with incompatible needs:
+
+- Ravi wants an adventure day without exceeding the group budget.
+- Priya wants vegetarian food and slow mornings.
+- Mei wants anime and nightlife.
+
+The product outcome is not just an itinerary. It is a Group Agreement: the must-dos each traveler receives, their explicit concessions, why every activity exists, and a deterministic budget.
+
+## Run locally
+
+Requirements: Node.js 22+ and npm.
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For live planning, configure these values in `.env.local` or your deployment provider. Never commit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```dotenv
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.6
+```
 
-## Learn More
+Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** OpenAI or Maps calls.
 
-To learn more about Next.js, take a look at the following resources:
+## Backend contract for the app UI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The UI can use the API immediately; all JSON is validated on the server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Create a plan
 
-## Deploy on Vercel
+`POST /api/plan`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```json
+{
+  "travelers": [
+    {
+      "id": "ravi",
+      "name": "Ravi",
+      "pace": "packed",
+      "interests": ["adventure", "food"],
+      "dietary": [],
+      "accessibility": [],
+      "mustDo": ["Hike Mount Takao"],
+      "dealbreakers": ["Fine dining every night"]
+    }
+  ],
+  "constraints": {
+    "destination": "Tokyo, Japan",
+    "days": 3,
+    "currency": "USD",
+    "budgetCeiling": 4500
+  }
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Response:
+
+```json
+{ "trip": "Trip", "source": "live | cache | demo" }
+```
+
+Send `Accept: text/event-stream` to receive the same payload as an SSE `trip` event.
+
+### Veto and re-negotiate
+
+`POST /api/edit`
+
+```json
+{
+  "trip": "the current Trip object",
+  "command": "Priya vetoes the 6am Mount Takao hike."
+}
+```
+
+Response:
+
+```json
+{
+  "trip": "the next Trip version",
+  "diff": {
+    "previousVersion": 1,
+    "nextVersion": 2,
+    "removedActivities": [],
+    "addedActivities": [],
+    "budget": { "before": 870, "after": 918, "delta": 48 },
+    "changedTradeoffs": true
+  },
+  "source": "live | demo"
+}
+```
+
+The UI should derive the Group Agreement from the frozen `Trip` contract:
+
+- traveler `mustDo` and `dealbreakers`;
+- per-activity `satisfies`, `rationale`, and `tension`;
+- group-level `tradeoffs`;
+- code-computed `budget`.
+
+Do not add a black-box fairness score or change `lib/types.ts` without an explicit contract decision.
+
+## Safety and cost controls
+
+- The landing demo is sourced from `data/seed-demo-trip.json`.
+- `DEMO_ONLY=true` avoids paid calls entirely.
+- Identical live planning requests are cached in-process by a SHA-256 input hash.
+- `/api/plan` and `/api/edit` have a five-request-per-minute per-instance limiter.
+- GPT-5.6 can make at most eight sequential custom-tool rounds.
+- Every final plan is server-validated: activity rationales are required, traveler ids are checked, and budget totals are recalculated in code.
+
+## Verification
+
+```bash
+npm run validate:seed
+npm run verify:orchestrator
+npm run verify:replan
+npm run verify:safeguards
+npm run lint
+npm run build
+```
+
+## How Codex and GPT-5.6 were used
+
+Codex was used to scaffold the Next.js application, freeze the trip data contract, build the server routes, implement the deterministic budget validator, and create the mock-backed verification scripts. The design decision that drove the build was to make a group compromise visible and challengeable, rather than produce another opaque AI itinerary.
+
+GPT-5.6 is the server-side negotiation engine. It uses the Responses API function-calling loop to search grounded activity fixtures, request route data, call the deterministic budget tool, and finally commit a schema-validated Trip. The application retains every model output item between tool calls, caps the loop at eight rounds, and rejects any final plan with invented budget math or missing rationales.
+
+Before submission, add the primary Codex `/feedback` session ID here and in the Devpost form.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
