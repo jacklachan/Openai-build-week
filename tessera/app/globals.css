@@ -365,21 +365,24 @@ button {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1rem;
   padding: 1.5rem clamp(1rem, 3vw, 3rem);
-  background: var(--paper);
-  border-bottom: var(--rule-bold) solid var(--rule);
+  background: var(--ink);
+  border-bottom: var(--rule-bold) solid var(--bone);
 }
 
 .tradeoffPanelHeading {
   grid-column: 1 / span 3;
+  padding-left: 0.75rem;
+  border-left: var(--rule-bold) solid var(--data);
 }
 
 .tradeoffPanelHeading p {
   margin-bottom: 0.5rem;
+  color: var(--bone);
 }
 
 .tradeoffPanelHeading h2 {
   margin: 0;
-  color: var(--data);
+  color: var(--paper);
   font-size: clamp(1.25rem, 2.1vw, 2rem);
   font-weight: 800;
   letter-spacing: -0.055em;
@@ -389,7 +392,8 @@ button {
 .tradeoffLedger {
   display: grid;
   grid-column: 4 / -1;
-  border-top: var(--rule-bold) solid var(--rule);
+  background: var(--ink);
+  border-top: var(--rule-bold) solid var(--bone);
 }
 
 .tradeoffLedgerHeader,
@@ -399,11 +403,11 @@ button {
   gap: 0.75rem;
   align-items: start;
   padding: 0.65rem 0;
-  border-bottom: var(--rule-thin) solid var(--rule);
+  border-bottom: var(--rule-thin) solid var(--bone-2);
 }
 
 .tradeoffLedgerHeader {
-  color: var(--ink-2);
+  color: var(--bone);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.625rem;
   font-weight: 700;
@@ -411,13 +415,14 @@ button {
 }
 
 .tradeoffLedgerRow {
-  color: var(--ink-2);
+  color: var(--bone);
+  background: var(--ink);
   font-size: 0.8125rem;
   line-height: 1.35;
 }
 
 .tradeoffLedgerRow > span:first-child {
-  color: var(--ink);
+  color: var(--paper);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -433,8 +438,8 @@ button {
 
 .tradeoffNet {
   padding-left: 0.5rem;
-  color: var(--ink);
-  border-left: var(--rule-bold) solid var(--rule);
+  color: var(--paper);
+  border-left: var(--rule-bold) solid var(--bone);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.625rem;
   font-weight: 700;
@@ -889,6 +894,25 @@ button {
   border-color: var(--bone);
 }
 
+.budgetBar:has(.budgetTrack-neutral) {
+  padding: 0.65rem 0.75rem;
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--ink);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetLabels {
+  color: var(--ink-2);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetValue {
+  color: var(--ink);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetTrack-neutral {
+  background: none;
+  border-color: var(--ink);
+}
+
 .vetoPanel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1031,7 +1055,7 @@ button {
   }
 
   .tradeoffLedgerRow > span::before {
-    color: var(--ink-2);
+    color: var(--bone);
     content: attr(data-label);
     font-family: var(--font-jetbrains-mono);
     font-size: 0.625rem;
@@ -1042,7 +1066,7 @@ button {
   .tradeoffNet {
     padding-left: 0;
     border-left: 0;
-    border-top: var(--rule-bold) solid var(--rule);
+    border-top: var(--rule-bold) solid var(--bone);
   }
 
   .tradeoffNet-tension {

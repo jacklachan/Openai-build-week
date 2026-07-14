@@ -34,3 +34,18 @@
 
 - No protected API, provider, seed, type, budget, data, or test file was changed. The pre-existing `package-lock.json` modification was left untouched and is excluded from the Task 4 commit.
 - A local visual browser connection was unavailable, so the final visual inspection could not be captured there. The required source rails, static self-review, UI tests, lint, and production build all passed.
+
+## Repair follow-up
+
+- Converted the complete TradeoffPanel to an ink band. Ledger labels and NET text are now bone/paper on the ink ground, while GOT remains verify and GAVE UP remains signal on that same ink ground. The heading uses a data rule rather than data text, and narration retains bone text with its 3px data left rule.
+- A ceiling-free budget now receives a compact paper surface selected only by its existing neutral track. Its SPENT text is ink, and the track is an unfilled ink outline. Ceiling-present verify/warn/signal track behavior is unchanged and no ceiling or delta is added.
+
+## Repair verification
+
+| Check | Result |
+| --- | --- |
+| Both required source rails | No matches (expected `rg` exit 1) |
+| `npm run test:ui` | Pass — 19 tests, 0 failures |
+| `npm run lint` | Pass |
+| `npm run build` | Pass — production compilation, TypeScript, and static generation completed |
+| `git diff --check` | No whitespace errors |
