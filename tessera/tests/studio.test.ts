@@ -6,6 +6,7 @@ import {
   getSelectedDay,
   getVetoPreview,
 } from "../lib/studio";
+import { getMapScriptUrl } from "../components/trip-map";
 import type { Trip } from "../lib/types";
 
 const trip = seedTrip as Trip;
@@ -25,4 +26,12 @@ test("derives the seeded agreement and veto preview", () => {
 test("returns the correct itinerary for the selected day", () => {
   assert.notEqual(getSelectedDay(trip, 1)?.summary, getSelectedDay(trip, 3)?.summary);
   assert.equal(getSelectedDay(trip, 3)?.activities[0]?.title, "Tsukiji Outer Market breakfast");
+});
+
+test("creates a safe Google Maps script URL only when a browser key exists", () => {
+  assert.equal(getMapScriptUrl(""), null);
+  assert.equal(
+    getMapScriptUrl("key with space"),
+    "https://maps.googleapis.com/maps/api/js?key=key%20with%20space&v=weekly",
+  );
 });
