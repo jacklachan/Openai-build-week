@@ -3,6 +3,7 @@ import test from "node:test";
 import seedTrip from "../data/seed-demo-trip.json";
 import {
   getAgreementEntries,
+  getAtlasSignals,
   getSelectedDay,
   getVetoPreview,
 } from "../lib/studio";
@@ -28,6 +29,14 @@ test("derives the seeded agreement and veto preview", () => {
 test("returns the correct itinerary for the selected day", () => {
   assert.notEqual(getSelectedDay(trip, 1)?.summary, getSelectedDay(trip, 3)?.summary);
   assert.equal(getSelectedDay(trip, 3)?.activities[0]?.title, "Tsukiji Outer Market breakfast");
+});
+
+test("derives honest Atlas status signals from the trip contract", () => {
+  const signals = getAtlasSignals(trip);
+
+  assert.equal(signals.agreementCount, trip.travelers.length);
+  assert.equal(signals.budgetRatio, 19);
+  assert.equal(signals.nextStop, "Shinjuku Gyoen National Garden");
 });
 
 test("creates a safe Google Maps script URL only when a browser key exists", () => {

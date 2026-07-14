@@ -16,6 +16,13 @@ export interface VetoPreview {
   replacement: string;
 }
 
+/** The small, data-derived status summary shown over the Atlas map. */
+export interface AtlasSignals {
+  agreementCount: number;
+  budgetRatio: number;
+  nextStop: string;
+}
+
 /** Returns the day currently selected in the itinerary rail. */
 export function getSelectedDay(trip: Trip, day: number): DayPlan | undefined {
   return trip.days.find((plan) => plan.day === day);
@@ -46,5 +53,17 @@ export function getVetoPreview(trip: Trip): VetoPreview {
     beforeTime: hike?.startTime ?? "08:30",
     removedActivity: hike?.title ?? "Early hike",
     replacement: "Yanaka walk + tea",
+  };
+}
+
+/** Derives display-only status from the existing trip contract without claiming live provider data. */
+export function getAtlasSignals(trip: Trip): AtlasSignals {
+  const budgetCeiling = trip.budget.ceiling ?? trip.constraints.budgetCeiling ?? trip.budget.total;
+  const nextStop = trip.days[0]?.activities[0]?.title ?? "Your first shared stop";
+
+  return {
+    agreementCount: trip.travelers.length,
+    budgetRatio: Math.min(100, Math.round((trip.budget.total / budgetCeiling) * 100)),
+    nextStop,
   };
 }

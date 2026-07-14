@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { AtlasMotion } from "./atlas-motion";
+import { AtlasStatus } from "./atlas-status";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { TripMap } from "./trip-map";
@@ -93,6 +95,8 @@ export function TripStudio({ trip }: TripStudioProps) {
       <div className="studioWorkspace">
         <section className="mapWorkspace" aria-label="Tokyo itinerary map">
           <TripMap />
+          <AtlasMotion />
+          <AtlasStatus trip={trip} />
           <RouteOverlay
             trip={trip}
             selectedDay={selectedDay}

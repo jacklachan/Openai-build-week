@@ -37,6 +37,20 @@ OPENAI_MODEL=gpt-5.6
 
 Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** OpenAI or Maps calls.
 
+## Deploy to Google Cloud Run
+
+The checked-in release target is project `tessera-502419` in `asia-south1`. The initial service is intentionally deployed with `DEMO_ONLY=true`, so it does not need an OpenAI key or a Google Maps browser key.
+
+```powershell
+$image = "asia-south1-docker.pkg.dev/tessera-502419/tessera/tessera-web:$(git rev-parse --short HEAD)"
+gcloud builds submit --project tessera-502419 --config cloudbuild.yaml --substitutions "_IMAGE=$image" .
+.\scripts\deploy-cloud-run.ps1 -ImageUri $image
+```
+
+The script deploys a public HTTPS service with a dedicated runtime service account, a `/api/health` startup probe, zero minimum instances, and bounded concurrency. It never sends or prints secrets.
+
+To enable live planning later, store `OPENAI_API_KEY` in Secret Manager, grant `tessera-run@tessera-502419.iam.gserviceaccount.com` `roles/secretmanager.secretAccessor`, mount the secret on Cloud Run, and then change `DEMO_ONLY` to `false`. A Maps browser key remains optional; without it the interface shows an explicit map setup notice rather than a fake Earth view.
+
 ## Backend contract for the app UI
 
 The UI can use the API immediately; all JSON is validated on the server.
