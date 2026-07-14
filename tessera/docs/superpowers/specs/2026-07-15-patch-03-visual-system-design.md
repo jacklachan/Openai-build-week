@@ -23,11 +23,17 @@ The seeded `Trip` is used only as the initial landing request source and as a sa
 
 The implementation defines the exact Patch 03 tokens in `:root` and uses only those variables for rendered color. The only loaded faces are Archivo (including the width axis for expanded display headings) and JetBrains Mono, both from Google Fonts with the Latin subset.
 
+The contrast law is fixed for every rendered text/ground pair:
+
+- On `--bone`, text may be `--ink`, `--ink-2`, or `--data`. `--signal`, `--verify`, and `--warn` are fills, rules, and marks only.
+- On `--ink`, text may be `--bone`, `--paper`, `--signal`, `--verify`, or `--warn`. `--data` is a rule or fill only.
+- A `--data` fill may use `--bone` text; this is reserved for the rationale panel.
+
 - Major regions alternate flat `--bone` and `--ink` full-bleed bands.
-- Every major section uses a real-data mono kicker followed by an Archivo Expanded title.
+- Every major section uses a real-data mono kicker followed by an Archivo Expanded title. Kickers use `--ink-2` on bone grounds and `--bone` on ink grounds. `--ink-3` is limited to non-essential text at 18px or larger.
 - Rules are the sole depth system: `1px` for local separation and `3px` for major boundaries.
 - All radii are zero. There are no gradients, shadows, translucent surfaces, default palette classes, emoji icons, or decorative AI graphics.
-- The active timeline or selected rationale panel alone receives corner brackets (`⌐` and `¬`).
+- Only the selected rationale panel receives corner brackets (`⌐` and `¬`).
 - Every interactive control receives a square `2px --data` focus outline through `:focus-visible`.
 
 ## Landing and generation
@@ -38,7 +44,7 @@ The landing hero is a full-bleed `--ink` band.
 - Title and the approved plain-language subhead describe the negotiation problem.
 - The destination field is a bare line with a `--rule-bold` underline; it is the one input.
 - The rectangular `Generate plan` button is the one action and posts to the existing plan endpoint.
-- Read-only `TravelerChips` appear above or alongside the field. Each chip is a square ruled block with a real `T01`-style ID, traveler name, a 3px semantic left edge, and a derived conflict summary from existing profile values: contribution/cap when available, pace, and a top interest or must-do. They do not add inputs or local state.
+- Read-only `TravelerChips` appear above or alongside the field. Each chip is a square ruled block with a real `T01`-style ID, traveler name, a neutral 3px `--ink` left edge, and a derived conflict summary from existing profile values: contribution/cap when available, pace, and a top interest or must-do. They do not add inputs or local state. Landing and generating chips never disclose post-plan semantic outcomes.
 - The globe is a geometric, flat-block graphic only; it has no atmospheric effect or decorative accent.
 
 ## Ready-state order and components
@@ -51,17 +57,17 @@ The generated state has this fixed order at desktop sizes:
 
 ### TradeoffPanel
 
-The ledger has one traveler row and the columns `TRAVELER`, `GOT`, `GAVE UP`, and `NET`. Existing agreement helpers and `Trip.tradeoffs` provide all its content. Satisfied outcomes use `--verify`; concessions use `--signal`; the derived group narration uses `--data`. On small screens, each row converts to a labeled stack rather than compressing columns.
+The ledger has one traveler row and the columns `TRAVELER`, `GOT`, `GAVE UP`, and `NET`. Existing agreement helpers and `Trip.tradeoffs` provide all its content. Satisfied outcomes use `--verify`; concessions use `--signal`; the derived group narration uses `--bone` text with a 3px `--data` left rule. On small screens, each row converts to a labeled stack rather than compressing columns.
 
 ### Traveler transcript and budget
 
-The supporting rail uses a transcript instead of avatar cards or bubbles. Speakers are mono labels and AI/system-derived reasoning gets a 3px `--data` left rule. Traveler chips remain square with `T01 // NAME` labels. The budget is one flat bar whose fill is derived from `Trip.budget.total` and its ceiling: `--verify` below 90%, `--warn` within 10%, `--signal` over the ceiling.
+The supporting rail uses a transcript instead of avatar cards or bubbles. Speakers are mono labels and AI/system-derived reasoning gets a 3px `--data` left rule. Traveler chips remain square with `T01 // NAME` labels. In the ready state, a traveler chip gets a `--signal` left edge if a related activity has `Activity.tension`; otherwise it gets `--verify` if a related activity has a non-empty `Activity.satisfies`; otherwise it retains the neutral `--ink` edge. The budget is one flat bar whose fill is derived from `Trip.budget.total` and its supplied ceiling: `--verify` below 90%, `--warn` within 10%, `--signal` over the ceiling. If no ceiling exists, it is a neutral `--ink` outline with `SPENT` only and no `CEILING` or `DELTA` values.
 
 ### Map and timeline
 
 The optional Google map keeps its existing browser-key behavior and direct fallback message. Its surrounding presentation becomes a muted flat bone/ink surface; route lines are `--ink` at 2px and the selected day is `--data` at 3px. Stops are flat squares.
 
-The timeline derives its controls from `Trip.days.length`; no day count is hardcoded. It presents real hour ticks, sequential `D01`-style labels, and flat activity blocks. Blocks use `--verify` where `Activity.satisfies` is present and `--signal` where `Activity.tension` is present. Selecting an activity exposes its existing `Activity.rationale` in a `--data` panel. The selected panel is the only place with corner brackets.
+The timeline derives its controls from `Trip.days.length`; no day count is hardcoded. It presents real hour ticks, sequential `D01`-style labels, and flat activity blocks. `Activity.tension` has precedence and produces a `--signal` block even when `Activity.satisfies` is also populated. A non-empty `Activity.satisfies` without tension produces `--verify`; neither field produces a neutral `--ink` outline without a semantic fill. Selecting an activity exposes its existing `Activity.rationale` in a `--data` fill with `--bone` text. The selected rationale panel is the only place with corner brackets.
 
 The existing Veto preview remains a display-only proposal. It is the sole `--signal` filled button, consistently labeled `Veto`/`Vetoed`; any reversal uses the normal ink treatment.
 
@@ -73,4 +79,4 @@ At 380px, the layout becomes one column, traveler chip content wraps within its 
 
 ## Validation
 
-Before reporting, the implementation will verify the seeded demo renders, day controls adapt to a different `Trip.days` count in automated coverage, and all existing behavior tests continue to pass. It will also run the directive's banned-token searches, contrast calculations, keyboard focus check, reduced-motion check, 380px check, lint, and production build. The final report will include those results, the accent-to-schema mapping, and screenshots of the landing state, ledger, and 380px state. No deployment or push occurs before human review.
+Before reporting, the implementation will verify the seeded demo renders, day controls adapt to a different `Trip.days` count in automated coverage, and all existing behavior tests continue to pass. It will also run the directive's banned-token searches, contrast calculations for every rendered text/ground pair, keyboard focus check, reduced-motion check, 380px check, lint, and production build. Validation explicitly confirms that no `--data` text appears on `--ink`, no `--signal`/`--verify`/`--warn` text appears on `--bone`, and an activity with both `satisfies` and `tension` renders as tension (`--signal`). The final report will include those results, the accent-to-schema mapping, and screenshots of the landing state, ledger, and 380px state. No deployment or push occurs before human review.
