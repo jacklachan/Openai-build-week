@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { cacheKey, getCachedPlan, getDemoTrip, isDemoOnly, setCachedPlan } from "@/lib/cache";
 import { negotiateTrip, type PlanRequest } from "@/lib/openai";
+import { checkRateLimit, clientKey } from "@/lib/rate-limit";
 import type { Interest, TravelerProfile, TripConstraints } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -66,11 +68,14 @@ function parsePlanRequest(value: unknown): PlanRequest {
   return { travelers: value.travelers, constraints: value.constraints };
 }
 
-function sseResponse(trip: Awaited<ReturnType<typeof negotiateTrip>>): Response {
+function sseResponse(
+  trip: Awaited<ReturnType<typeof negotiateTrip>>,
+  source: "live" | "cache" | "demo",
+): Response {
   const body = new ReadableStream({
     start(controller) {
       controller.enqueue(
-        new TextEncoder().encode(`event: trip\ndata: ${JSON.stringify({ trip })}\n\n`),
+        new TextEncoder().encode(`event: trip\ndata: ${JSON.stringify({ trip, source })}\n\n`),
       );
       controller.close();
     },
@@ -85,13 +90,26 @@ function sseResponse(trip: Awaited<ReturnType<typeof negotiateTrip>>): Response 
 }
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimit(clientKey(request.headers));
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many plan requests. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } },
+    );
+  }
+
   try {
     const planRequest = parsePlanRequest(await request.json());
-    const trip = await negotiateTrip(planRequest);
+    const key = cacheKey(planRequest);
+    const demoOnly = isDemoOnly();
+    const cachedTrip = demoOnly ? undefined : getCachedPlan(key);
+    const trip = demoOnly ? getDemoTrip() : cachedTrip || (await negotiateTrip(planRequest));
+    const source = demoOnly ? "demo" : cachedTrip ? "cache" : "live";
+    if (!demoOnly && !cachedTrip) setCachedPlan(key, trip);
     if (request.headers.get("accept")?.includes("text/event-stream")) {
-      return sseResponse(trip);
+      return sseResponse(trip, source);
     }
-    return NextResponse.json({ trip });
+    return NextResponse.json({ trip, source });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to create a plan.";
     const status = message.includes("Request") || message.includes("invalid") ? 400 : 503;
