@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "npm run validate:seed && npm run verify:orchestrator && npm run verify:replan && npm run verify:safeguards",
     "validate:seed": "node scripts/validate-seed.mjs",
     "verify:orchestrator": "tsx scripts/verify-orchestrator.ts",
     "verify:replan": "tsx scripts/verify-replan.ts",
