@@ -2,8 +2,12 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - build
+      - --build-arg
+      - NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=${_NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY}
       - --tag
       - $_IMAGE
       - .
+substitutions:
+  _NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY: ""
 images:
   - $_IMAGE

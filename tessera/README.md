@@ -39,15 +39,20 @@ Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response w
 
 ## Deploy to Google Cloud Run
 
-The checked-in release target is project `tessera-502419` in `asia-south1`. The initial service is intentionally deployed with `DEMO_ONLY=true`, so it does not need an OpenAI key or a Google Maps browser key.
+The checked-in release target is project `tessera-502419` in `asia-south1`. The initial service is intentionally deployed with `DEMO_ONLY=true`, so it does not need an OpenAI key. A Google Maps browser key is optional for demo planning, but supplying it at build time enables the interactive trip map.
 
 ```powershell
 $image = "asia-south1-docker.pkg.dev/tessera-502419/tessera/tessera-web:$(git rev-parse --short HEAD)"
-gcloud builds submit --project tessera-502419 --config cloudbuild.yaml --substitutions "_IMAGE=$image" .
+$mapsKey = ""
+if (Test-Path .env.local) {
+  $match = Select-String -Path .env.local -Pattern '^NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=(.+)$' | Select-Object -First 1
+  if ($match) { $mapsKey = $match.Matches[0].Groups[1].Value.Trim() }
+}
+gcloud builds submit --project tessera-502419 --config cloudbuild.yaml --substitutions "_IMAGE=$image,_NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=$mapsKey" .
 .\scripts\deploy-cloud-run.ps1 -ImageUri $image
 ```
 
-The script deploys a public HTTPS service with a dedicated runtime service account, a `/api/health` startup probe, zero minimum instances, and bounded concurrency. It never sends or prints secrets.
+`NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY` is a browser key, not a server secret: restrict it to the deployed site and the Maps JavaScript API. It is passed only into the Next.js production build, never committed or set as a Cloud Run runtime variable. Leave it empty to keep the explicit map setup notice. The script deploys a public HTTPS service with a dedicated runtime service account, a `/api/health` startup probe, zero minimum instances, and bounded concurrency. It never sends or prints server secrets.
 
 To enable live planning later, store `OPENAI_API_KEY` in Secret Manager, grant `tessera-run@tessera-502419.iam.gserviceaccount.com` `roles/secretmanager.secretAccessor`, mount the secret on Cloud Run, and then change `DEMO_ONLY` to `false`. A Maps browser key remains optional; without it the interface shows an explicit map setup notice rather than a fake Earth view.
 
