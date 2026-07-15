@@ -1,26 +1,1217 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bone: #E9E5DA;
+  --bone-2: #DDD8C9;
+  --paper: #F4F1E8;
+  --ink: #121211;
+  --ink-2: #3A3934;
+  --ink-3: #6E6C63;
+  --signal: #FF4A17;
+  --verify: #00A88F;
+  --data: #2E2AE8;
+  --warn: #D9A404;
+  --rule: #121211;
+  --rule-thin: 1px;
+  --rule-bold: 3px;
+  --radius: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-width: 0;
+  margin: 0;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-archivo);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:where(button, input, select, textarea, a):focus-visible {
+  outline: 2px solid var(--data);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.studioShell {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bone);
+}
+
+.studioShell-ready {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  background: var(--bone);
+}
+
+.landingHero {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-content: center;
+  min-height: 100vh;
+  padding: 4rem clamp(1rem, 4vw, 4rem);
+  background: var(--ink);
+  border-top: var(--rule-bold) solid var(--data);
+}
+
+.landingKicker,
+.sectionKicker,
+.generatedHeader p,
+.tradeoffPanelHeading p,
+.transcriptSpeaker,
+.budgetLabels,
+.vetoLabel,
+.timelineDay,
+.mapNotice,
+.mapLoading,
+.planState {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.landingKicker,
+.landingHero h1,
+.landingSubhead,
+.landingHero .travelerChips,
+.planError,
+.planForm {
+  grid-column: 2 / span 8;
+}
+
+.landingKicker {
+  margin-bottom: 1.5rem;
+  color: var(--bone);
+}
+
+.landingHero h1 {
+  max-width: 11ch;
+  margin: 0;
+  color: var(--paper);
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.landingSubhead {
+  max-width: 44rem;
+  margin: 1.5rem 0 0;
+  color: var(--bone);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.4;
+}
+
+.travelerChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 2rem 0 0;
+  list-style: none;
+}
+
+.travelerChip {
+  display: grid;
+  flex: 1 1 12rem;
+  min-width: min(100%, 10rem);
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: var(--bone);
+  border: var(--rule-thin) solid var(--rule);
+  border-left-width: var(--rule-bold);
+}
+
+.travelerChip span {
+  color: var(--ink);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+.travelerChip small {
+  margin-top: 0.25rem;
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.travelerChip-tension {
+  border-left-color: var(--signal);
+}
+
+.travelerChip-satisfied {
+  border-left-color: var(--verify);
+}
+
+.travelerChip-neutral {
+  border-color: var(--rule);
+  border-left-color: var(--rule);
+}
+
+.planError {
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  color: var(--ink);
+  background: var(--signal);
+  border: var(--rule-bold) solid var(--signal);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.planForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.planForm label {
+  grid-column: 1 / -1;
+  color: var(--bone);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.planForm input {
+  min-width: 0;
+  padding: 0.8rem 0 0.5rem;
+  color: var(--bone);
+  background: none;
+  border: 0;
+  border-bottom: var(--rule-thin) solid var(--bone);
+}
+
+.planForm button,
+.signalButton,
+.inkButton {
+  padding: 0.8rem 1rem;
+  color: var(--bone);
+  background: var(--ink);
+  border: var(--rule-thin) solid var(--ink);
+  border-radius: var(--radius);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.planForm button {
+  color: var(--ink);
+  background: var(--bone);
+  border-color: var(--bone);
+}
+
+.planForm button:hover:not(:disabled) {
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--bone);
+}
+
+.planForm button:disabled,
+.planForm input:disabled {
+  cursor: not-allowed;
+  color: var(--ink);
+  background: var(--bone-2);
+  border-color: var(--ink);
+}
+
+.studioShell-generating .landingHero {
+  background: var(--ink);
+  border-color: var(--data);
+}
+
+.studioShell-generating .landingKicker,
+.studioShell-generating .landingSubhead,
+.studioShell-generating .planForm label {
+  color: var(--bone);
+}
+
+.studioShell-generating .landingHero h1 {
+  color: var(--paper);
+}
+
+.studioShell-generating .travelerChip {
+  color: var(--ink);
+  background: var(--bone);
+}
+
+.studioShell-generating .planForm input {
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--bone);
+}
+
+.studioShell-generating .planForm button {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+.generationTimeline {
+  display: grid;
+  grid-column: 2 / span 8;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  gap: 0.5rem;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  list-style: none;
+}
+
+.generationTimelineRow {
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  border-left: var(--rule-bold) solid var(--data);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  animation: timelineSnap 60ms steps(2, end) backwards;
+  animation-delay: calc(var(--timeline-index) * 60ms);
+}
+
+.generatedHeader {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.5rem;
+  padding: 0.75rem clamp(1rem, 3vw, 3rem);
+  color: var(--bone);
+  background: var(--ink);
+  border-top: var(--rule-bold) solid var(--data);
+  border-bottom: var(--rule-thin) solid var(--ink);
+}
+
+.generatedHeader p {
+  grid-column: 1 / span 3;
+  color: var(--bone);
+}
+
+.generatedHeader > span {
+  grid-column: 4 / span 3;
+  color: var(--paper);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.generatedHeader .travelerChips {
+  grid-column: 7 / -1;
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.generatedHeader .travelerChip {
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  background: var(--bone);
+}
+
+.generatedHeader .travelerChip span {
+  color: var(--ink);
+}
+
+.generatedHeader .travelerChip small {
+  color: var(--ink-2);
+}
+
+.generatedHeader .travelerChip-tension {
+  border-color: var(--rule);
+  border-left-color: var(--signal);
+}
+
+.generatedHeader .travelerChip-satisfied {
+  border-color: var(--rule);
+  border-left-color: var(--verify);
+}
+
+.tradeoffPanel {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.5rem clamp(1rem, 3vw, 3rem);
+  background: var(--ink);
+  border-bottom: var(--rule-bold) solid var(--bone);
+}
+
+.tradeoffPanelHeading {
+  grid-column: 1 / span 3;
+  padding-left: 0.75rem;
+  border-left: var(--rule-bold) solid var(--data);
+}
+
+.tradeoffPanelHeading p {
+  margin-bottom: 0.5rem;
+  color: var(--bone);
+}
+
+.tradeoffPanelHeading h2 {
+  margin: 0;
+  color: var(--paper);
+  font-size: clamp(1.25rem, 2.1vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+.tradeoffLedger {
+  display: grid;
+  grid-column: 4 / -1;
+  background: var(--ink);
+  border-top: var(--rule-bold) solid var(--bone);
+}
+
+.tradeoffLedgerHeader,
+.tradeoffLedgerRow {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(10rem, 1.5fr) minmax(10rem, 1.5fr) minmax(6rem, 0.8fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.65rem 0;
+  border-bottom: var(--rule-thin) solid var(--bone-2);
+}
+
+.tradeoffLedgerHeader {
+  color: var(--bone);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.tradeoffLedgerRow {
+  color: var(--bone);
+  background: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.tradeoffLedgerRow > span:first-child {
+  color: var(--paper);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.tradeoffGot {
+  color: var(--verify);
+}
+
+.tradeoffGaveUp {
+  color: var(--signal);
+}
+
+.tradeoffNet {
+  padding-left: 0.5rem;
+  color: var(--paper);
+  border-left: var(--rule-bold) solid var(--bone);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.tradeoffNet-tension {
+  border-color: var(--signal);
+}
+
+.tradeoffNet-satisfied {
+  border-color: var(--verify);
+}
+
+.tradeoffNarration {
+  grid-column: 4 / -1;
+  margin: 0;
+  padding: 0.75rem 0 0.75rem 1rem;
+  color: var(--bone);
+  background: var(--ink);
+  border-left: var(--rule-bold) solid var(--data);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.planningWorkspace {
+  display: grid;
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.studioWorkspace {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(20rem, 4fr);
+  min-height: calc(100vh - 17rem);
+}
+
+.mapWorkspace {
+  position: relative;
+  min-width: 0;
+  min-height: 42rem;
+  overflow: hidden;
+  background: var(--bone-2);
+  border-right: var(--rule-bold) solid var(--rule);
+}
+
+.mapScene,
+.mapCanvas,
+.mapFallback {
+  position: absolute;
+  inset: 0;
+}
+
+.mapScene {
+  background: var(--bone-2);
+}
+
+.mapCanvas {
+  background: var(--bone-2);
+}
+
+.mapCanvas > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.flatMapFallback {
+  background: var(--bone-2);
+}
+
+.mapNotice,
+.mapLoading {
+  position: absolute;
+  z-index: 4;
+  max-width: min(26rem, calc(100% - 2rem));
+  padding: 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--rule);
+}
+
+.mapNotice {
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.mapLoading {
+  top: 1rem;
+  left: 1rem;
+}
+
+.routeOverlay {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+
+.routeLine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.inkRoute {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.dataSelectedRoute {
+  stroke: var(--data);
+  stroke-width: 3;
+}
+
+.routeStop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+}
+
+.stop-1 {
+  bottom: 31%;
+  left: 17%;
+}
+
+.stop-2 {
+  bottom: 48%;
+  left: 43%;
+}
+
+.stop-3 {
+  top: 11%;
+  right: 10%;
+}
+
+.squareMarker {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--bone);
+  background: var(--data);
+  border: var(--rule-thin) solid var(--ink);
+  border-radius: var(--radius);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.routeStop div {
+  display: grid;
+  min-width: 7rem;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  color: var(--bone);
+  background: var(--ink);
+  border: var(--rule-thin) solid var(--ink);
+}
+
+.routeStop strong {
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.routeStop small {
+  color: var(--paper);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.5625rem;
+  line-height: 1.2;
+}
+
+.mapControls {
+  position: absolute;
+  z-index: 6;
+  bottom: 1rem;
+  left: 1rem;
+  display: grid;
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--rule);
+}
+
+.mapControls span {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--ink);
+  border-bottom: var(--rule-thin) solid var(--rule);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.mapControls span:last-child {
+  border-bottom: 0;
+}
+
+.sectionRuleDraw {
+  position: absolute;
+  z-index: 7;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--rule-thin);
+  background: var(--data);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: ruleDraw 240ms steps(4, end) forwards;
+}
+
+.itineraryTray {
+  position: absolute;
+  z-index: 8;
+  right: 1rem;
+  bottom: 1rem;
+  left: 4.25rem;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 52rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: var(--rule-bold) solid var(--rule);
+}
+
+.timelineDayControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: var(--rule-thin) solid var(--rule);
+}
+
+.timelineDay {
+  padding: 0.4rem 0.5rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.timelineDay:hover,
+.timelineDay-selected {
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.activityTimeline {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.activityTimelineRow {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: stretch;
+  animation: timelineSnap 60ms steps(2, end) backwards;
+  animation-delay: calc(var(--timeline-index) * 60ms);
+}
+
+.timelineHour {
+  align-self: center;
+  color: var(--ink-2);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.timelineActivity {
+  min-width: 0;
+  padding: 0.55rem 0.65rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--rule);
+  border-left-width: var(--rule-bold);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.timelineActivity:hover,
+.timelineActivity-selected {
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.activityTone-tension {
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.activityTone-satisfied {
+  color: var(--ink);
+  background: var(--verify);
+  border-color: var(--verify);
+}
+
+.activityTone-neutral {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--ink);
+}
+
+.timelineActivity:hover.activityTone-tension,
+.timelineActivity-selected.activityTone-tension {
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.timelineActivity:hover.activityTone-satisfied,
+.timelineActivity-selected.activityTone-satisfied {
+  color: var(--ink);
+  background: var(--verify);
+  border-color: var(--verify);
+}
+
+.rationalePanel {
+  position: relative;
+  margin-top: 0.25rem;
+  padding: 0.75rem 1rem;
+  color: var(--bone);
+  background: var(--data);
+  border: var(--rule-thin) solid var(--data);
+}
+
+.rationalePanel p {
+  margin: 0;
+  color: var(--bone);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.cornerBrackets::before,
+.cornerBrackets::after {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-color: var(--bone);
+  content: "";
+}
+
+.cornerBrackets::before {
+  top: 0.25rem;
+  left: 0.25rem;
+  border-top: var(--rule-thin) solid var(--bone);
+  border-left: var(--rule-thin) solid var(--bone);
+}
+
+.cornerBrackets::after {
+  right: 0.25rem;
+  bottom: 0.25rem;
+  border-right: var(--rule-thin) solid var(--bone);
+  border-bottom: var(--rule-thin) solid var(--bone);
+}
+
+.agreementTranscript {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1.25rem;
+  color: var(--bone);
+  background: var(--ink);
+}
+
+.transcriptHeading {
+  padding-bottom: 0.75rem;
+  border-bottom: var(--rule-bold) solid var(--data);
+}
+
+.sectionKicker,
+.transcriptSpeaker,
+.budgetLabels,
+.vetoLabel {
+  color: var(--bone);
+}
+
+.transcriptHeading h2 {
+  margin: 0.35rem 0 0;
+  color: var(--paper);
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+.transcriptTurns {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.transcriptTurn {
+  padding-bottom: 0.75rem;
+  border-bottom: var(--rule-thin) solid var(--bone-2);
+}
+
+.transcriptTurn:last-child {
+  border-bottom: 0;
+}
+
+.transcriptBody {
+  margin: 0.2rem 0 0.65rem;
+  color: var(--bone);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.dataLeftRule {
+  padding-left: 0.75rem;
+  border-left: var(--rule-bold) solid var(--data);
+}
+
+.budgetBar {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.9rem 0;
+  border-top: var(--rule-thin) solid var(--bone-2);
+  border-bottom: var(--rule-thin) solid var(--bone-2);
+}
+
+.budgetValues,
+.budgetValue {
+  margin: 0;
+  color: var(--paper);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.budgetValues span {
+  color: var(--bone);
+}
+
+.budgetTrack {
+  height: 0.5rem;
+  overflow: hidden;
+  background: var(--bone-2);
+  border: var(--rule-thin) solid var(--bone-2);
+}
+
+.budgetTrack span {
+  display: block;
+  height: 100%;
+  background: var(--verify);
+}
+
+.budgetTrack-warn span {
+  background: var(--warn);
+}
+
+.budgetTrack-signal span {
+  background: var(--signal);
+}
+
+.budgetTrack-neutral {
+  background: none;
+  border-color: var(--bone);
+}
+
+.budgetBar:has(.budgetTrack-neutral) {
+  padding: 0.65rem 0.75rem;
+  background: var(--paper);
+  border: var(--rule-thin) solid var(--ink);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetLabels {
+  color: var(--ink-2);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetValue {
+  color: var(--ink);
+}
+
+.budgetBar:has(.budgetTrack-neutral) .budgetTrack-neutral {
+  background: none;
+  border-color: var(--ink);
+}
+
+.vetoPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 0.75rem;
+  padding: 0.85rem;
+  background: var(--ink);
+  border: var(--rule-bold) solid var(--signal);
+}
+
+.vetoLabel {
+  grid-column: 1 / -1;
+}
+
+.vetoSummary {
+  align-self: center;
+  margin: 0;
+  color: var(--paper);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.signalButton {
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.signalButton:hover {
+  color: var(--bone);
+  background: var(--ink);
+  border-color: var(--signal);
+}
+
+.vetoPreview {
+  grid-column: 1 / -1;
+  padding-top: 0.5rem;
+  border-top: var(--rule-thin) solid var(--bone-2);
+}
+
+.vetoPreview p {
+  margin: 0.25rem 0 0;
+  color: var(--bone);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  line-height: 1.4;
+}
+
+.planState {
+  padding: 1.25rem;
+  color: var(--ink);
+  background: var(--bone-2);
+  border-top: var(--rule-bold) solid var(--signal);
+  border-bottom: var(--rule-bold) solid var(--rule);
+}
+
+@keyframes ruleDraw {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes timelineSnap {
+  from {
+    transform: translateX(-0.5rem);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .landingHero {
+    padding: 1rem;
+  }
+
+  .landingKicker,
+  .landingHero h1,
+  .landingSubhead,
+  .landingHero .travelerChips,
+  .planError,
+  .planForm {
+    grid-column: 1 / -1;
+  }
+
+  .landingHero h1 {
+    font-size: clamp(2.75rem, 15vw, 4.5rem);
+  }
+
+  .generatedHeader,
+  .tradeoffPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .generatedHeader {
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .generatedHeader p,
+  .generatedHeader > span,
+  .generatedHeader .travelerChips,
+  .tradeoffPanelHeading,
+  .tradeoffLedger,
+  .tradeoffNarration {
+    grid-column: 1;
+  }
+
+  .generatedHeader .travelerChips {
+    justify-content: flex-start;
+  }
+
+  .studioWorkspace {
+    grid-template-columns: 1fr;
+  }
+
+  .mapWorkspace {
+    min-height: 36rem;
+    border-right: 0;
+    border-bottom: var(--rule-bold) solid var(--rule);
+  }
+
+  .agreementTranscript {
+    padding: 1rem;
+  }
+
+  .tradeoffLedgerHeader {
+    display: none;
+  }
+
+  .tradeoffLedgerRow {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .tradeoffLedgerRow > span {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .tradeoffLedgerRow > span::before {
+    color: var(--bone);
+    content: attr(data-label);
+    font-family: var(--font-jetbrains-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .tradeoffNet {
+    padding-left: 0;
+    border-left: 0;
+    border-top: var(--rule-bold) solid var(--bone);
+  }
+
+  .tradeoffNet-tension {
+    border-color: var(--signal);
+  }
+
+  .tradeoffNet-satisfied {
+    border-color: var(--verify);
+  }
+
+  .routeStop div {
+    min-width: 0;
+    max-width: 6.5rem;
+  }
+
+  .routeStop strong {
+    overflow-wrap: anywhere;
+  }
+
+  .stop-1 {
+    left: 12%;
+  }
+
+  .stop-2 {
+    left: 49%;
+  }
+
+  .stop-3 {
+    right: 12%;
+  }
+
+  .itineraryTray {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .mapControls {
+    top: 0.75rem;
+    bottom: auto;
+    left: auto;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 380px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .landingHero,
+  .generatedHeader,
+  .tradeoffPanel {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .planForm {
+    grid-template-columns: 1fr;
+  }
+
+  .planForm button {
+    width: 100%;
+  }
+
+  .travelerChips {
+    gap: 0.4rem;
+  }
+
+  .travelerChip {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .mapWorkspace {
+    min-height: 40rem;
+  }
+
+  .mapNotice {
+    right: 0.75rem;
+    bottom: 13.5rem;
+    left: 0.75rem;
+    max-width: none;
+  }
+
+  .itineraryTray {
+    gap: 0.55rem;
+    padding: 0.55rem;
+  }
+
+  .timelineDayControls {
+    gap: 0.35rem;
+  }
+
+  .activityTimelineRow {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+  }
+
+  .vetoPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .signalButton,
+  .inkButton {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
