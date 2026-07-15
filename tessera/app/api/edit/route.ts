@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Request must include a trip and edit command." }, { status: 400 });
     }
     const previousTrip = validateCommittedTrip(body.trip);
-    const demoOnly = isDemoOnly();
+    const demoOnly = isDemoOnly() || !process.env.OPENAI_API_KEY;
     const nextTrip = validateReplannedTrip(
       previousTrip,
       demoOnly ? getDemoReplan() : await negotiateTrip(createReplanRequest(previousTrip, body.command)),

@@ -1016,6 +1016,33 @@ button {
   }
 }
 
+@media (max-height: 800px) and (min-width: 761px) {
+  .landingHero {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .landingKicker {
+    margin-bottom: 0.75rem;
+  }
+
+  .landingHero h1 {
+    font-size: clamp(2.75rem, 5vw, 4.5rem);
+  }
+
+  .landingSubhead {
+    margin-top: 1rem;
+  }
+
+  .travelerChips {
+    margin-top: 1.25rem;
+  }
+
+  .planForm {
+    margin-top: 1rem;
+  }
+}
+
 @media (max-width: 760px) {
   .landingHero {
     padding: 1rem;
