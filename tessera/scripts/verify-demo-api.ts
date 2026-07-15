@@ -7,12 +7,56 @@ import { POST as createPlan } from "../app/api/plan/route";
 import { parseTrip } from "../lib/plan-validation";
 
 async function main() {
-  process.env.DEMO_ONLY = "true";
   const seed = parseTrip(seedTrip);
   const planRequest = {
     travelers: seed.travelers,
     constraints: seed.constraints,
   };
+
+  const previousDemoOnly = process.env.DEMO_ONLY;
+  const previousOpenAiApiKey = process.env.OPENAI_API_KEY;
+  delete process.env.DEMO_ONLY;
+  delete process.env.OPENAI_API_KEY;
+
+  const noKeyResponse = await createPlan(
+    new Request("http://localhost/api/plan", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-forwarded-for": "demo-no-key" },
+      body: JSON.stringify(planRequest),
+    }),
+  );
+  const noKeyPayload = await noKeyResponse.json();
+  assert.equal(noKeyResponse.status, 200);
+  assert.equal(noKeyPayload.source, "demo");
+  assert.equal(noKeyPayload.trip.version, 1);
+
+  const noKeyEditResponse = await editPlan(
+    new Request("http://localhost/api/edit", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-forwarded-for": "demo-no-key-edit" },
+      body: JSON.stringify({
+        trip: noKeyPayload.trip,
+        command: "Priya vetoes the 6am Mount Takao hike.",
+      }),
+    }),
+  );
+  const noKeyEditPayload = await noKeyEditResponse.json();
+  assert.equal(noKeyEditResponse.status, 200);
+  assert.equal(noKeyEditPayload.source, "demo");
+  assert.equal(noKeyEditPayload.trip.version, 2);
+
+  if (previousDemoOnly === undefined) {
+    delete process.env.DEMO_ONLY;
+  } else {
+    process.env.DEMO_ONLY = previousDemoOnly;
+  }
+  if (previousOpenAiApiKey === undefined) {
+    delete process.env.OPENAI_API_KEY;
+  } else {
+    process.env.OPENAI_API_KEY = previousOpenAiApiKey;
+  }
+
+  process.env.DEMO_ONLY = "true";
 
   const planResponse = await createPlan(
     new Request("http://localhost/api/plan", {

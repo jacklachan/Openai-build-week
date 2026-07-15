@@ -101,7 +101,7 @@ export async function POST(request: Request) {
   try {
     const planRequest = parsePlanRequest(await request.json());
     const key = cacheKey(planRequest);
-    const demoOnly = isDemoOnly();
+    const demoOnly = isDemoOnly() || !process.env.OPENAI_API_KEY;
     const cachedTrip = demoOnly ? undefined : getCachedPlan(key);
     const trip = demoOnly ? getDemoTrip() : cachedTrip || (await negotiateTrip(planRequest));
     const source = demoOnly ? "demo" : cachedTrip ? "cache" : "live";
