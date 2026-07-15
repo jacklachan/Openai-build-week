@@ -8,10 +8,11 @@ COPY package.json package-lock.json ./
 RUN npm install --ignore-scripts --no-audit --no-fund
 
 FROM base AS build
+ARG NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY npm run build
 
 FROM base AS runtime
 WORKDIR /app
