@@ -22,13 +22,14 @@
 4. The first full UI run exposed one stale assertion in `tests/evidence-components.test.ts`: it expected `signalButton` for the previewed `Vetoed` state. Updated it to the binding `inkButton` requirement, then reran the full suite successfully.
 5. The standalone TypeScript rail then identified an inherited dotAll (`s`) regex flag in `tests/landing-hero.test.ts` that is invalid for the project's ES2017 target. The assertion already uses `[^}]` to span the CSS declaration block, so the compatibility-only repair removed the redundant flag while preserving the test. The focused landing test and standalone typecheck both passed afterward.
 6. Independent review identified that the no-candidate test did not directly exercise the `TripStudio` preview guard. Added `getVetoPreviewForTrip` as the small selector used by `TripStudio`, with a no-`mount-takao` assertion. RED: the focused suite failed because the selector did not exist. GREEN: it passed after the selector returned `undefined` without a matching activity.
+7. Reviewer P1 found that `.timelineActivity:hover` (specificity 0,2,0) overrode the lower-specificity tension/satisfied tone blocks. Added a focused interaction assertion first. RED: the focused suite failed because no tone-specific hover/selected selector existed. GREEN: two 0,3,0 overrides preserve ink text plus the signal/verify fill and border for tension/satisfied activities; neutral activities retain the standard ink inversion.
 
 ## Verification
 
 | Check | Result |
 | --- | --- |
-| `npx tsx --test tests/task5-repairs.test.ts` | Pass — 5 tests, 0 failures |
-| `npm run test:ui` | Pass — 26 tests, 0 failures |
+| `npx tsx --test tests/task5-repairs.test.ts` | Pass — 6 tests, 0 failures |
+| `npm run test:ui` | Pass — 27 tests, 0 failures |
 | `npm run lint` | Pass |
 | `npx tsc --noEmit` | Pass |
 | `npm run build` | Pass — production compilation, Next TypeScript phase, and static generation completed |

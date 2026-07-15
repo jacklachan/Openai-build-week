@@ -769,6 +769,20 @@ button {
   border-color: var(--ink);
 }
 
+.timelineActivity:hover.activityTone-tension,
+.timelineActivity-selected.activityTone-tension {
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.timelineActivity:hover.activityTone-satisfied,
+.timelineActivity-selected.activityTone-satisfied {
+  color: var(--ink);
+  background: var(--verify);
+  border-color: var(--verify);
+}
+
 .rationalePanel {
   position: relative;
   margin-top: 0.25rem;

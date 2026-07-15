@@ -122,6 +122,25 @@ test("uses left-edge traveler semantics and flat activity tone blocks", async ()
   assert.match(generationRow, /animation-delay: calc\(var\(--timeline-index\) \* 60ms\)/);
 });
 
+test("keeps tension and satisfied activity blocks semantic when hovered or selected", async () => {
+  const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const hoveredTension = cssBlock(
+    stylesheet,
+    ".timelineActivity:hover.activityTone-tension,\n.timelineActivity-selected.activityTone-tension",
+  );
+  const hoveredSatisfied = cssBlock(
+    stylesheet,
+    ".timelineActivity:hover.activityTone-satisfied,\n.timelineActivity-selected.activityTone-satisfied",
+  );
+
+  assert.match(hoveredTension, /color: var\(--ink\)/);
+  assert.match(hoveredTension, /background: var\(--signal\)/);
+  assert.match(hoveredTension, /border-color: var\(--signal\)/);
+  assert.match(hoveredSatisfied, /color: var\(--ink\)/);
+  assert.match(hoveredSatisfied, /background: var\(--verify\)/);
+  assert.match(hoveredSatisfied, /border-color: var\(--verify\)/);
+});
+
 test("keeps the landing button and disabled controls legible while preserving map route weights", async () => {
   const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const formButton = cssBlock(stylesheet, ".planForm button");
