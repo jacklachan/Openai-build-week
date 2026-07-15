@@ -1,0 +1,68 @@
+import assert from "node:assert/strict";
+
+import seedTrip from "../data/seed-demo-trip.json";
+import { POST as editPlan } from "../app/api/edit/route";
+import { GET as getDemo } from "../app/api/demo/route";
+import { POST as createPlan } from "../app/api/plan/route";
+import { parseTrip } from "../lib/plan-validation";
+
+async function main() {
+  process.env.DEMO_ONLY = "true";
+  const seed = parseTrip(seedTrip);
+  const planRequest = {
+    travelers: seed.travelers,
+    constraints: seed.constraints,
+  };
+
+  const planResponse = await createPlan(
+    new Request("http://localhost/api/plan", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-forwarded-for": "demo-plan" },
+      body: JSON.stringify(planRequest),
+    }),
+  );
+  const planPayload = await planResponse.json();
+  assert.equal(planResponse.status, 200);
+  assert.equal(planPayload.source, "demo");
+  assert.equal(planPayload.trip.version, 1);
+
+  const sseResponse = await createPlan(
+    new Request("http://localhost/api/plan", {
+      method: "POST",
+      headers: {
+        accept: "text/event-stream",
+        "content-type": "application/json",
+        "x-forwarded-for": "demo-sse",
+      },
+      body: JSON.stringify(planRequest),
+    }),
+  );
+  assert.match(sseResponse.headers.get("content-type") || "", /text\/event-stream/);
+  assert.match(await sseResponse.text(), /"source":"demo"/);
+
+  const editResponse = await editPlan(
+    new Request("http://localhost/api/edit", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-forwarded-for": "demo-edit" },
+      body: JSON.stringify({
+        trip: planPayload.trip,
+        command: "Priya vetoes the 6am Mount Takao hike.",
+      }),
+    }),
+  );
+  const editPayload = await editResponse.json();
+  assert.equal(editResponse.status, 200);
+  assert.equal(editPayload.source, "demo");
+  assert.equal(editPayload.trip.version, 2);
+  assert.equal(editPayload.diff.previousVersion, 1);
+  assert.equal(editPayload.diff.nextVersion, 2);
+
+  const demoResponse = await getDemo(new Request("http://localhost/api/demo?version=2"));
+  const demoPayload = await demoResponse.json();
+  assert.equal(demoResponse.status, 200);
+  assert.equal(demoPayload.trip.version, 2);
+
+  console.log("Demo plan, SSE, veto, and versioned demo endpoint passed without API usage.");
+}
+
+void main();

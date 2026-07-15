@@ -55,6 +55,10 @@ To enable live planning later, store `OPENAI_API_KEY` in Secret Manager, grant `
 
 The UI can use the API immediately; all JSON is validated on the server.
 
+### Load the no-cost demo
+
+`GET /api/demo` returns the initial Tokyo agreement. `GET /api/demo?version=2` returns the vetted post-veto revision. Both work without any environment variables or paid API calls.
+
 ### Create a plan
 
 `POST /api/plan`

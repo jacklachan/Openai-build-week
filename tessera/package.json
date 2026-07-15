@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run validate:seed && npm run verify:orchestrator && npm run verify:replan && npm run verify:safeguards",
+    "test": "npm run validate:seed && npm run verify:orchestrator && npm run verify:replan && npm run verify:safeguards && npm run verify:demo-api",
     "validate:seed": "node scripts/validate-seed.mjs",
     "verify:orchestrator": "tsx scripts/verify-orchestrator.ts",
     "verify:replan": "tsx scripts/verify-replan.ts",
     "verify:safeguards": "tsx scripts/verify-safeguards.ts",
+    "verify:demo-api": "tsx scripts/verify-demo-api.ts",
     "test:ui": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
