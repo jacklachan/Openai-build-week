@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type CSSProperties, type FormEvent } from "react";
 import { AtlasMotion } from "./atlas-motion";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
@@ -47,6 +47,30 @@ export function getPlanSelection(trip: Trip) {
     activityId: Array.isArray(firstDay?.activities) ? firstDay.activities[0]?.id ?? null : null,
     day: firstDay?.day ?? 1,
   };
+}
+
+export function GenerationTimeline({ days }: { days: number }) {
+  return (
+    <ol className="generationTimeline" aria-label="Generating itinerary days">
+      {Array.from({ length: days }, (_, index) => (
+        <li
+          className="generationTimelineRow"
+          key={`generation-day-${index + 1}`}
+          style={{ "--timeline-index": index } as CSSProperties}
+        >
+          {`D${String(index + 1).padStart(2, "0")}`}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+export function getVetoPreviewForTrip(trip: Trip) {
+  const vetoActivity = trip.days
+    .flatMap((day) => day.activities)
+    .find((activity) => activity.id === "mount-takao");
+
+  return vetoActivity ? getVetoPreview(trip) : undefined;
 }
 
 function RouteOverlay({
@@ -109,7 +133,7 @@ export function TripStudio({ trip }: TripStudioProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const canShowWorkspace = phase === "ready" && hasPlanningWorkspace(activeTrip);
-  const vetoPreview = canShowWorkspace ? getVetoPreview(activeTrip) : undefined;
+  const vetoPreview = canShowWorkspace ? getVetoPreviewForTrip(activeTrip) : undefined;
 
   async function requestPlan() {
     setPhase("generating");
@@ -170,6 +194,7 @@ export function TripStudio({ trip }: TripStudioProps) {
             Everyone wants something different. Get a plan that says who gave up what.
           </p>
           <TravelerChips phase={isGenerating ? "generating" : "landing"} trip={trip} />
+          {isGenerating ? <GenerationTimeline days={activeTrip.constraints.days} /> : null}
           {phase === "error" ? (
             <p className="planError" role="alert">
               PLAN FAILED // {formatPlanError(errorMessage)}. RETRY.
@@ -208,7 +233,7 @@ export function TripStudio({ trip }: TripStudioProps) {
       />
 
       <section className="planningWorkspace" aria-label="Generated planning workspace">
-        {canShowWorkspace && vetoPreview ? (
+        {canShowWorkspace ? (
           <div className="studioWorkspace">
             <section className="mapWorkspace" aria-label="Tokyo itinerary map">
               <TripMap />
@@ -237,9 +262,9 @@ export function TripStudio({ trip }: TripStudioProps) {
             <GroupAgreement
               agreement={getAgreementEntries(activeTrip)}
               preview={vetoPreview}
-              showPreview={showPreview}
+              showPreview={vetoPreview ? showPreview : false}
               trip={activeTrip}
-              onTogglePreview={() => setShowPreview((visible) => !visible)}
+              onTogglePreview={vetoPreview ? () => setShowPreview((visible) => !visible) : undefined}
             />
           </div>
         ) : (

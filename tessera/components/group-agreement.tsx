@@ -4,10 +4,10 @@ import { getBudgetState } from "./presentation";
 
 interface GroupAgreementProps {
   agreement: AgreementEntry[];
-  preview: VetoPreview;
-  showPreview: boolean;
+  preview?: VetoPreview;
+  showPreview?: boolean;
   trip: Trip;
-  onTogglePreview: () => void;
+  onTogglePreview?: () => void;
 }
 
 function formatCurrency(value: number, currency: string) {
@@ -28,6 +28,13 @@ export function GroupAgreement({
   const budgetState = getBudgetState(trip.budget);
   const budgetCeiling = trip.budget.ceiling;
   const currency = trip.constraints.currency;
+  const vetoDay = trip.days.find((day) =>
+    day.activities.some((activity) => activity.id === "mount-takao"),
+  )?.day;
+  const veto =
+    preview && vetoDay !== undefined && onTogglePreview
+      ? { day: vetoDay, onTogglePreview, preview }
+      : undefined;
 
   return (
     <aside className="agreementTranscript" aria-labelledby="agreement-title">
@@ -73,27 +80,33 @@ export function GroupAgreement({
         )}
       </section>
 
-      <section className="vetoPanel" aria-live="polite">
-        <p className="vetoLabel">VETO // DAY 02</p>
-        <p className="vetoSummary">
-          {showPreview ? "Vetoed // later start proposed" : "Preview a later start proposal"}
-        </p>
-        <button className="signalButton" type="button" onClick={onTogglePreview}>
-          {showPreview ? "Vetoed" : "Veto"}
-        </button>
-        {showPreview ? (
-          <div className="vetoPreview">
-            <p>
-              {`BEFORE // ${preview.removedActivity} // `}
-              <data value={preview.beforeTime}>{preview.beforeTime}</data>
-            </p>
-            <p>
-              {`PROPOSED // ${preview.replacement} // `}
-              <data value={preview.afterTime}>{preview.afterTime}</data>
-            </p>
-          </div>
-        ) : null}
-      </section>
+      {veto ? (
+        <section className="vetoPanel" aria-live="polite">
+          <p className="vetoLabel">{`VETO // DAY ${String(veto.day).padStart(2, "0")}`}</p>
+          <p className="vetoSummary">
+            {showPreview ? "Vetoed // later start proposed" : "Preview a later start proposal"}
+          </p>
+          <button
+            className={showPreview ? "inkButton" : "signalButton"}
+            type="button"
+            onClick={veto.onTogglePreview}
+          >
+            {showPreview ? "Vetoed" : "Veto"}
+          </button>
+          {showPreview ? (
+            <div className="vetoPreview">
+              <p>
+                {`BEFORE // ${veto.preview.removedActivity} // `}
+                <data value={veto.preview.beforeTime}>{veto.preview.beforeTime}</data>
+              </p>
+              <p>
+                {`PROPOSED // ${veto.preview.replacement} // `}
+                <data value={veto.preview.afterTime}>{veto.preview.afterTime}</data>
+              </p>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
     </aside>
   );
 }

@@ -173,32 +173,16 @@ button {
 }
 
 .travelerChip-tension {
-  background: var(--signal);
-  border-color: var(--signal);
   border-left-color: var(--signal);
 }
 
 .travelerChip-satisfied {
-  background: var(--verify);
-  border-color: var(--verify);
   border-left-color: var(--verify);
 }
 
 .travelerChip-neutral {
   border-color: var(--rule);
   border-left-color: var(--rule);
-}
-
-.travelerChip-tension,
-.travelerChip-satisfied {
-  color: var(--ink);
-}
-
-.travelerChip-tension span,
-.travelerChip-tension small,
-.travelerChip-satisfied span,
-.travelerChip-satisfied small {
-  color: var(--ink);
 }
 
 .planError {
@@ -239,14 +223,9 @@ button {
   border-bottom: var(--rule-thin) solid var(--bone);
 }
 
-.planForm button {
-  color: var(--ink);
-  background: var(--bone);
-  border-color: var(--bone);
-}
-
 .planForm button,
-.signalButton {
+.signalButton,
+.inkButton {
   padding: 0.8rem 1rem;
   color: var(--bone);
   background: var(--ink);
@@ -259,6 +238,12 @@ button {
   text-transform: uppercase;
 }
 
+.planForm button {
+  color: var(--ink);
+  background: var(--bone);
+  border-color: var(--bone);
+}
+
 .planForm button:hover:not(:disabled) {
   color: var(--bone);
   background: var(--ink);
@@ -268,9 +253,9 @@ button {
 .planForm button:disabled,
 .planForm input:disabled {
   cursor: not-allowed;
-  color: var(--ink-3);
+  color: var(--ink);
   background: var(--bone-2);
-  border-color: var(--ink-3);
+  border-color: var(--ink);
 }
 
 .studioShell-generating .landingHero {
@@ -303,6 +288,29 @@ button {
   color: var(--ink);
   background: var(--paper);
   border-color: var(--paper);
+}
+
+.generationTimeline {
+  display: grid;
+  grid-column: 2 / span 8;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  gap: 0.5rem;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  list-style: none;
+}
+
+.generationTimelineRow {
+  padding: 0.65rem 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  border-left: var(--rule-bold) solid var(--data);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  animation: timelineSnap 60ms steps(2, end) backwards;
+  animation-delay: calc(var(--timeline-index) * 60ms);
 }
 
 .generatedHeader {
@@ -341,32 +349,25 @@ button {
 .generatedHeader .travelerChip {
   min-width: 0;
   padding: 0.4rem 0.5rem;
-  background: var(--ink);
+  background: var(--bone);
 }
 
 .generatedHeader .travelerChip span {
-  color: var(--bone);
+  color: var(--ink);
 }
 
 .generatedHeader .travelerChip small {
-  color: var(--paper);
+  color: var(--ink-2);
 }
 
 .generatedHeader .travelerChip-tension {
-  background: var(--signal);
-  border-color: var(--signal);
+  border-color: var(--rule);
+  border-left-color: var(--signal);
 }
 
 .generatedHeader .travelerChip-satisfied {
-  background: var(--verify);
-  border-color: var(--verify);
-}
-
-.generatedHeader .travelerChip-tension span,
-.generatedHeader .travelerChip-tension small,
-.generatedHeader .travelerChip-satisfied span,
-.generatedHeader .travelerChip-satisfied small {
-  color: var(--ink);
+  border-color: var(--rule);
+  border-left-color: var(--verify);
 }
 
 .tradeoffPanel {
@@ -560,11 +561,12 @@ button {
 .inkRoute {
   fill: none;
   stroke: var(--ink);
-  stroke-width: 3;
+  stroke-width: 2;
 }
 
 .dataSelectedRoute {
   stroke: var(--data);
+  stroke-width: 3;
 }
 
 .routeStop {
@@ -716,7 +718,7 @@ button {
   grid-template-columns: 4.5rem minmax(0, 1fr);
   gap: 0.5rem;
   align-items: stretch;
-  animation: timelineSnap 120ms steps(2, end) backwards;
+  animation: timelineSnap 60ms steps(2, end) backwards;
   animation-delay: calc(var(--timeline-index) * 60ms);
 }
 
@@ -750,15 +752,21 @@ button {
 }
 
 .activityTone-tension {
-  border-left-color: var(--signal);
+  color: var(--ink);
+  background: var(--signal);
+  border-color: var(--signal);
 }
 
 .activityTone-satisfied {
-  border-left-color: var(--verify);
+  color: var(--ink);
+  background: var(--verify);
+  border-color: var(--verify);
 }
 
 .activityTone-neutral {
-  border-left-color: var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--ink);
 }
 
 .rationalePanel {
@@ -1179,7 +1187,8 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .signalButton {
+  .signalButton,
+  .inkButton {
     width: 100%;
   }
 }

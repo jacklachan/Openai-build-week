@@ -28,7 +28,7 @@ test("renders contract-derived transcript, budget, and Veto preview state", () =
   assert.match(html, /agreementTranscript/);
   assert.doesNotMatch(html, /avatar/);
   assert.match(html, /SPENT \/\/ CEILING \/\/ DELTA/);
-  assert.match(html, /signalButton/);
+  assert.match(html, /inkButton/);
   assert.match(html, />Vetoed</);
   assert.match(html, /Mount Takao summit trail/);
   assert.match(html, /10:30/);

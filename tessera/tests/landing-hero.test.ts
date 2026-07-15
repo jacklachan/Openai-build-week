@@ -19,5 +19,5 @@ test("renders the approved landing subhead", () => {
 test("uses an ink ground for the base landing hero", async () => {
   const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(stylesheet, /^\.landingHero\s*\{[^}]*background: var\(--ink\);/ms);
+  assert.match(stylesheet, /^\.landingHero\s*\{[^}]*background: var\(--ink\);/m);
 });
