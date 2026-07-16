@@ -355,12 +355,6 @@ export function TripStudio() {
       </section>
       ) : null}
 
-      <TradeoffPanel
-        agreement={getAgreementEntries(activeTrip)}
-        tradeoffs={activeTrip.tradeoffs}
-        trip={activeTrip}
-      />
-      {replanAudit ? <ReplanAudit currency={activeTrip.constraints.currency} diff={replanAudit} /> : null}
       {errorMessage ? (
         <p className="replanError" role="alert">
           {formatPlanError(errorMessage)}. Try the demo again.
@@ -404,6 +398,12 @@ export function TripStudio() {
           </p>
         )}
       </section>
+      {replanAudit ? <ReplanAudit currency={activeTrip.constraints.currency} diff={replanAudit} /> : null}
+      <TradeoffPanel
+        agreement={getAgreementEntries(activeTrip)}
+        tradeoffs={activeTrip.tradeoffs}
+        trip={activeTrip}
+      />
     </main>
   );
 }

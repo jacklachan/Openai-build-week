@@ -1392,3 +1392,328 @@ button {
     transition: none !important;
   }
 }
+
+/* Map-first Tokyo studio: the generated terrain is the product's visual thesis. */
+.studioShell-ready {
+  background: #07111d;
+}
+
+.generatedHeader {
+  min-height: 3.75rem;
+  padding: 0.65rem clamp(1rem, 3vw, 3.5rem);
+  background: #07111d;
+  border-top: 0;
+  border-bottom: 1px solid rgba(184, 214, 244, 0.22);
+}
+
+.generatedHeader p,
+.generatedHeader > span {
+  color: #d9e9ff;
+}
+
+.generatedHeader > span {
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.generatedHeader .travelerChip {
+  color: #d9e9ff;
+  background: rgba(17, 38, 62, 0.8);
+  border-color: rgba(184, 214, 244, 0.28);
+}
+
+.generatedHeader .travelerChip span,
+.generatedHeader .travelerChip small {
+  color: #d9e9ff;
+}
+
+.judgeGuide {
+  grid-template-columns: minmax(12rem, 1fr) minmax(18rem, 1.3fr) auto;
+  padding: 0.85rem clamp(1rem, 3vw, 3.5rem);
+  color: #d9e9ff;
+  background: linear-gradient(100deg, #101e36 0%, #162d50 58%, #0d1727 100%);
+  border-bottom: 1px solid rgba(184, 214, 244, 0.22);
+}
+
+.judgeGuide h2 {
+  color: #ffffff;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+}
+
+.judgeGuide p,
+.judgeGuide li {
+  color: #a8c5e8;
+}
+
+.judgeGuide .judgeStep-active {
+  color: #07111d;
+  background: #c0fe04;
+  border-color: #c0fe04;
+}
+
+.judgeGuide .judgeStep-complete {
+  color: #d9e9ff;
+  border-color: rgba(184, 214, 244, 0.42);
+}
+
+.judgeAction {
+  color: #07111d;
+  background: #c0fe04;
+  border-color: #c0fe04;
+}
+
+.judgeAction:hover:not(:disabled) {
+  color: #c0fe04;
+  background: #07111d;
+}
+
+.studioWorkspace {
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.36fr);
+  min-height: clamp(38rem, 72vh, 55rem);
+}
+
+.mapWorkspace {
+  min-height: clamp(38rem, 72vh, 55rem);
+  background: #07111d;
+  border-right: 1px solid rgba(184, 214, 244, 0.22);
+}
+
+.mapScene,
+.mapCanvas {
+  background: #07111d;
+}
+
+.mapCanvas-hidden {
+  display: none;
+}
+
+.terrainMap3d {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #07111d;
+}
+
+.terrainMap3d::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, transparent 30%, rgba(2, 8, 16, 0.52) 100%);
+  pointer-events: none;
+  content: "";
+}
+
+.terrainSvg {
+  width: 100%;
+  height: 100%;
+  min-width: 48rem;
+  transform: scale(1.04);
+  transform-origin: center;
+}
+
+.terrainGround {
+  fill: url(#terrain-ground);
+}
+
+.terrainGrid {
+  fill: url(#terrain-grid);
+}
+
+.terrainRiver {
+  fill: none;
+  stroke: #315e8a;
+  stroke-linecap: round;
+  stroke-width: 42;
+  opacity: 0.55;
+}
+
+.terrainRoad {
+  fill: none;
+  stroke: #5d7b9d;
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  stroke-width: 7;
+  opacity: 0.55;
+}
+
+.terrainRoad-major {
+  stroke: #8aa8c8;
+  stroke-width: 12;
+}
+
+.terrainBuildingSide,
+.terrainBuildingFront,
+.terrainBuildingRight,
+.terrainBuildingRoof {
+  stroke: #3f5f82;
+  stroke-width: 1;
+}
+
+.terrainBuildingSide { fill: #18314c; }
+.terrainBuildingFront { fill: #1d4162; }
+.terrainBuildingRight { fill: #132a42; }
+.terrainBuildingRoof { fill: #315b7f; }
+.terrainBuildingLight { fill: #c0fe04; filter: url(#terrain-glow); }
+
+.terrainRouteGlow,
+.terrainRoute {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.terrainRouteGlow {
+  stroke: #5200ff;
+  stroke-width: 17;
+  opacity: 0.42;
+  filter: url(#terrain-glow);
+}
+
+.terrainRoute {
+  stroke: #c0fe04;
+  stroke-dasharray: 3 10;
+  stroke-width: 5;
+}
+
+.terrainStopHalo {
+  fill: #5200ff;
+  opacity: 0.24;
+  filter: url(#terrain-glow);
+}
+
+.terrainStopCore {
+  fill: #07111d;
+  stroke: #c0fe04;
+  stroke-width: 3;
+}
+
+.terrainStop-selected .terrainStopHalo { fill: #c0fe04; opacity: 0.42; }
+.terrainStop-selected .terrainStopCore { fill: #c0fe04; stroke: #ffffff; }
+
+.terrainStopNumber {
+  fill: #ffffff;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.terrainStop-selected .terrainStopNumber { fill: #07111d; }
+
+.terrainStopLabel {
+  width: max-content;
+  max-width: 10rem;
+  padding: 0.28rem 0.4rem;
+  color: #eaf4ff;
+  background: rgba(7, 17, 29, 0.86);
+  border: 1px solid rgba(192, 254, 4, 0.45);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.terrainHud {
+  position: absolute;
+  z-index: 3;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  color: #a8c5e8;
+  background: rgba(7, 17, 29, 0.74);
+  border-left: 3px solid #c0fe04;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.terrainHud strong {
+  color: #ffffff;
+  font-family: var(--font-archivo);
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+}
+
+.terrainCaption {
+  position: absolute;
+  z-index: 3;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: 19rem;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  color: #a8c5e8;
+  background: rgba(7, 17, 29, 0.8);
+  border: 1px solid rgba(184, 214, 244, 0.2);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  line-height: 1.45;
+}
+
+.itineraryTray {
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  max-width: 35rem;
+  color: #eaf4ff;
+  background: rgba(7, 17, 29, 0.86);
+  border: 1px solid rgba(184, 214, 244, 0.3);
+  box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px);
+}
+
+.timelineDayControls { border-color: rgba(184, 214, 244, 0.24); }
+.timelineDay { color: #a8c5e8; background: transparent; border-color: rgba(184, 214, 244, 0.3); }
+.timelineDay:hover, .timelineDay-selected { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+.timelineHour { color: #a8c5e8; }
+.timelineActivity { color: #eaf4ff; background: rgba(17, 38, 62, 0.9); border-color: rgba(184, 214, 244, 0.3); }
+.activityTone-neutral { color: #eaf4ff; background: rgba(17, 38, 62, 0.9); border-color: rgba(184, 214, 244, 0.3); }
+.rationalePanel { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+.rationalePanel p { color: #07111d; }
+
+.agreementTranscript {
+  gap: 1.1rem;
+  padding: 1.5rem;
+  color: #d9e9ff;
+  background: #0b1828;
+}
+
+.transcriptHeading { border-color: #c0fe04; }
+.transcriptHeading h2, .transcriptBody, .budgetValues, .budgetValue, .vetoSummary { color: #f5f9ff; }
+.sectionKicker, .transcriptSpeaker, .budgetLabels, .vetoLabel { color: #a8c5e8; }
+.transcriptTurn, .budgetBar, .vetoPreview { border-color: rgba(184, 214, 244, 0.2); }
+.budgetTrack { background: rgba(184, 214, 244, 0.2); border-color: transparent; }
+.budgetTrack span { background: #c0fe04; }
+.vetoPanel { background: rgba(17, 38, 62, 0.78); border-color: #c0fe04; }
+.signalButton { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+.signalButton:hover { color: #c0fe04; background: #07111d; }
+
+.tradeoffPanel {
+  gap: 1.5rem;
+  padding: 3rem clamp(1rem, 5vw, 5rem);
+  background: #0b1828;
+  border-top: 1px solid rgba(184, 214, 244, 0.2);
+  border-bottom: 0;
+}
+
+.tradeoffPanelHeading { border-color: #c0fe04; }
+.tradeoffPanelHeading p, .tradeoffLedgerHeader { color: #a8c5e8; }
+.tradeoffPanelHeading h2 { color: #ffffff; }
+.tradeoffLedger { background: transparent; border-color: rgba(184, 214, 244, 0.3); }
+.tradeoffLedgerRow { color: #d9e9ff; background: transparent; border-color: rgba(184, 214, 244, 0.2); }
+.tradeoffLedgerRow > span:first-child, .tradeoffNet { color: #eaf4ff; }
+.tradeoffNarration { color: #d9e9ff; background: transparent; border-color: #c0fe04; }
+
+@media (max-width: 760px) {
+  .generatedHeader, .judgeGuide { grid-template-columns: 1fr; }
+  .generatedHeader .travelerChips { grid-column: 1; }
+  .judgeGuide { gap: 0.75rem; }
+  .studioWorkspace { grid-template-columns: 1fr; }
+  .mapWorkspace { min-height: 35rem; border-right: 0; }
+  .terrainSvg { min-width: 42rem; transform: translateX(-6rem) scale(1.04); }
+  .terrainCaption { display: none; }
+  .itineraryTray { max-width: none; }
+  .agreementTranscript { min-height: auto; }
+}

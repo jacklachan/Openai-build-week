@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { TerrainMap3D } from "./terrain-map-3d";
 import { getActiveVetoPreview, getSelectedDay, type VetoPreview } from "../lib/studio";
 import type { Activity, TransportLeg, Trip } from "../lib/types";
 
@@ -397,6 +398,11 @@ export function TripMap({ selectedActivityId, selectedDay, trip, vetoPreview }: 
   const [mapState, setMapState] = useState<MapState>(() =>
     scriptUrl ? "loading" : "missing-key",
   );
+  const showGeneratedTerrain =
+    mapState === "missing-key" ||
+    mapState === "location-error" ||
+    mapState === "partial-route" ||
+    mapState === "error";
 
   useEffect(() => {
     if (!scriptUrl) {
@@ -564,12 +570,16 @@ export function TripMap({ selectedActivityId, selectedDay, trip, vetoPreview }: 
 
   return (
     <div className="mapScene mapSurface" aria-label={`Day ${selectedDay} Trip map`}>
-      <div ref={containerRef} className="mapCanvas" />
-      {mapState === "missing-key" ? <div className="mapFallback flatMapFallback" aria-hidden="true" /> : null}
-      {mapState === "missing-key" ||
-      mapState === "location-error" ||
-      mapState === "partial-route" ||
-      mapState === "error" ? (
+      <div ref={containerRef} className={`mapCanvas${showGeneratedTerrain ? " mapCanvas-hidden" : ""}`} />
+      {showGeneratedTerrain ? (
+        <TerrainMap3D
+          activities={mapDay.activities}
+          destination={mapDay.destination}
+          selectedActivityId={selectedActivityId}
+          selectedDay={selectedDay}
+        />
+      ) : null}
+      {mapState !== "missing-key" && showGeneratedTerrain ? (
         <p className="mapNotice">{getMapFallbackMessage(mapState)}</p>
       ) : null}
       {mapState === "loading" ? <p className="mapLoading">Loading trip map…</p> : null}

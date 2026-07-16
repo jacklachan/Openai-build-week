@@ -84,7 +84,7 @@ test("renders the non-animated rule element", () => {
   assert.doesNotMatch(html, /atlasParticleField/);
 });
 
-test("renders a flat map fallback when no browser key is available", () => {
+test("renders a generated 3D itinerary terrain when no browser key is available", () => {
   const browserKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
 
@@ -100,10 +100,11 @@ test("renders a flat map fallback when no browser key is available", () => {
     );
 
     assert.match(html, /mapSurface/);
-    assert.match(html, /flatMapFallback/);
-    assert.match(html, /NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY/);
+    assert.match(html, /terrainMap3d/);
+    assert.match(html, /GENERATED TERRAIN/);
     assert.match(html, /Trip map/);
-    assert.doesNotMatch(html, /Tokyo|3D/);
+    assert.match(html, /Tokyo/);
+    assert.match(html, /3D/);
   } finally {
     if (browserKey === undefined) {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
