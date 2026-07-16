@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { TerrainMap3D } from "./terrain-map-3d";
+import { OsmItineraryMap } from "./osm-itinerary-map";
 import { getActiveVetoPreview, getSelectedDay, type VetoPreview } from "../lib/studio";
 import type { Activity, TransportLeg, Trip } from "../lib/types";
 
@@ -572,7 +572,7 @@ export function TripMap({ selectedActivityId, selectedDay, trip, vetoPreview }: 
     <div className="mapScene mapSurface" aria-label={`Day ${selectedDay} Trip map`}>
       <div ref={containerRef} className={`mapCanvas${showGeneratedTerrain ? " mapCanvas-hidden" : ""}`} />
       {showGeneratedTerrain ? (
-        <TerrainMap3D
+        <OsmItineraryMap
           activities={mapDay.activities}
           destination={mapDay.destination}
           selectedActivityId={selectedActivityId}

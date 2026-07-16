@@ -6,6 +6,7 @@ import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
+import { getOsmViewport } from "../components/osm-itinerary-map";
 import { TripMap } from "../components/trip-map";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
@@ -84,7 +85,7 @@ test("renders the non-animated rule element", () => {
   assert.doesNotMatch(html, /atlasParticleField/);
 });
 
-test("renders a generated 3D itinerary terrain when no browser key is available", () => {
+test("renders a real OpenStreetMap route when no browser key is available", () => {
   const browserKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
 
@@ -100,11 +101,12 @@ test("renders a generated 3D itinerary terrain when no browser key is available"
     );
 
     assert.match(html, /mapSurface/);
-    assert.match(html, /terrainMap3d/);
-    assert.match(html, /GENERATED TERRAIN/);
+    assert.match(html, /osmItineraryMap/);
+    assert.match(html, /LIVE STREET MAP/);
+    assert.match(html, /OpenStreetMap/);
     assert.match(html, /Trip map/);
     assert.match(html, /Tokyo/);
-    assert.match(html, /3D/);
+    assert.match(html, /DAY 01/);
   } finally {
     if (browserKey === undefined) {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
@@ -112,4 +114,13 @@ test("renders a generated 3D itinerary terrain when no browser key is available"
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY = browserKey;
     }
   }
+});
+
+test("uses only the visible nine-tile map viewport and projects known stops", () => {
+  const viewport = getOsmViewport(trip.days[0].activities);
+
+  assert.equal(viewport.tiles.length, 9);
+  assert.ok(viewport.tiles.every(({ z }) => Number.isInteger(z) && z >= 8 && z <= 13));
+  assert.equal(viewport.points.length, trip.days[0].activities.length);
+  assert.ok(viewport.points.every(({ x, y }) => Number.isFinite(x) && Number.isFinite(y)));
 });

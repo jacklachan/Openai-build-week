@@ -52,6 +52,8 @@
         {
           "id": "shinjuku-garden",
           "title": "Shinjuku Gyoen National Garden",
+          "lat": 35.6852,
+          "lng": 139.7101,
           "startTime": "11:00",
           "durationMin": 120,
           "category": "nature",
@@ -62,6 +64,8 @@
         {
           "id": "vegan-ramen",
           "title": "Vegetarian ramen lunch",
+          "lat": 35.6922,
+          "lng": 139.7007,
           "startTime": "13:30",
           "durationMin": 60,
           "category": "meal",
@@ -72,6 +76,8 @@
         {
           "id": "akihabara-night",
           "title": "Akihabara after dark",
+          "lat": 35.7023,
+          "lng": 139.7745,
           "startTime": "19:30",
           "durationMin": 150,
           "category": "anime",
@@ -99,6 +105,8 @@
         {
           "id": "mount-takao",
           "title": "Mount Takao summit trail",
+          "lat": 35.6254,
+          "lng": 139.2434,
           "startTime": "08:30",
           "durationMin": 300,
           "category": "adventure",
@@ -110,6 +118,8 @@
         {
           "id": "asakusa-culture",
           "title": "Asakusa and Senso-ji",
+          "lat": 35.7148,
+          "lng": 139.7967,
           "startTime": "15:30",
           "durationMin": 120,
           "category": "culture",
@@ -120,6 +130,8 @@
         {
           "id": "special-dinner",
           "title": "Vegetarian kaiseki dinner",
+          "lat": 35.6718,
+          "lng": 139.7659,
           "startTime": "19:00",
           "durationMin": 120,
           "category": "meal",
@@ -154,6 +166,8 @@
         {
           "id": "tsukiji-food",
           "title": "Tsukiji Outer Market breakfast",
+          "lat": 35.6654,
+          "lng": 139.7707,
           "startTime": "10:00",
           "durationMin": 90,
           "category": "food",
@@ -164,6 +178,8 @@
         {
           "id": "harajuku-shopping",
           "title": "Harajuku design and shopping walk",
+          "lat": 35.6702,
+          "lng": 139.7026,
           "startTime": "13:00",
           "durationMin": 150,
           "category": "shopping",
@@ -174,6 +190,8 @@
         {
           "id": "shibuya-sky",
           "title": "Shibuya Sky at sunset",
+          "lat": 35.658,
+          "lng": 139.7016,
           "startTime": "17:30",
           "durationMin": 90,
           "category": "city",

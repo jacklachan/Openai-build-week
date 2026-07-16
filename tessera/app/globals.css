@@ -1652,6 +1652,153 @@ button {
   line-height: 1.45;
 }
 
+.osmItineraryMap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #d5d9d1;
+}
+
+.osmTileGrid {
+  position: absolute;
+  inset: -3%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 106%;
+  height: 106%;
+  filter: saturate(0.8) contrast(1.08) brightness(0.88);
+  transform: scale(1.05);
+  transform-origin: center;
+}
+
+.osmTileGrid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.osmItineraryMap::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 17, 29, 0.32), transparent 30%, rgba(7, 17, 29, 0.2));
+  pointer-events: none;
+  content: "";
+}
+
+.osmRouteLayer {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.osmRouteGlow,
+.osmRoute {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.osmRouteGlow {
+  stroke: #5200ff;
+  stroke-width: 2.3;
+  opacity: 0.56;
+  filter: drop-shadow(0 0 0.65rem #5200ff);
+}
+
+.osmRoute {
+  stroke: #c0fe04;
+  stroke-dasharray: 0.5 1.8;
+  stroke-width: 0.65;
+}
+
+.osmStop {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 13rem;
+  transform: translate(-50%, -50%);
+}
+
+.osmStop > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #07111d;
+  background: #c0fe04;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 0.5rem 1.25rem rgba(7, 17, 29, 0.45);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.osmStop strong {
+  padding: 0.35rem 0.45rem;
+  color: #ffffff;
+  background: rgba(7, 17, 29, 0.84);
+  border: 1px solid rgba(192, 254, 4, 0.68);
+  box-shadow: 0 0.5rem 1.25rem rgba(7, 17, 29, 0.28);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.osmStop-selected > span {
+  color: #ffffff;
+  background: #5200ff;
+  box-shadow: 0 0 0 0.35rem rgba(82, 0, 255, 0.24), 0 0.5rem 1.25rem rgba(7, 17, 29, 0.45);
+}
+
+.osmStop-selected strong { border-color: #ffffff; }
+
+.osmMapHud {
+  position: absolute;
+  z-index: 5;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  color: #a8c5e8;
+  background: rgba(7, 17, 29, 0.82);
+  border-left: 3px solid #c0fe04;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.osmMapHud strong {
+  color: #ffffff;
+  font-family: var(--font-archivo);
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+}
+
+.osmAttribution {
+  position: absolute;
+  z-index: 5;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  margin: 0;
+  padding: 0.2rem 0.35rem;
+  color: #ffffff;
+  background: rgba(7, 17, 29, 0.74);
+  font-size: 0.65rem;
+}
+
+.osmAttribution a { color: #c0fe04; }
+
 .itineraryTray {
   right: 1rem;
   bottom: 1rem;
@@ -1714,6 +1861,8 @@ button {
   .mapWorkspace { min-height: 35rem; border-right: 0; }
   .terrainSvg { min-width: 42rem; transform: translateX(-6rem) scale(1.04); }
   .terrainCaption { display: none; }
+  .osmStop { max-width: 9rem; }
+  .osmStop strong { font-size: 0.55rem; }
   .itineraryTray { max-width: none; }
   .agreementTranscript { min-height: auto; }
 }

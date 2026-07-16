@@ -33,6 +33,8 @@ export function getDemoReplan(): Trip {
   day.activities.unshift({
     id: "teamlab-planets",
     title: "teamLab Planets",
+    lat: 35.6491,
+    lng: 139.789,
     category: "city",
     startTime: "11:00",
     durationMin: 120,

@@ -97,6 +97,8 @@ test("uses only a complete finite Veto replacement coordinate pair", () => {
             {
               ...sourceDay.activities[1]!,
               id: "replacement-stop",
+              lat: undefined,
+              lng: undefined,
               title: preview.replacement,
               ...coordinates,
             },
