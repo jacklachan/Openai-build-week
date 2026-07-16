@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { cacheKey, getCachedPlan, getDemoTrip, isDemoOnly, setCachedPlan } from "@/lib/cache";
-import { negotiateTrip, type PlanRequest } from "@/lib/openai";
+import { negotiateTrip, type PlanRequest } from "@/lib/gemini";
 import { checkRateLimit, clientKey } from "@/lib/rate-limit";
 import type { Interest, TravelerProfile, TripConstraints } from "@/lib/types";
 
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
   try {
     const planRequest = parsePlanRequest(await request.json());
     const key = cacheKey(planRequest);
-    const demoOnly = isDemoOnly() || !process.env.OPENAI_API_KEY;
+    const demoOnly = isDemoOnly() || !process.env.GEMINI_API_KEY;
     const cachedTrip = demoOnly ? undefined : getCachedPlan(key);
     const trip = demoOnly ? getDemoTrip() : cachedTrip || (await negotiateTrip(planRequest));
     const source = demoOnly ? "demo" : cachedTrip ? "cache" : "live";

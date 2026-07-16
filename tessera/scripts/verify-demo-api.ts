@@ -14,9 +14,9 @@ async function main() {
   };
 
   const previousDemoOnly = process.env.DEMO_ONLY;
-  const previousOpenAiApiKey = process.env.OPENAI_API_KEY;
+  const previousGeminiApiKey = process.env.GEMINI_API_KEY;
   delete process.env.DEMO_ONLY;
-  delete process.env.OPENAI_API_KEY;
+  delete process.env.GEMINI_API_KEY;
 
   const noKeyResponse = await createPlan(
     new Request("http://localhost/api/plan", {
@@ -50,10 +50,10 @@ async function main() {
   } else {
     process.env.DEMO_ONLY = previousDemoOnly;
   }
-  if (previousOpenAiApiKey === undefined) {
-    delete process.env.OPENAI_API_KEY;
+  if (previousGeminiApiKey === undefined) {
+    delete process.env.GEMINI_API_KEY;
   } else {
-    process.env.OPENAI_API_KEY = previousOpenAiApiKey;
+    process.env.GEMINI_API_KEY = previousGeminiApiKey;
   }
 
   process.env.DEMO_ONLY = "true";

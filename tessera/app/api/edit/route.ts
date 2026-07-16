@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getDemoReplan, isDemoOnly } from "@/lib/cache";
-import { negotiateTrip } from "@/lib/openai";
+import { negotiateTrip } from "@/lib/gemini";
 import { validateCommittedTrip } from "@/lib/plan-validation";
 import { checkRateLimit, clientKey } from "@/lib/rate-limit";
 import { createReplanRequest, diffTrips, validateReplannedTrip } from "@/lib/replan";
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Request must include a trip and edit command." }, { status: 400 });
     }
     const previousTrip = validateCommittedTrip(body.trip);
-    const demoOnly = isDemoOnly() || !process.env.OPENAI_API_KEY;
+    const demoOnly = isDemoOnly() || !process.env.GEMINI_API_KEY;
     const nextTrip = validateReplannedTrip(
       previousTrip,
       demoOnly ? getDemoReplan() : await negotiateTrip(createReplanRequest(previousTrip, body.command)),
