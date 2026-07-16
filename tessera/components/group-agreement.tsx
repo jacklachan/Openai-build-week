@@ -7,6 +7,8 @@ interface GroupAgreementProps {
   preview?: VetoPreview;
   showPreview?: boolean;
   trip: Trip;
+  isApplyingVeto?: boolean;
+  onApplyVeto?: () => void;
   onTogglePreview?: () => void;
 }
 
@@ -23,17 +25,16 @@ export function GroupAgreement({
   preview,
   showPreview,
   trip,
+  isApplyingVeto = false,
+  onApplyVeto,
   onTogglePreview,
 }: GroupAgreementProps) {
   const budgetState = getBudgetState(trip.budget);
   const budgetCeiling = trip.budget.ceiling;
   const currency = trip.constraints.currency;
-  const vetoDay = trip.days.find((day) =>
-    day.activities.some((activity) => activity.id === "mount-takao"),
-  )?.day;
   const veto =
-    preview && vetoDay !== undefined && onTogglePreview
-      ? { day: vetoDay, onTogglePreview, preview }
+    preview && onTogglePreview
+      ? { day: preview.day, onTogglePreview, preview }
       : undefined;
 
   return (
@@ -104,6 +105,16 @@ export function GroupAgreement({
                 <data value={veto.preview.afterTime}>{veto.preview.afterTime}</data>
               </p>
             </div>
+          ) : null}
+          {showPreview && onApplyVeto ? (
+            <button
+              className="signalButton"
+              disabled={isApplyingVeto}
+              onClick={onApplyVeto}
+              type="button"
+            >
+              {isApplyingVeto ? "Re-negotiating" : "Apply veto"}
+            </button>
           ) : null}
         </section>
       ) : null}

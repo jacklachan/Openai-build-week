@@ -1,18 +1,33 @@
 :root {
-  --bone: #E9E5DA;
-  --bone-2: #DDD8C9;
-  --paper: #F4F1E8;
-  --ink: #121211;
-  --ink-2: #3A3934;
-  --ink-3: #6E6C63;
-  --signal: #FF4A17;
-  --verify: #00A88F;
-  --data: #2E2AE8;
-  --warn: #D9A404;
-  --rule: #121211;
-  --rule-thin: 1px;
-  --rule-bold: 3px;
+  --purple: #5200ff;
+  --neon: #c0fe04;
+  --background: #ffffff;
+  --surface: #efefea;
+  --surface-raised: #f7f7f3;
+  --foreground: #000000;
+  --foreground-muted: #424242;
+  --foreground-subtle: #6a6a6a;
+  --interactive: var(--purple);
+  --focus: var(--purple);
+  --warning: #ff4a17;
+  --verification: #008f79;
+  --caution: #d9a404;
+  --chart-1: var(--purple);
+  --chart-2: var(--neon);
+  --border: var(--foreground);
+  --border-thin: 1px;
+  --border-bold: 3px;
   --radius: 0;
+}
+
+html[data-theme="dark"] {
+  --background: #000000;
+  --surface: #171717;
+  --surface-raised: #242424;
+  --foreground: #ffffff;
+  --foreground-muted: #c4c4c4;
+  --foreground-subtle: #949494;
+  --border: var(--foreground);
 }
 
 * {
@@ -27,8 +42,8 @@ body {
 body {
   min-width: 0;
   margin: 0;
-  background: var(--bone);
-  color: var(--ink);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-archivo);
 }
 
@@ -41,8 +56,25 @@ button {
   cursor: pointer;
 }
 
+.themeToggle {
+  position: fixed;
+  z-index: 20;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.45rem 0.6rem;
+  color: var(--foreground);
+  background: var(--background);
+  border: var(--border-thin) solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 :where(button, input, select, textarea, a):focus-visible {
-  outline: 2px solid var(--data);
+  outline: 2px solid var(--interactive);
   outline-offset: 2px;
   border-radius: 0;
 }
@@ -63,13 +95,13 @@ button {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--bone);
+  background: var(--background);
 }
 
 .studioShell-ready {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  background: var(--bone);
+  background: var(--background);
 }
 
 .landingHero {
@@ -78,8 +110,8 @@ button {
   align-content: center;
   min-height: 100vh;
   padding: 4rem clamp(1rem, 4vw, 4rem);
-  background: var(--ink);
-  border-top: var(--rule-bold) solid var(--data);
+  background: var(--foreground);
+  border-top: var(--border-bold) solid var(--interactive);
 }
 
 .landingKicker,
@@ -94,7 +126,7 @@ button {
 .mapLoading,
 .planState {
   margin: 0;
-  color: var(--ink-2);
+  color: var(--foreground-muted);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -114,13 +146,13 @@ button {
 
 .landingKicker {
   margin-bottom: 1.5rem;
-  color: var(--bone);
+  color: var(--background);
 }
 
 .landingHero h1 {
   max-width: 11ch;
   margin: 0;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: clamp(2.75rem, 7vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.075em;
@@ -131,7 +163,7 @@ button {
 .landingSubhead {
   max-width: 44rem;
   margin: 1.5rem 0 0;
-  color: var(--bone);
+  color: var(--background);
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.4;
 }
@@ -150,14 +182,14 @@ button {
   flex: 1 1 12rem;
   min-width: min(100%, 10rem);
   padding: 0.65rem 0.75rem;
-  color: var(--ink);
-  background: var(--bone);
-  border: var(--rule-thin) solid var(--rule);
-  border-left-width: var(--rule-bold);
+  color: var(--foreground);
+  background: var(--background);
+  border: var(--border-thin) solid var(--border);
+  border-left-width: var(--border-bold);
 }
 
 .travelerChip span {
-  color: var(--ink);
+  color: var(--foreground);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -167,30 +199,30 @@ button {
 
 .travelerChip small {
   margin-top: 0.25rem;
-  color: var(--ink-2);
+  color: var(--foreground-muted);
   font-size: 0.75rem;
   line-height: 1.3;
 }
 
 .travelerChip-tension {
-  border-left-color: var(--signal);
+  border-left-color: var(--warning);
 }
 
 .travelerChip-satisfied {
-  border-left-color: var(--verify);
+  border-left-color: var(--verification);
 }
 
 .travelerChip-neutral {
-  border-color: var(--rule);
-  border-left-color: var(--rule);
+  border-color: var(--border);
+  border-left-color: var(--border);
 }
 
 .planError {
   margin: 1rem 0 0;
   padding: 0.75rem;
-  color: var(--ink);
-  background: var(--signal);
-  border: var(--rule-bold) solid var(--signal);
+  color: var(--foreground);
+  background: var(--warning);
+  border: var(--border-bold) solid var(--warning);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.75rem;
   font-weight: 700;
@@ -206,7 +238,7 @@ button {
 
 .planForm label {
   grid-column: 1 / -1;
-  color: var(--bone);
+  color: var(--background);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -217,19 +249,19 @@ button {
 .planForm input {
   min-width: 0;
   padding: 0.8rem 0 0.5rem;
-  color: var(--bone);
+  color: var(--background);
   background: none;
   border: 0;
-  border-bottom: var(--rule-thin) solid var(--bone);
+  border-bottom: var(--border-thin) solid var(--background);
 }
 
 .planForm button,
 .signalButton,
 .inkButton {
   padding: 0.8rem 1rem;
-  color: var(--bone);
-  background: var(--ink);
-  border: var(--rule-thin) solid var(--ink);
+  color: var(--background);
+  background: var(--foreground);
+  border: var(--border-thin) solid var(--foreground);
   border-radius: var(--radius);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
@@ -239,55 +271,76 @@ button {
 }
 
 .planForm button {
-  color: var(--ink);
-  background: var(--bone);
-  border-color: var(--bone);
+  color: var(--foreground);
+  background: var(--background);
+  border-color: var(--background);
 }
 
 .planForm button:hover:not(:disabled) {
-  color: var(--bone);
-  background: var(--ink);
-  border-color: var(--bone);
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--background);
+}
+
+.demoButton {
+  grid-column: 2 / span 8;
+  justify-self: start;
+  margin-top: 0.75rem;
+  padding: 0;
+  color: var(--neon);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--border-thin) solid currentColor;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demoButton:disabled {
+  cursor: not-allowed;
+  color: var(--foreground-muted);
 }
 
 .planForm button:disabled,
 .planForm input:disabled {
   cursor: not-allowed;
-  color: var(--ink);
-  background: var(--bone-2);
-  border-color: var(--ink);
+  color: var(--foreground);
+  background: var(--surface);
+  border-color: var(--foreground);
 }
 
 .studioShell-generating .landingHero {
-  background: var(--ink);
-  border-color: var(--data);
+  background: var(--foreground);
+  border-color: var(--interactive);
 }
 
 .studioShell-generating .landingKicker,
 .studioShell-generating .landingSubhead,
 .studioShell-generating .planForm label {
-  color: var(--bone);
+  color: var(--background);
 }
 
 .studioShell-generating .landingHero h1 {
-  color: var(--paper);
+  color: var(--surface-raised);
 }
 
 .studioShell-generating .travelerChip {
-  color: var(--ink);
-  background: var(--bone);
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .studioShell-generating .planForm input {
-  color: var(--bone);
-  background: var(--ink);
-  border-color: var(--bone);
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--background);
 }
 
 .studioShell-generating .planForm button {
-  color: var(--ink);
-  background: var(--paper);
-  border-color: var(--paper);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border-color: var(--surface-raised);
 }
 
 .generationTimeline {
@@ -302,9 +355,9 @@ button {
 
 .generationTimelineRow {
   padding: 0.65rem 0.75rem;
-  color: var(--ink);
-  background: var(--paper);
-  border-left: var(--rule-bold) solid var(--data);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border-left: var(--border-bold) solid var(--interactive);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -321,20 +374,20 @@ button {
   gap: 1rem;
   min-height: 4.5rem;
   padding: 0.75rem clamp(1rem, 3vw, 3rem);
-  color: var(--bone);
-  background: var(--ink);
-  border-top: var(--rule-bold) solid var(--data);
-  border-bottom: var(--rule-thin) solid var(--ink);
+  color: var(--background);
+  background: var(--foreground);
+  border-top: var(--border-bold) solid var(--interactive);
+  border-bottom: var(--border-thin) solid var(--foreground);
 }
 
 .generatedHeader p {
   grid-column: 1 / span 3;
-  color: var(--bone);
+  color: var(--background);
 }
 
 .generatedHeader > span {
   grid-column: 4 / span 3;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: clamp(1rem, 2vw, 1.35rem);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -349,25 +402,25 @@ button {
 .generatedHeader .travelerChip {
   min-width: 0;
   padding: 0.4rem 0.5rem;
-  background: var(--bone);
+  background: var(--background);
 }
 
 .generatedHeader .travelerChip span {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .generatedHeader .travelerChip small {
-  color: var(--ink-2);
+  color: var(--foreground-muted);
 }
 
 .generatedHeader .travelerChip-tension {
-  border-color: var(--rule);
-  border-left-color: var(--signal);
+  border-color: var(--border);
+  border-left-color: var(--warning);
 }
 
 .generatedHeader .travelerChip-satisfied {
-  border-color: var(--rule);
-  border-left-color: var(--verify);
+  border-color: var(--border);
+  border-left-color: var(--verification);
 }
 
 .tradeoffPanel {
@@ -376,24 +429,24 @@ button {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1rem;
   padding: 1.5rem clamp(1rem, 3vw, 3rem);
-  background: var(--ink);
-  border-bottom: var(--rule-bold) solid var(--bone);
+  background: var(--foreground);
+  border-bottom: var(--border-bold) solid var(--background);
 }
 
 .tradeoffPanelHeading {
   grid-column: 1 / span 3;
   padding-left: 0.75rem;
-  border-left: var(--rule-bold) solid var(--data);
+  border-left: var(--border-bold) solid var(--interactive);
 }
 
 .tradeoffPanelHeading p {
   margin-bottom: 0.5rem;
-  color: var(--bone);
+  color: var(--background);
 }
 
 .tradeoffPanelHeading h2 {
   margin: 0;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: clamp(1.25rem, 2.1vw, 2rem);
   font-weight: 800;
   letter-spacing: -0.055em;
@@ -403,8 +456,8 @@ button {
 .tradeoffLedger {
   display: grid;
   grid-column: 4 / -1;
-  background: var(--ink);
-  border-top: var(--rule-bold) solid var(--bone);
+  background: var(--foreground);
+  border-top: var(--border-bold) solid var(--background);
 }
 
 .tradeoffLedgerHeader,
@@ -414,11 +467,11 @@ button {
   gap: 0.75rem;
   align-items: start;
   padding: 0.65rem 0;
-  border-bottom: var(--rule-thin) solid var(--bone-2);
+  border-bottom: var(--border-thin) solid var(--surface);
 }
 
 .tradeoffLedgerHeader {
-  color: var(--bone);
+  color: var(--background);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.625rem;
   font-weight: 700;
@@ -426,31 +479,31 @@ button {
 }
 
 .tradeoffLedgerRow {
-  color: var(--bone);
-  background: var(--ink);
+  color: var(--background);
+  background: var(--foreground);
   font-size: 0.8125rem;
   line-height: 1.35;
 }
 
 .tradeoffLedgerRow > span:first-child {
-  color: var(--paper);
+  color: var(--surface-raised);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
 }
 
 .tradeoffGot {
-  color: var(--verify);
+  color: var(--verification);
 }
 
 .tradeoffGaveUp {
-  color: var(--signal);
+  color: var(--warning);
 }
 
 .tradeoffNet {
   padding-left: 0.5rem;
-  color: var(--paper);
-  border-left: var(--rule-bold) solid var(--bone);
+  color: var(--surface-raised);
+  border-left: var(--border-bold) solid var(--background);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.625rem;
   font-weight: 700;
@@ -458,20 +511,20 @@ button {
 }
 
 .tradeoffNet-tension {
-  border-color: var(--signal);
+  border-color: var(--warning);
 }
 
 .tradeoffNet-satisfied {
-  border-color: var(--verify);
+  border-color: var(--verification);
 }
 
 .tradeoffNarration {
   grid-column: 4 / -1;
   margin: 0;
   padding: 0.75rem 0 0.75rem 1rem;
-  color: var(--bone);
-  background: var(--ink);
-  border-left: var(--rule-bold) solid var(--data);
+  color: var(--background);
+  background: var(--foreground);
+  border-left: var(--border-bold) solid var(--interactive);
   font-size: 0.875rem;
   line-height: 1.45;
 }
@@ -480,6 +533,17 @@ button {
   display: grid;
   grid-column: 1 / -1;
   min-width: 0;
+}
+
+.replanError {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.75rem clamp(1rem, 3vw, 3rem);
+  color: var(--foreground);
+  background: var(--warning);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .studioWorkspace {
@@ -493,8 +557,8 @@ button {
   min-width: 0;
   min-height: 42rem;
   overflow: hidden;
-  background: var(--bone-2);
-  border-right: var(--rule-bold) solid var(--rule);
+  background: var(--surface);
+  border-right: var(--border-bold) solid var(--border);
 }
 
 .mapScene,
@@ -505,11 +569,11 @@ button {
 }
 
 .mapScene {
-  background: var(--bone-2);
+  background: var(--surface);
 }
 
 .mapCanvas {
-  background: var(--bone-2);
+  background: var(--surface);
 }
 
 .mapCanvas > * {
@@ -519,7 +583,7 @@ button {
 }
 
 .flatMapFallback {
-  background: var(--bone-2);
+  background: var(--surface);
 }
 
 .mapNotice,
@@ -528,9 +592,9 @@ button {
   z-index: 4;
   max-width: min(26rem, calc(100% - 2rem));
   padding: 0.75rem;
-  color: var(--ink);
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--rule);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border: var(--border-thin) solid var(--border);
 }
 
 .mapNotice {
@@ -543,126 +607,14 @@ button {
   left: 1rem;
 }
 
-.routeOverlay {
-  position: absolute;
-  z-index: 5;
-  inset: 0;
-  pointer-events: none;
-}
-
-.routeLine {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.inkRoute {
-  fill: none;
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.dataSelectedRoute {
-  stroke: var(--data);
-  stroke-width: 3;
-}
-
-.routeStop {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--ink);
-}
-
-.stop-1 {
-  bottom: 31%;
-  left: 17%;
-}
-
-.stop-2 {
-  bottom: 48%;
-  left: 43%;
-}
-
-.stop-3 {
-  top: 11%;
-  right: 10%;
-}
-
-.squareMarker {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 1.75rem;
-  height: 1.75rem;
-  color: var(--bone);
-  background: var(--data);
-  border: var(--rule-thin) solid var(--ink);
-  border-radius: var(--radius);
-  font-family: var(--font-jetbrains-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-}
-
-.routeStop div {
-  display: grid;
-  min-width: 7rem;
-  gap: 0.1rem;
-  padding: 0.45rem 0.55rem;
-  color: var(--bone);
-  background: var(--ink);
-  border: var(--rule-thin) solid var(--ink);
-}
-
-.routeStop strong {
-  font-size: 0.75rem;
-  line-height: 1.2;
-}
-
-.routeStop small {
-  color: var(--paper);
-  font-family: var(--font-jetbrains-mono);
-  font-size: 0.5625rem;
-  line-height: 1.2;
-}
-
-.mapControls {
-  position: absolute;
-  z-index: 6;
-  bottom: 1rem;
-  left: 1rem;
-  display: grid;
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--rule);
-}
-
-.mapControls span {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--ink);
-  border-bottom: var(--rule-thin) solid var(--rule);
-  font-family: var(--font-jetbrains-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-}
-
-.mapControls span:last-child {
-  border-bottom: 0;
-}
-
 .sectionRuleDraw {
   position: absolute;
   z-index: 7;
   top: 0;
   right: 0;
   left: 0;
-  height: var(--rule-thin);
-  background: var(--data);
+  height: var(--border-thin);
+  background: var(--interactive);
   transform: scaleX(0);
   transform-origin: left;
   animation: ruleDraw 240ms steps(4, end) forwards;
@@ -678,31 +630,31 @@ button {
   gap: 0.75rem;
   max-width: 52rem;
   padding: 0.75rem;
-  color: var(--ink);
-  background: var(--paper);
-  border: var(--rule-bold) solid var(--rule);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border: var(--border-bold) solid var(--border);
 }
 
 .timelineDayControls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  border-bottom: var(--rule-thin) solid var(--rule);
+  border-bottom: var(--border-thin) solid var(--border);
 }
 
 .timelineDay {
   padding: 0.4rem 0.5rem;
-  color: var(--ink);
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--rule);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border: var(--border-thin) solid var(--border);
   border-radius: var(--radius);
 }
 
 .timelineDay:hover,
 .timelineDay-selected {
-  color: var(--bone);
-  background: var(--ink);
-  border-color: var(--ink);
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--foreground);
 }
 
 .activityTimeline {
@@ -724,7 +676,7 @@ button {
 
 .timelineHour {
   align-self: center;
-  color: var(--ink-2);
+  color: var(--foreground-muted);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -733,10 +685,10 @@ button {
 .timelineActivity {
   min-width: 0;
   padding: 0.55rem 0.65rem;
-  color: var(--ink);
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--rule);
-  border-left-width: var(--rule-bold);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border: var(--border-thin) solid var(--border);
+  border-left-width: var(--border-bold);
   border-radius: var(--radius);
   font-size: 0.8125rem;
   font-weight: 700;
@@ -746,55 +698,55 @@ button {
 
 .timelineActivity:hover,
 .timelineActivity-selected {
-  color: var(--bone);
-  background: var(--ink);
-  border-color: var(--ink);
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--foreground);
 }
 
 .activityTone-tension {
-  color: var(--ink);
-  background: var(--signal);
-  border-color: var(--signal);
+  color: var(--foreground);
+  background: var(--warning);
+  border-color: var(--warning);
 }
 
 .activityTone-satisfied {
-  color: var(--ink);
-  background: var(--verify);
-  border-color: var(--verify);
+  color: var(--foreground);
+  background: var(--verification);
+  border-color: var(--verification);
 }
 
 .activityTone-neutral {
-  color: var(--ink);
-  background: var(--paper);
-  border-color: var(--ink);
+  color: var(--foreground);
+  background: var(--surface-raised);
+  border-color: var(--foreground);
 }
 
 .timelineActivity:hover.activityTone-tension,
 .timelineActivity-selected.activityTone-tension {
-  color: var(--ink);
-  background: var(--signal);
-  border-color: var(--signal);
+  color: var(--foreground);
+  background: var(--warning);
+  border-color: var(--warning);
 }
 
 .timelineActivity:hover.activityTone-satisfied,
 .timelineActivity-selected.activityTone-satisfied {
-  color: var(--ink);
-  background: var(--verify);
-  border-color: var(--verify);
+  color: var(--foreground);
+  background: var(--verification);
+  border-color: var(--verification);
 }
 
 .rationalePanel {
   position: relative;
   margin-top: 0.25rem;
   padding: 0.75rem 1rem;
-  color: var(--bone);
-  background: var(--data);
-  border: var(--rule-thin) solid var(--data);
+  color: var(--background);
+  background: var(--interactive);
+  border: var(--border-thin) solid var(--interactive);
 }
 
 .rationalePanel p {
   margin: 0;
-  color: var(--bone);
+  color: var(--background);
   font-size: 0.8125rem;
   line-height: 1.4;
 }
@@ -804,22 +756,22 @@ button {
   position: absolute;
   width: 0.75rem;
   height: 0.75rem;
-  border-color: var(--bone);
+  border-color: var(--background);
   content: "";
 }
 
 .cornerBrackets::before {
   top: 0.25rem;
   left: 0.25rem;
-  border-top: var(--rule-thin) solid var(--bone);
-  border-left: var(--rule-thin) solid var(--bone);
+  border-top: var(--border-thin) solid var(--background);
+  border-left: var(--border-thin) solid var(--background);
 }
 
 .cornerBrackets::after {
   right: 0.25rem;
   bottom: 0.25rem;
-  border-right: var(--rule-thin) solid var(--bone);
-  border-bottom: var(--rule-thin) solid var(--bone);
+  border-right: var(--border-thin) solid var(--background);
+  border-bottom: var(--border-thin) solid var(--background);
 }
 
 .agreementTranscript {
@@ -828,25 +780,25 @@ button {
   gap: 1rem;
   min-width: 0;
   padding: 1.25rem;
-  color: var(--bone);
-  background: var(--ink);
+  color: var(--background);
+  background: var(--foreground);
 }
 
 .transcriptHeading {
   padding-bottom: 0.75rem;
-  border-bottom: var(--rule-bold) solid var(--data);
+  border-bottom: var(--border-bold) solid var(--interactive);
 }
 
 .sectionKicker,
 .transcriptSpeaker,
 .budgetLabels,
 .vetoLabel {
-  color: var(--bone);
+  color: var(--background);
 }
 
 .transcriptHeading h2 {
   margin: 0.35rem 0 0;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: clamp(1.5rem, 2.4vw, 2.25rem);
   font-weight: 800;
   letter-spacing: -0.055em;
@@ -860,7 +812,7 @@ button {
 
 .transcriptTurn {
   padding-bottom: 0.75rem;
-  border-bottom: var(--rule-thin) solid var(--bone-2);
+  border-bottom: var(--border-thin) solid var(--surface);
 }
 
 .transcriptTurn:last-child {
@@ -869,80 +821,80 @@ button {
 
 .transcriptBody {
   margin: 0.2rem 0 0.65rem;
-  color: var(--bone);
+  color: var(--background);
   font-size: 0.875rem;
   line-height: 1.4;
 }
 
 .dataLeftRule {
   padding-left: 0.75rem;
-  border-left: var(--rule-bold) solid var(--data);
+  border-left: var(--border-bold) solid var(--interactive);
 }
 
 .budgetBar {
   display: grid;
   gap: 0.4rem;
   padding: 0.9rem 0;
-  border-top: var(--rule-thin) solid var(--bone-2);
-  border-bottom: var(--rule-thin) solid var(--bone-2);
+  border-top: var(--border-thin) solid var(--surface);
+  border-bottom: var(--border-thin) solid var(--surface);
 }
 
 .budgetValues,
 .budgetValue {
   margin: 0;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.04em;
 }
 
 .budgetValues span {
-  color: var(--bone);
+  color: var(--background);
 }
 
 .budgetTrack {
   height: 0.5rem;
   overflow: hidden;
-  background: var(--bone-2);
-  border: var(--rule-thin) solid var(--bone-2);
+  background: var(--surface);
+  border: var(--border-thin) solid var(--surface);
 }
 
 .budgetTrack span {
   display: block;
   height: 100%;
-  background: var(--verify);
+  background: var(--verification);
 }
 
 .budgetTrack-warn span {
-  background: var(--warn);
+  background: var(--caution);
 }
 
 .budgetTrack-signal span {
-  background: var(--signal);
+  background: var(--warning);
 }
 
 .budgetTrack-neutral {
   background: none;
-  border-color: var(--bone);
+  border-color: var(--background);
 }
 
 .budgetBar:has(.budgetTrack-neutral) {
   padding: 0.65rem 0.75rem;
-  background: var(--paper);
-  border: var(--rule-thin) solid var(--ink);
+  background: var(--surface-raised);
+  border: var(--border-thin) solid var(--foreground);
 }
 
 .budgetBar:has(.budgetTrack-neutral) .budgetLabels {
-  color: var(--ink-2);
+  color: var(--foreground-muted);
 }
 
 .budgetBar:has(.budgetTrack-neutral) .budgetValue {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .budgetBar:has(.budgetTrack-neutral) .budgetTrack-neutral {
   background: none;
-  border-color: var(--ink);
+  border-color: var(--foreground);
 }
 
 .vetoPanel {
@@ -950,8 +902,8 @@ button {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.5rem 0.75rem;
   padding: 0.85rem;
-  background: var(--ink);
-  border: var(--rule-bold) solid var(--signal);
+  background: var(--foreground);
+  border: var(--border-bold) solid var(--warning);
 }
 
 .vetoLabel {
@@ -961,32 +913,32 @@ button {
 .vetoSummary {
   align-self: center;
   margin: 0;
-  color: var(--paper);
+  color: var(--surface-raised);
   font-size: 0.8125rem;
   line-height: 1.35;
 }
 
 .signalButton {
-  color: var(--ink);
-  background: var(--signal);
-  border-color: var(--signal);
+  color: var(--foreground);
+  background: var(--warning);
+  border-color: var(--warning);
 }
 
 .signalButton:hover {
-  color: var(--bone);
-  background: var(--ink);
-  border-color: var(--signal);
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--warning);
 }
 
 .vetoPreview {
   grid-column: 1 / -1;
   padding-top: 0.5rem;
-  border-top: var(--rule-thin) solid var(--bone-2);
+  border-top: var(--border-thin) solid var(--surface);
 }
 
 .vetoPreview p {
   margin: 0.25rem 0 0;
-  color: var(--bone);
+  color: var(--background);
   font-family: var(--font-jetbrains-mono);
   font-size: 0.625rem;
   line-height: 1.4;
@@ -994,10 +946,10 @@ button {
 
 .planState {
   padding: 1.25rem;
-  color: var(--ink);
-  background: var(--bone-2);
-  border-top: var(--rule-bold) solid var(--signal);
-  border-bottom: var(--rule-bold) solid var(--rule);
+  color: var(--foreground);
+  background: var(--surface);
+  border-top: var(--border-bold) solid var(--warning);
+  border-bottom: var(--border-bold) solid var(--border);
 }
 
 @keyframes ruleDraw {
@@ -1053,7 +1005,8 @@ button {
   .landingSubhead,
   .landingHero .travelerChips,
   .planError,
-  .planForm {
+  .planForm,
+  .demoButton {
     grid-column: 1 / -1;
   }
 
@@ -1091,7 +1044,7 @@ button {
   .mapWorkspace {
     min-height: 36rem;
     border-right: 0;
-    border-bottom: var(--rule-bold) solid var(--rule);
+    border-bottom: var(--border-bold) solid var(--border);
   }
 
   .agreementTranscript {
@@ -1114,7 +1067,7 @@ button {
   }
 
   .tradeoffLedgerRow > span::before {
-    color: var(--bone);
+    color: var(--background);
     content: attr(data-label);
     font-family: var(--font-jetbrains-mono);
     font-size: 0.625rem;
@@ -1125,36 +1078,15 @@ button {
   .tradeoffNet {
     padding-left: 0;
     border-left: 0;
-    border-top: var(--rule-bold) solid var(--bone);
+    border-top: var(--border-bold) solid var(--background);
   }
 
   .tradeoffNet-tension {
-    border-color: var(--signal);
+    border-color: var(--warning);
   }
 
   .tradeoffNet-satisfied {
-    border-color: var(--verify);
-  }
-
-  .routeStop div {
-    min-width: 0;
-    max-width: 6.5rem;
-  }
-
-  .routeStop strong {
-    overflow-wrap: anywhere;
-  }
-
-  .stop-1 {
-    left: 12%;
-  }
-
-  .stop-2 {
-    left: 49%;
-  }
-
-  .stop-3 {
-    right: 12%;
+    border-color: var(--verification);
   }
 
   .itineraryTray {
@@ -1163,12 +1095,6 @@ button {
     left: 0.75rem;
   }
 
-  .mapControls {
-    top: 0.75rem;
-    bottom: auto;
-    left: auto;
-    right: 0.75rem;
-  }
 }
 
 @media (max-width: 380px) {

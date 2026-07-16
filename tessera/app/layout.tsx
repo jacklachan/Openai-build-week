@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
+import { ThemeToggle } from "../components/theme-toggle";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -17,14 +18,33 @@ export const metadata: Metadata = {
   description: "An explainable AI group-travel negotiator.",
 };
 
+const themeScript = `
+const themeStorageKey = "tessera-theme";
+const storedTheme = localStorage.getItem(themeStorageKey);
+const theme = storedTheme === "light" || storedTheme === "dark"
+  ? storedTheme
+  : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+document.documentElement.dataset.theme = theme;
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${jetbrainsMono.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${archivo.variable} ${jetbrainsMono.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>
+        <ThemeToggle />
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, type CSSProperties, type FormEvent } from "react";
+import { useState, type CSSProperties } from "react";
+
 import { AtlasMotion } from "./atlas-motion";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
+import { createPlanDraft, PlanForm, type PlanRequestPayload } from "./plan-form";
 import { TradeoffPanel } from "./tradeoff-panel";
 import { TripMap } from "./trip-map";
 import { TravelerChips } from "./traveler-chips";
 import {
+  getActiveVetoPreview,
   getAgreementEntries,
   getSelectedDay,
   getVetoPreview,
@@ -15,11 +18,9 @@ import {
 } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
-interface TripStudioProps {
-  trip: Trip;
-}
+export { getActiveVetoPreview } from "../lib/studio";
 
-type PlanSource = "demo" | "live" | "cache";
+export type PlanSource = "demo" | "live" | "cache";
 type StudioPhase = "landing" | "generating" | "ready" | "error";
 
 type PlanResponse = {
@@ -28,25 +29,43 @@ type PlanResponse = {
   trip?: Trip;
 };
 
-function hasPlanningWorkspace(trip: Trip) {
+type EditResponse = PlanResponse & {
+  diff?: unknown;
+};
+
+function hasPlanningWorkspace(trip: Trip | null): trip is Trip {
   return (
+    trip !== null &&
     Array.isArray(trip.days) &&
     trip.days.length > 0 &&
     trip.days.every((day) => Array.isArray(day.activities))
   );
 }
 
+/** Allows every valid ready plan to render its workspace without inspecting its source. */
+export function canRenderTripWorkspace(phase: StudioPhase, trip: Trip | null): trip is Trip {
+  return phase === "ready" && hasPlanningWorkspace(trip);
+}
+
 function formatPlanError(message: string) {
   return message.replace(/[.]+$/, "");
 }
 
-export function getPlanSelection(trip: Trip) {
-  const firstDay = Array.isArray(trip.days) ? trip.days[0] : undefined;
+export function getPlanSelection(trip?: Trip) {
+  const firstDay = Array.isArray(trip?.days) ? trip.days[0] : undefined;
 
   return {
     activityId: Array.isArray(firstDay?.activities) ? firstDay.activities[0]?.id ?? null : null,
     day: firstDay?.day ?? 1,
   };
+}
+
+export function createPlanRequestBody(request: PlanRequestPayload) {
+  return JSON.stringify({ travelers: request.travelers, constraints: request.constraints });
+}
+
+export function getVetoPreviewSelection(preview: VetoPreview) {
+  return { selectedActivityId: preview.activityId, selectedDay: preview.day };
 }
 
 export function GenerationTimeline({ days }: { days: number }) {
@@ -66,76 +85,26 @@ export function GenerationTimeline({ days }: { days: number }) {
 }
 
 export function getVetoPreviewForTrip(trip: Trip) {
-  const vetoActivity = trip.days
-    .flatMap((day) => day.activities)
-    .find((activity) => activity.id === "mount-takao");
-
-  return vetoActivity ? getVetoPreview(trip) : undefined;
+  return getVetoPreview(trip);
 }
 
-function RouteOverlay({
-  trip,
-  selectedDay,
-  selectedActivityId,
-  vetoPreview,
-}: {
-  trip: Trip;
-  selectedDay: number;
-  selectedActivityId: string | null;
-  vetoPreview?: VetoPreview;
-}) {
-  const selectedPlan = hasPlanningWorkspace(trip) ? getSelectedDay(trip, selectedDay) : undefined;
-  const routeStops = selectedPlan?.activities?.slice(0, 3) ?? [];
-  const hasSelectedRoute = selectedPlan?.day === selectedDay;
-
-  return (
-    <div
-      className="routeOverlay"
-      aria-label={`Day ${selectedDay} highlighted itinerary`}
-      data-selected-activity={selectedActivityId ?? undefined}
-    >
-      <svg className="routeLine" viewBox="0 0 500 340" aria-hidden="true" preserveAspectRatio="none">
-        <path
-          className={`inkRoute${hasSelectedRoute ? " dataSelectedRoute" : ""}`}
-          d="M92 266 C180 236, 162 167, 284 175 S349 93, 427 74"
-        />
-      </svg>
-      {routeStops.map((activity, index) => {
-        const displayedActivity =
-          vetoPreview && activity.id === "mount-takao"
-            ? { ...activity, startTime: vetoPreview.afterTime, title: vetoPreview.replacement }
-            : activity;
-
-        return (
-          <div className={`routeStop squareMarkerStop stop-${index + 1}`} key={activity.id}>
-            <span className="routePin squareMarker">{index + 1}</span>
-            <div>
-              <strong>{displayedActivity.title}</strong>
-              <small>Day {selectedDay} · {displayedActivity.startTime ?? "Flexible"}</small>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export function TripStudio({ trip }: TripStudioProps) {
-  const initialSelection = getPlanSelection(trip);
-  const [activeTrip, setActiveTrip] = useState(trip);
-  const [destination, setDestination] = useState(trip.constraints.destination);
+export function TripStudio() {
+  const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
+  const [planDraft, setPlanDraft] = useState(createPlanDraft);
+  const [pendingPlan, setPendingPlan] = useState<PlanRequestPayload | null>(null);
   const [phase, setPhase] = useState<StudioPhase>("landing");
   const [source, setSource] = useState<PlanSource | null>(null);
-  const [selectedDay, setSelectedDay] = useState(initialSelection.day);
-  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(
-    initialSelection.activityId,
-  );
-  const [showPreview, setShowPreview] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
+  const [activePreview, setActivePreview] = useState<VetoPreview | null>(null);
+  const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const canShowWorkspace = phase === "ready" && hasPlanningWorkspace(activeTrip);
-  const vetoPreview = canShowWorkspace ? getVetoPreviewForTrip(activeTrip) : undefined;
+  const canShowWorkspace = canRenderTripWorkspace(phase, activeTrip);
+  const vetoPreview = hasPlanningWorkspace(activeTrip) ? getVetoPreviewForTrip(activeTrip) : undefined;
+  const visibleVetoPreview = getActiveVetoPreview(activePreview, selectedDay, selectedActivityId);
 
-  async function requestPlan() {
+  async function requestPlan(request: PlanRequestPayload) {
+    setPendingPlan(request);
     setPhase("generating");
     setErrorMessage("");
 
@@ -143,10 +112,7 @@ export function TripStudio({ trip }: TripStudioProps) {
       const response = await fetch("/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          travelers: activeTrip.travelers,
-          constraints: { ...activeTrip.constraints, destination },
-        }),
+        body: createPlanRequestBody(request),
       });
       const payload = (await response.json()) as PlanResponse;
 
@@ -163,7 +129,7 @@ export function TripStudio({ trip }: TripStudioProps) {
       setActiveTrip(payload.trip);
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
-      setShowPreview(false);
+      setActivePreview(null);
       setSource(payload.source);
       setPhase("ready");
     } catch (error) {
@@ -172,14 +138,83 @@ export function TripStudio({ trip }: TripStudioProps) {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    void requestPlan();
+  function selectDay(day: number) {
+    setActivePreview(null);
+    setSelectedDay(day);
+    setSelectedActivityId(activeTrip ? getSelectedDay(activeTrip, day)?.activities[0]?.id ?? null : null);
   }
 
-  function selectDay(day: number) {
-    setSelectedDay(day);
-    setSelectedActivityId(getSelectedDay(activeTrip, day)?.activities[0]?.id ?? null);
+  async function loadDemo() {
+    setPendingPlan(null);
+    setPhase("generating");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/demo");
+      const payload = (await response.json()) as PlanResponse;
+      if (!response.ok || !payload.trip || payload.source !== "demo") {
+        throw new Error(payload.error ?? "Unable to load the demo plan");
+      }
+
+      const selection = getPlanSelection(payload.trip);
+      setActiveTrip(payload.trip);
+      setSelectedDay(selection.day);
+      setSelectedActivityId(selection.activityId);
+      setActivePreview(null);
+      setSource(payload.source);
+      setPhase("ready");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Unable to load the demo plan");
+      setPhase("error");
+    }
+  }
+
+  function selectActivity(activityId: string) {
+    setActivePreview(null);
+    setSelectedActivityId(activityId);
+  }
+
+  function toggleVetoPreview() {
+    if (!vetoPreview) return;
+    if (visibleVetoPreview) {
+      setActivePreview(null);
+      return;
+    }
+
+    const selection = getVetoPreviewSelection(vetoPreview);
+    setSelectedDay(selection.selectedDay);
+    setSelectedActivityId(selection.selectedActivityId);
+    setActivePreview(vetoPreview);
+  }
+
+  async function applyVeto() {
+    if (!activeTrip || !vetoPreview) return;
+
+    setIsApplyingVeto(true);
+    setErrorMessage("");
+    try {
+      const command = `${activeTrip.travelers[0]?.name ?? "A traveler"} vetoes ${vetoPreview.removedActivity}. Replace it with ${vetoPreview.replacement} at ${vetoPreview.afterTime}.`;
+      const response = await fetch("/api/edit", {
+        body: JSON.stringify({ command, trip: activeTrip }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = (await response.json()) as EditResponse;
+      if (!response.ok || !payload.trip || (payload.source !== "demo" && payload.source !== "live")) {
+        throw new Error(payload.error ?? "Unable to apply the veto");
+      }
+
+      const selection = getPlanSelection(payload.trip);
+      setActiveTrip(payload.trip);
+      setSelectedDay(selection.day);
+      setSelectedActivityId(selection.activityId);
+      setActivePreview(null);
+      setSource(payload.source);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Unable to apply the veto");
+    } finally {
+      setIsApplyingVeto(false);
+    }
   }
 
   if (phase !== "ready") {
@@ -193,37 +228,38 @@ export function TripStudio({ trip }: TripStudioProps) {
           <p className="landingSubhead">
             Everyone wants something different. Get a plan that says who gave up what.
           </p>
-          <TravelerChips phase={isGenerating ? "generating" : "landing"} trip={trip} />
-          {isGenerating ? <GenerationTimeline days={activeTrip.constraints.days} /> : null}
+          {isGenerating && pendingPlan ? (
+            <TravelerChips phase="generating" travelers={pendingPlan.travelers} />
+          ) : null}
+          {isGenerating && pendingPlan ? <GenerationTimeline days={pendingPlan.constraints.days} /> : null}
           {phase === "error" ? (
             <p className="planError" role="alert">
               PLAN FAILED // {formatPlanError(errorMessage)}. RETRY.
             </p>
           ) : null}
-          <form className="planForm" onSubmit={handleSubmit}>
-            <label htmlFor="destination">Destination</label>
-            <input
-              id="destination"
-              name="destination"
-              value={destination}
-              onChange={(event) => setDestination(event.target.value)}
-              disabled={isGenerating}
-            />
-            <button type="submit" disabled={isGenerating}>
-              {isGenerating ? "Generating plan" : phase === "error" ? "Retry" : "Generate plan"}
-            </button>
-          </form>
+          <PlanForm
+            disabled={isGenerating}
+            draft={planDraft}
+            onDraftChange={setPlanDraft}
+            onSubmit={(request) => void requestPlan(request)}
+            submitLabel={isGenerating ? "Generating plan" : phase === "error" ? "Retry" : "Generate plan"}
+          />
+          <button className="demoButton" disabled={isGenerating} onClick={() => void loadDemo()} type="button">
+            Load the Tokyo demo
+          </button>
         </section>
       </main>
     );
   }
 
+  if (!activeTrip) return null;
+
   return (
     <main className="studioShell studioShell-ready">
       <header className="generatedHeader">
-        <p>{source === "demo" ? "PLAN GENERATED // DEMO" : "PLAN GENERATED // LIVE"}</p>
+        <p>{`PLAN GENERATED // ${source?.toUpperCase() ?? "LIVE"}`}</p>
         <span>{activeTrip.constraints.destination}</span>
-        <TravelerChips phase="ready" trip={activeTrip} />
+        <TravelerChips phase="ready" travelers={activeTrip.travelers} trip={activeTrip} />
       </header>
 
       <TradeoffPanel
@@ -231,30 +267,29 @@ export function TripStudio({ trip }: TripStudioProps) {
         tradeoffs={activeTrip.tradeoffs}
         trip={activeTrip}
       />
+      {errorMessage ? (
+        <p className="replanError" role="alert">
+          {formatPlanError(errorMessage)}. Try the demo again.
+        </p>
+      ) : null}
 
       <section className="planningWorkspace" aria-label="Generated planning workspace">
         {canShowWorkspace ? (
           <div className="studioWorkspace">
-            <section className="mapWorkspace" aria-label="Tokyo itinerary map">
-              <TripMap />
-              <AtlasMotion />
-              <RouteOverlay
-                trip={activeTrip}
-                selectedDay={selectedDay}
+            <section className="mapWorkspace" aria-label="Trip itinerary map">
+              <TripMap
                 selectedActivityId={selectedActivityId}
-                vetoPreview={showPreview ? vetoPreview : undefined}
+                selectedDay={selectedDay}
+                trip={activeTrip}
+                vetoPreview={visibleVetoPreview}
               />
-              <div className="mapControls" aria-label="Map display controls">
-                <span>2D</span>
-                <span>◇</span>
-                <span>⌾</span>
-              </div>
+              <AtlasMotion />
               <ItineraryTray
                 selectedActivityId={selectedActivityId}
                 selectedDay={selectedDay}
                 trip={activeTrip}
-                vetoPreview={showPreview ? vetoPreview : undefined}
-                onSelectActivity={setSelectedActivityId}
+                vetoPreview={visibleVetoPreview}
+                onSelectActivity={selectActivity}
                 onSelectDay={selectDay}
               />
             </section>
@@ -262,13 +297,17 @@ export function TripStudio({ trip }: TripStudioProps) {
             <GroupAgreement
               agreement={getAgreementEntries(activeTrip)}
               preview={vetoPreview}
-              showPreview={vetoPreview ? showPreview : false}
+              showPreview={Boolean(visibleVetoPreview)}
               trip={activeTrip}
-              onTogglePreview={vetoPreview ? () => setShowPreview((visible) => !visible) : undefined}
+              isApplyingVeto={isApplyingVeto}
+              onApplyVeto={visibleVetoPreview ? () => void applyVeto() : undefined}
+              onTogglePreview={vetoPreview ? toggleVetoPreview : undefined}
             />
           </div>
         ) : (
-          <p className="planState">PLAN GENERATED // ITINERARY DETAILS ARE NOT AVAILABLE.</p>
+          <p className="planState" role="status">
+            ITINERARY DATA IS UNAVAILABLE.
+          </p>
         )}
       </section>
     </main>

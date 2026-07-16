@@ -7,16 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "npm run validate:seed && npm run verify:orchestrator && npm run verify:replan && npm run verify:safeguards && npm run verify:demo-api",
+    "test": "npm run validate:seed && npm run verify:orchestrator && npm run verify:replan && npm run verify:safeguards && npm run verify:demo-api && npm run test:ui",
+    "test:ui": "tsx --test tests/**/*.test.ts",
     "validate:seed": "node scripts/validate-seed.mjs",
     "verify:orchestrator": "tsx scripts/verify-orchestrator.ts",
     "verify:replan": "tsx scripts/verify-replan.ts",
     "verify:safeguards": "tsx scripts/verify-safeguards.ts",
-    "verify:demo-api": "tsx scripts/verify-demo-api.ts",
-    "test:ui": "tsx --test tests/**/*.test.ts"
+    "verify:demo-api": "tsx scripts/verify-demo-api.ts"
   },
   "dependencies": {
-    "animejs": "^4.5.0",
     "next": "16.2.10",
     "openai": "6.46.0",
     "react": "19.2.4",

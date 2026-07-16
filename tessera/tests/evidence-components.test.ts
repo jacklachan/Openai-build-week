@@ -15,6 +15,7 @@ const trip = seedTrip as Trip;
 test("renders contract-derived transcript, budget, and Veto preview state", () => {
   const agreement = getAgreementEntries(trip);
   const preview = getVetoPreview(trip);
+  assert.ok(preview);
   const html = renderToStaticMarkup(
     createElement(GroupAgreement, {
       agreement,
@@ -30,8 +31,8 @@ test("renders contract-derived transcript, budget, and Veto preview state", () =
   assert.match(html, /SPENT \/\/ CEILING \/\/ DELTA/);
   assert.match(html, /inkButton/);
   assert.match(html, />Vetoed</);
-  assert.match(html, /Mount Takao summit trail/);
-  assert.match(html, /10:30/);
+  assert.ok(html.includes(preview.removedActivity));
+  assert.ok(html.includes(preview.afterTime));
 });
 
 test("renders ceiling-free budget data without inventing a ceiling or delta", () => {
@@ -53,14 +54,16 @@ test("renders ceiling-free budget data without inventing a ceiling or delta", ()
 });
 
 test("renders sequential timeline controls, truthful preview values, and selected rationale", () => {
+  const preview = getVetoPreview(trip);
+  assert.ok(preview);
   const html = renderToStaticMarkup(
     createElement(ItineraryTray, {
       onSelectActivity: () => undefined,
       onSelectDay: () => undefined,
-      selectedActivityId: "mount-takao",
-      selectedDay: 2,
+      selectedActivityId: preview.activityId,
+      selectedDay: preview.day,
       trip,
-      vetoPreview: getVetoPreview(trip),
+      vetoPreview: preview,
     }),
   );
 
@@ -68,10 +71,10 @@ test("renders sequential timeline controls, truthful preview values, and selecte
   assert.match(html, />D02</);
   assert.match(html, />D03</);
   assert.match(html, /activityTone-tension/);
-  assert.match(html, /Yanaka walk \+ tea/);
-  assert.match(html, />10:30</);
+  assert.ok(html.includes(preview.replacement));
+  assert.ok(html.includes(preview.afterTime));
   assert.match(html, /rationalePanel/);
-  assert.match(html, /single early, active day satisfies Ravi/);
+  assert.match(html, /without requiring an early start for Priya/);
 });
 
 test("renders the non-animated rule element", () => {
@@ -86,11 +89,21 @@ test("renders a flat map fallback when no browser key is available", () => {
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
 
   try {
-    const html = renderToStaticMarkup(createElement(TripMap));
+    const preview = getVetoPreview(trip);
+    const html = renderToStaticMarkup(
+      createElement(TripMap, {
+        selectedActivityId: preview?.activityId ?? null,
+        selectedDay: preview?.day ?? 1,
+        trip,
+        vetoPreview: preview,
+      }),
+    );
 
     assert.match(html, /mapSurface/);
     assert.match(html, /flatMapFallback/);
-    assert.doesNotMatch(html, /mapShade/);
+    assert.match(html, /NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY/);
+    assert.match(html, /Trip map/);
+    assert.doesNotMatch(html, /Tokyo|3D/);
   } finally {
     if (browserKey === undefined) {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;

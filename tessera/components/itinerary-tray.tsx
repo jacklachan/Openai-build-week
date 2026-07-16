@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { VetoPreview } from "../lib/studio";
+import { getActiveVetoPreview, type VetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 import { getActivityTone, getTimelineDays } from "./presentation";
 
@@ -24,6 +24,7 @@ export function ItineraryTray({
   const selectedPlan = timelineDays.find(({ day }) => day.day === selectedDay)?.day;
   const activities = Array.isArray(selectedPlan?.activities) ? selectedPlan.activities : [];
   const selectedActivity = activities.find(({ id }) => id === selectedActivityId);
+  const activeVetoPreview = getActiveVetoPreview(vetoPreview, selectedDay, selectedActivityId);
 
   return (
     <section className="itineraryTray" aria-label="Trip itinerary by day">
@@ -49,8 +50,12 @@ export function ItineraryTray({
         <ol className="activityTimeline">
           {activities.map((activity, index) => {
             const displayedActivity =
-              vetoPreview && activity.id === "mount-takao"
-                ? { ...activity, startTime: vetoPreview.afterTime, title: vetoPreview.replacement }
+              activeVetoPreview && activity.id === activeVetoPreview.activityId
+                ? {
+                    ...activity,
+                    startTime: activeVetoPreview.afterTime,
+                    title: activeVetoPreview.replacement,
+                  }
                 : activity;
             const isSelected = activity.id === selectedActivityId;
 

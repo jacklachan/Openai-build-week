@@ -12,13 +12,14 @@ import type { Trip } from "../lib/types";
 const trip = seedTrip as Trip;
 
 function cssBlock(stylesheet: string, selector: string) {
-  const start = stylesheet.indexOf(`${selector} {`);
+  const normalizedStylesheet = stylesheet.replace(/\r\n/g, "\n");
+  const start = normalizedStylesheet.indexOf(`${selector} {`);
   assert.notEqual(start, -1, `Expected ${selector} to be defined.`);
 
-  return stylesheet.slice(start, stylesheet.indexOf("}", start));
+  return normalizedStylesheet.slice(start, normalizedStylesheet.indexOf("}", start));
 }
 
-test("omits a Veto action and fabricated preview for a generated plan without mount-takao", () => {
+test("derives a Veto from a generated activity without mount-takao", () => {
   const generatedTrip = {
     ...trip,
     days: trip.days.map((day) => ({
@@ -29,21 +30,29 @@ test("omits a Veto action and fabricated preview for a generated plan without mo
   const getVetoPreviewForTrip = (tripStudio as Record<string, unknown>).getVetoPreviewForTrip;
 
   assert.equal(typeof getVetoPreviewForTrip, "function");
-  assert.equal((getVetoPreviewForTrip as (value: Trip) => unknown)(generatedTrip), undefined);
+  const preview = (getVetoPreviewForTrip as (value: Trip) => ReturnType<typeof getVetoPreview>)(
+    generatedTrip,
+  );
+  assert.ok(preview);
+  assert.notEqual(preview.activityId, "mount-takao");
 
   const html = renderToStaticMarkup(
     createElement(GroupAgreement, {
       agreement: getAgreementEntries(generatedTrip),
+      onTogglePreview: () => undefined,
+      preview,
+      showPreview: true,
       trip: generatedTrip,
     }),
   );
 
-  assert.doesNotMatch(html, /vetoPanel/);
-  assert.doesNotMatch(html, />Veto(?:ed)?</);
-  assert.doesNotMatch(html, /Early hike|Yanaka walk \+ tea|10:30/);
+  assert.match(html, /vetoPanel/);
+  assert.match(html, new RegExp(`VETO // DAY ${String(preview.day).padStart(2, "0")}`));
+  assert.ok(html.includes(preview.removedActivity));
+  assert.ok(html.includes(preview.replacement));
 });
 
-test("keeps the seeded Veto and derives its label from the matched activity day", () => {
+test("keeps the seeded Veto and derives its labels from the selected activity day", () => {
   const movedVetoTrip = {
     ...trip,
     days: trip.days.map((day, index) => ({
@@ -57,24 +66,29 @@ test("keeps the seeded Veto and derives its label from the matched activity day"
               ),
             ]
           : day.activities.filter((activity) => activity.id !== "mount-takao"),
-    })),
+  })),
   };
+  const preview = getVetoPreview(movedVetoTrip);
+  assert.ok(preview);
+  const previewDay = movedVetoTrip.days.find((day) =>
+    day.activities.some((activity) => activity.title === preview.removedActivity),
+  );
   const html = renderToStaticMarkup(
     createElement(GroupAgreement, {
       agreement: getAgreementEntries(movedVetoTrip),
       onTogglePreview: () => undefined,
-      preview: getVetoPreview(movedVetoTrip),
+      preview,
       showPreview: true,
       trip: movedVetoTrip,
     }),
   );
 
   assert.match(html, /vetoPanel/);
-  assert.match(html, /VETO \/\/ DAY 01/);
+  assert.ok(html.includes(`VETO // DAY ${String(previewDay?.day ?? 1).padStart(2, "0")}`));
   assert.match(html, /class="inkButton"/);
   assert.match(html, />Vetoed</);
-  assert.match(html, /Mount Takao summit trail/);
-  assert.match(html, /10:30/);
+  assert.ok(html.includes(preview.removedActivity));
+  assert.ok(html.includes(preview.afterTime));
 });
 
 test("renders a non-revealing generation block for every requested day", () => {
@@ -106,18 +120,18 @@ test("uses left-edge traveler semantics and flat activity tone blocks", async ()
   const timelineNeutral = cssBlock(stylesheet, ".activityTone-neutral");
   const generationRow = cssBlock(stylesheet, ".generationTimelineRow");
 
-  assert.match(travelerTension, /border-left-color: var\(--signal\)/);
+  assert.match(travelerTension, /border-left-color: var\(--warning\)/);
   assert.doesNotMatch(travelerTension, /background:/);
-  assert.match(travelerSatisfied, /border-left-color: var\(--verify\)/);
+  assert.match(travelerSatisfied, /border-left-color: var\(--verification\)/);
   assert.doesNotMatch(travelerSatisfied, /background:/);
-  assert.match(headerChip, /background: var\(--bone\)/);
-  assert.match(headerChipName, /color: var\(--ink\)/);
-  assert.match(headerChipDetail, /color: var\(--ink-2\)/);
-  assert.match(timelineTension, /background: var\(--signal\)/);
-  assert.match(timelineTension, /color: var\(--ink\)/);
-  assert.match(timelineSatisfied, /background: var\(--verify\)/);
-  assert.match(timelineSatisfied, /color: var\(--ink\)/);
-  assert.match(timelineNeutral, /border-color: var\(--ink\)/);
+  assert.match(headerChip, /background: var\(--background\)/);
+  assert.match(headerChipName, /color: var\(--foreground\)/);
+  assert.match(headerChipDetail, /color: var\(--foreground-muted\)/);
+  assert.match(timelineTension, /background: var\(--warning\)/);
+  assert.match(timelineTension, /color: var\(--foreground\)/);
+  assert.match(timelineSatisfied, /background: var\(--verification\)/);
+  assert.match(timelineSatisfied, /color: var\(--foreground\)/);
+  assert.match(timelineNeutral, /border-color: var\(--foreground\)/);
   assert.match(stylesheet, /animation: timelineSnap 60ms steps\(2, end\) backwards/);
   assert.match(generationRow, /animation-delay: calc\(var\(--timeline-index\) \* 60ms\)/);
 });
@@ -133,28 +147,25 @@ test("keeps tension and satisfied activity blocks semantic when hovered or selec
     ".timelineActivity:hover.activityTone-satisfied,\n.timelineActivity-selected.activityTone-satisfied",
   );
 
-  assert.match(hoveredTension, /color: var\(--ink\)/);
-  assert.match(hoveredTension, /background: var\(--signal\)/);
-  assert.match(hoveredTension, /border-color: var\(--signal\)/);
-  assert.match(hoveredSatisfied, /color: var\(--ink\)/);
-  assert.match(hoveredSatisfied, /background: var\(--verify\)/);
-  assert.match(hoveredSatisfied, /border-color: var\(--verify\)/);
+  assert.match(hoveredTension, /color: var\(--foreground\)/);
+  assert.match(hoveredTension, /background: var\(--warning\)/);
+  assert.match(hoveredTension, /border-color: var\(--warning\)/);
+  assert.match(hoveredSatisfied, /color: var\(--foreground\)/);
+  assert.match(hoveredSatisfied, /background: var\(--verification\)/);
+  assert.match(hoveredSatisfied, /border-color: var\(--verification\)/);
 });
 
-test("keeps the landing button and disabled controls legible while preserving map route weights", async () => {
+test("keeps the landing button and disabled controls legible without fake route geometry", async () => {
   const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const formButton = cssBlock(stylesheet, ".planForm button");
   const disabledControls = cssBlock(stylesheet, ".planForm button:disabled,\n.planForm input:disabled");
-  const inkRoute = cssBlock(stylesheet, ".inkRoute");
-  const selectedRoute = cssBlock(stylesheet, ".dataSelectedRoute");
 
-  assert.match(formButton, /color: var\(--ink\)/);
-  assert.match(formButton, /background: var\(--bone\)/);
+  assert.match(formButton, /color: var\(--foreground\)/);
+  assert.match(formButton, /background: var\(--background\)/);
   assert.ok(
     stylesheet.indexOf(".planForm button {") >
       stylesheet.indexOf(".planForm button,\n.signalButton,\n.inkButton"),
   );
   assert.doesNotMatch(disabledControls, /ink-3/);
-  assert.match(inkRoute, /stroke-width: 2/);
-  assert.match(selectedRoute, /stroke-width: 3/);
+  assert.doesNotMatch(stylesheet, /\.routeOverlay|\.routeLine|\.inkRoute|\.dataSelectedRoute|\.routeStop|\.mapControls/);
 });

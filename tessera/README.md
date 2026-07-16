@@ -156,6 +156,14 @@ npm run lint
 npm run build
 ```
 
+## Deploy
+
+The included Cloud Build configuration passes the optional browser-only Maps key at build time and keeps server secrets in the deployment environment.
+
+```bash
+gcloud builds submit --config cloudbuild.yaml --substitutions "_IMAGE=$image,_NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=$mapsKey"
+```
+
 ## How Codex and GPT-5.6 were used
 
 Codex was used to scaffold the Next.js application, freeze the trip data contract, build the server routes, implement the deterministic budget validator, and create the mock-backed verification scripts. The design decision that drove the build was to make a group compromise visible and challengeable, rather than produce another opaque AI itinerary.
