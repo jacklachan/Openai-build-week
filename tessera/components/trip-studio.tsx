@@ -6,17 +6,20 @@ import { AtlasMotion } from "./atlas-motion";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { createPlanDraft, PlanForm, type PlanRequestPayload } from "./plan-form";
+import { ReplanAudit } from "./replan-audit";
 import { TradeoffPanel } from "./tradeoff-panel";
 import { TripMap } from "./trip-map";
 import { TravelerChips } from "./traveler-chips";
 import {
   getActiveVetoPreview,
   getAgreementEntries,
+  getDemoVetoPreview,
   getSelectedDay,
   getVetoPreview,
   type VetoPreview,
 } from "../lib/studio";
 import type { Trip } from "../lib/types";
+import { diffTrips, type PlanDiff } from "../lib/replan";
 
 export { getActiveVetoPreview } from "../lib/studio";
 
@@ -30,8 +33,40 @@ type PlanResponse = {
 };
 
 type EditResponse = PlanResponse & {
-  diff?: unknown;
+  diff?: PlanDiff;
 };
+
+export type JudgeDemoStep = "load" | "preview" | "apply" | "complete";
+
+/** Keeps the no-key judge path explicit and deterministic for a live demo. */
+export function getJudgeDemoStep(
+  hasTrip: boolean,
+  hasPreview: boolean,
+  hasAppliedVeto: boolean,
+): JudgeDemoStep {
+  if (!hasTrip) return "load";
+  if (hasAppliedVeto) return "complete";
+  return hasPreview ? "apply" : "preview";
+}
+
+/** A trip loaded from the fixture must never spend credits when its veto is applied. */
+export function usesDeterministicDemoReplan(source: PlanSource | null) {
+  return source === "demo";
+}
+
+/** Judge Mode is reserved for the fixture source, not a live or cached plan. */
+export function isJudgeModeSource(source: PlanSource | null) {
+  return source === "demo";
+}
+
+function getJudgeStepLabel(step: JudgeDemoStep) {
+  return {
+    apply: "Apply the veto",
+    complete: "Restart the Tokyo demo",
+    load: "Load the Tokyo demo",
+    preview: "Preview the conflict",
+  }[step];
+}
 
 function hasPlanningWorkspace(trip: Trip | null): trip is Trip {
   return (
@@ -97,11 +132,19 @@ export function TripStudio() {
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [activePreview, setActivePreview] = useState<VetoPreview | null>(null);
+  const [replanAudit, setReplanAudit] = useState<PlanDiff | null>(null);
   const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const canShowWorkspace = canRenderTripWorkspace(phase, activeTrip);
-  const vetoPreview = hasPlanningWorkspace(activeTrip) ? getVetoPreviewForTrip(activeTrip) : undefined;
+  const vetoPreview =
+    hasPlanningWorkspace(activeTrip) && !replanAudit
+      ? source === "demo"
+        ? getDemoVetoPreview(activeTrip)
+        : getVetoPreviewForTrip(activeTrip)
+      : undefined;
   const visibleVetoPreview = getActiveVetoPreview(activePreview, selectedDay, selectedActivityId);
+  const showsJudgeMode = isJudgeModeSource(source);
+  const judgeStep = getJudgeDemoStep(Boolean(activeTrip), Boolean(visibleVetoPreview), Boolean(replanAudit));
 
   async function requestPlan(request: PlanRequestPayload) {
     setPendingPlan(request);
@@ -130,6 +173,7 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
     } catch (error) {
@@ -161,6 +205,7 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
     } catch (error) {
@@ -193,6 +238,23 @@ export function TripStudio() {
     setIsApplyingVeto(true);
     setErrorMessage("");
     try {
+      if (usesDeterministicDemoReplan(source)) {
+        const response = await fetch("/api/demo?version=2");
+        const payload = (await response.json()) as PlanResponse;
+        if (!response.ok || !payload.trip || payload.source !== "demo") {
+          throw new Error(payload.error ?? "Unable to apply the demo veto");
+        }
+
+        const selection = getPlanSelection(payload.trip);
+        setActiveTrip(payload.trip);
+        setSelectedDay(selection.day);
+        setSelectedActivityId(selection.activityId);
+        setActivePreview(null);
+        setReplanAudit(diffTrips(activeTrip, payload.trip));
+        setSource("demo");
+        return;
+      }
+
       const command = `${activeTrip.travelers[0]?.name ?? "A traveler"} vetoes ${vetoPreview.removedActivity}. Replace it with ${vetoPreview.replacement} at ${vetoPreview.afterTime}.`;
       const response = await fetch("/api/edit", {
         body: JSON.stringify({ command, trip: activeTrip }),
@@ -209,12 +271,25 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplanAudit(payload.diff ?? null);
       setSource(payload.source);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Unable to apply the veto");
     } finally {
       setIsApplyingVeto(false);
     }
+  }
+
+  function advanceJudgeDemo() {
+    if (judgeStep === "load" || judgeStep === "complete") {
+      void loadDemo();
+      return;
+    }
+    if (judgeStep === "preview") {
+      toggleVetoPreview();
+      return;
+    }
+    void applyVeto();
   }
 
   if (phase !== "ready") {
@@ -245,8 +320,9 @@ export function TripStudio() {
             submitLabel={isGenerating ? "Generating plan" : phase === "error" ? "Retry" : "Generate plan"}
           />
           <button className="demoButton" disabled={isGenerating} onClick={() => void loadDemo()} type="button">
-            Load the Tokyo demo
+            {getJudgeStepLabel("load")}
           </button>
+          <p className="judgeModeIntro">JUDGE MODE // A deterministic, no-key walkthrough: load → veto → audit.</p>
         </section>
       </main>
     );
@@ -262,11 +338,29 @@ export function TripStudio() {
         <TravelerChips phase="ready" travelers={activeTrip.travelers} trip={activeTrip} />
       </header>
 
+      {showsJudgeMode ? (
+      <section className="judgeGuide" aria-labelledby="judge-guide-title">
+        <div>
+          <p>JUDGE MODE // NO KEY REQUIRED</p>
+          <h2 id="judge-guide-title">Test one disagreement from start to finish.</h2>
+        </div>
+        <ol aria-label="Judge demo steps">
+          <li aria-current={judgeStep === "load" ? "step" : undefined} className={judgeStep === "load" ? "judgeStep-active" : "judgeStep-complete"}>01 // Load</li>
+          <li aria-current={judgeStep === "preview" ? "step" : undefined} className={judgeStep === "preview" ? "judgeStep-active" : judgeStep === "load" ? "" : "judgeStep-complete"}>02 // Veto</li>
+          <li aria-current={judgeStep === "apply" ? "step" : undefined} className={judgeStep === "apply" ? "judgeStep-active" : judgeStep === "complete" ? "judgeStep-complete" : ""}>03 // Audit</li>
+        </ol>
+        <button className="judgeAction" disabled={isApplyingVeto} onClick={advanceJudgeDemo} type="button">
+          {isApplyingVeto ? "Applying veto" : getJudgeStepLabel(judgeStep)}
+        </button>
+      </section>
+      ) : null}
+
       <TradeoffPanel
         agreement={getAgreementEntries(activeTrip)}
         tradeoffs={activeTrip.tradeoffs}
         trip={activeTrip}
       />
+      {replanAudit ? <ReplanAudit currency={activeTrip.constraints.currency} diff={replanAudit} /> : null}
       {errorMessage ? (
         <p className="replanError" role="alert">
           {formatPlanError(errorMessage)}. Try the demo again.

@@ -303,6 +303,19 @@ button {
   color: var(--foreground-muted);
 }
 
+.judgeModeIntro {
+  grid-column: 2 / span 8;
+  max-width: 46rem;
+  margin: 1rem 0 0;
+  color: var(--surface);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
 .planForm button:disabled,
 .planForm input:disabled {
   cursor: not-allowed;
@@ -421,6 +434,101 @@ button {
 .generatedHeader .travelerChip-satisfied {
   border-color: var(--border);
   border-left-color: var(--verification);
+}
+
+.judgeGuide {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(14rem, 1.45fr) minmax(0, 2fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem clamp(1rem, 3vw, 3rem);
+  color: var(--foreground);
+  background: var(--neon);
+  border-bottom: var(--border-bold) solid var(--foreground);
+}
+
+.judgeGuide p,
+.judgeGuide h2 {
+  margin: 0;
+}
+
+.judgeGuide p,
+.judgeStep,
+.replanAuditHeading p,
+.replanAuditGrid > section > p,
+.replanAuditHeading span,
+.auditEmpty,
+.auditActivityList,
+.replanAuditGrid > section > span {
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.judgeGuide h2 {
+  max-width: 30rem;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.judgeGuide ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.judgeGuide li {
+  padding: 0.55rem;
+  color: var(--foreground-muted);
+  border: var(--border-thin) solid currentColor;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.judgeGuide .judgeStep-active {
+  color: var(--background);
+  background: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.judgeGuide .judgeStep-complete {
+  color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.judgeAction {
+  padding: 0.75rem 0.9rem;
+  color: var(--background);
+  background: var(--foreground);
+  border: var(--border-bold) solid var(--foreground);
+  border-radius: var(--radius);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.judgeAction:hover:not(:disabled) {
+  color: var(--foreground);
+  background: transparent;
+}
+
+.judgeAction:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .tradeoffPanel {
@@ -544,6 +652,95 @@ button {
   font-family: var(--font-jetbrains-mono);
   font-size: 0.75rem;
   font-weight: 700;
+}
+
+.replanAudit {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(15rem, 1fr) minmax(0, 2fr);
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 3vw, 3rem);
+  color: var(--background);
+  background: var(--foreground);
+  border-bottom: var(--border-bold) solid var(--warning);
+}
+
+.replanAuditHeading {
+  padding-left: 0.75rem;
+  border-left: var(--border-bold) solid var(--warning);
+}
+
+.replanAuditHeading p {
+  color: var(--warning);
+}
+
+.replanAuditHeading h2 {
+  max-width: 18rem;
+  margin: 0.35rem 0 0.75rem;
+  color: var(--surface-raised);
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+
+.replanAuditHeading span {
+  color: var(--background);
+}
+
+.replanAuditGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: var(--border-thin) solid var(--surface);
+}
+
+.replanAuditGrid > section {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.7rem;
+  border-right: var(--border-thin) solid var(--surface);
+  border-bottom: var(--border-thin) solid var(--surface);
+}
+
+.replanAuditGrid > section:last-child {
+  border-right: 0;
+}
+
+.replanAuditGrid > section > p {
+  margin: 0;
+  color: var(--background);
+}
+
+.auditActivityList {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0;
+  margin: 0;
+  color: var(--surface-raised);
+  list-style: none;
+}
+
+.auditActivityList li::before {
+  color: var(--warning);
+  content: "// ";
+}
+
+.replanAuditGrid > section:nth-child(2) .auditActivityList li::before {
+  color: var(--verification);
+}
+
+.auditEmpty,
+.replanAuditGrid > section > span {
+  margin: 0;
+  color: var(--foreground-muted);
+}
+
+.replanAuditGrid strong {
+  color: var(--neon);
+  font-size: 1.2rem;
+  letter-spacing: -0.04em;
 }
 
 .studioWorkspace {
@@ -1033,6 +1230,23 @@ button {
     grid-column: 1;
   }
 
+  .judgeGuide,
+  .replanAudit {
+    grid-template-columns: 1fr;
+  }
+
+  .replanAuditGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .replanAuditGrid > section:nth-child(2) {
+    border-right: 0;
+  }
+
+  .replanAuditGrid > section:nth-child(3) {
+    border-right: var(--border-thin) solid var(--surface);
+  }
+
   .generatedHeader .travelerChips {
     justify-content: flex-start;
   }
@@ -1152,6 +1366,16 @@ button {
 
   .vetoPanel {
     grid-template-columns: 1fr;
+  }
+
+  .judgeGuide ol,
+  .replanAuditGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .replanAuditGrid > section,
+  .replanAuditGrid > section:nth-child(3) {
+    border-right: 0;
   }
 
   .signalButton,

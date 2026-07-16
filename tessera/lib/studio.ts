@@ -18,6 +18,24 @@ export interface VetoPreview {
   replacement: string;
 }
 
+const DEMO_VETO = {
+  activityId: "mount-takao",
+  afterTime: "11:00",
+  beforeTime: "08:30",
+  day: 2,
+  removedActivity: "Mount Takao summit trail",
+  replacement: "teamLab Planets",
+} as const satisfies VetoPreview;
+
+/** Returns the one fixed veto whose result is available from the no-key demo endpoint. */
+export function getDemoVetoPreview(trip: Trip): VetoPreview | undefined {
+  const activity = trip.days
+    .find((day) => day.day === DEMO_VETO.day)
+    ?.activities.find((item) => item.id === DEMO_VETO.activityId);
+
+  return activity?.title === DEMO_VETO.removedActivity ? { ...DEMO_VETO } : undefined;
+}
+
 /** Returns a preview only while its selected activity remains on its selected day. */
 export function getActiveVetoPreview(
   preview: VetoPreview | null | undefined,
