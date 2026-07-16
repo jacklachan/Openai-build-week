@@ -1,5 +1,6 @@
 import type { AgreementEntry, VetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
+import { DecisionRoom } from "./decision-room";
 import { getBudgetState } from "./presentation";
 
 interface GroupAgreementProps {
@@ -43,6 +44,8 @@ export function GroupAgreement({
         <p className="sectionKicker">THE TRIP PACT</p>
         <h2 id="agreement-title">Everyone gets a win.</h2>
       </header>
+
+      <DecisionRoom agreement={agreement} key={`${trip.id}-${trip.version}`} trip={trip} />
 
       <div className="transcriptTurns">
         {agreement.map(({ concession, mustDo, traveler }) => (
@@ -118,6 +121,7 @@ export function GroupAgreement({
           ) : null}
         </section>
       ) : null}
+
     </aside>
   );
 }

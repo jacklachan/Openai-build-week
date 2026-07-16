@@ -2012,6 +2012,93 @@ button {
 .signalButton { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
 .signalButton:hover { color: #c0fe04; background: #07111d; }
 
+.decisionRoom {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(184, 214, 244, 0.22);
+}
+
+.decisionRoomHeading,
+.decisionVote,
+.decisionRoomFooter,
+.decisionActions {
+  display: flex;
+  align-items: center;
+}
+
+.decisionRoomHeading,
+.decisionRoomFooter {
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.decisionRoomHeading p,
+.decisionRoomHeading h3,
+.decisionRoomFooter p {
+  margin: 0;
+}
+
+.decisionRoomHeading p,
+.decisionVote span,
+.decisionCount {
+  color: #a8c5e8;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.decisionRoomHeading h3 {
+  margin-top: 0.2rem;
+  color: #ffffff;
+  font-size: 1rem;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.decisionCount {
+  flex: 0 0 auto;
+  padding: 0.32rem 0.38rem;
+  border: 1px solid rgba(184, 214, 244, 0.3);
+}
+
+.decisionCount-ready { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+.decisionVotes { display: grid; gap: 0.38rem; }
+
+.decisionVote {
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.42rem 0;
+  border-bottom: 1px solid rgba(184, 214, 244, 0.14);
+}
+
+.decisionVote > div:first-child { display: grid; gap: 0.1rem; }
+.decisionVote strong { color: #eaf4ff; font-size: 0.77rem; }
+.decisionActions { gap: 0.3rem; }
+
+.decisionButton,
+.briefButton {
+  padding: 0.35rem 0.46rem;
+  color: #b6d2ee;
+  background: transparent;
+  border: 1px solid rgba(184, 214, 244, 0.3);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.decisionButton:hover,
+.decisionButton-active,
+.briefButton:hover { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+.decisionButton-warning { color: #07111d; background: #ff6b32; border-color: #ff6b32; }
+.decisionRoomFooter { align-items: end; }
+.decisionRoomFooter p { max-width: 14rem; color: #a8c5e8; font-size: 0.68rem; line-height: 1.35; }
+.briefButton { flex: 0 0 auto; color: #ffffff; }
+
 .tradeoffPanel {
   gap: 1.5rem;
   padding: 3rem clamp(1rem, 5vw, 5rem);
@@ -2073,6 +2160,7 @@ button {
   .map3dHint { display: none; }
   .itineraryTray { max-width: none; }
   .itineraryTrayHeading { align-items: start; }
+  .decisionRoomFooter { align-items: start; }
   .agreementTranscript { min-height: auto; }
 }
 @import "maplibre-gl/dist/maplibre-gl.css";

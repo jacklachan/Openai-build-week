@@ -4,6 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
+import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
 import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
@@ -28,6 +29,8 @@ test("renders contract-derived transcript, budget, and Veto preview state", () =
   );
 
   assert.match(html, /agreementTranscript/);
+  assert.match(html, /GROUP CHECK-IN/);
+  assert.match(html, /Download brief/);
   assert.doesNotMatch(html, /avatar/);
   assert.match(html, /SPENT \/\/ CEILING \/\/ DELTA/);
   assert.match(html, /inkButton/);
@@ -112,6 +115,21 @@ test("renders the key-free interactive 3D map shell", () => {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY = browserKey;
     }
   }
+});
+
+test("turns an explicit group check-in into a ready-to-book outcome and exportable brief", () => {
+  const agreement = getAgreementEntries(trip);
+  const decisions = Object.fromEntries(agreement.map((entry) => [entry.traveler.id, "ready" as const]));
+
+  assert.deepEqual(getDecisionRoomSummary(agreement, decisions), {
+    needsChange: 0,
+    ready: agreement.length,
+    total: agreement.length,
+    unanimous: true,
+  });
+  assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
+  assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
+  assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
 });
 
 test("uses only the visible nine-tile map viewport and projects known stops", () => {
