@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 
 import { AtlasMotion } from "./atlas-motion";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { createPlanDraft, PlanForm, type PlanRequestPayload } from "./plan-form";
+import { ProposalArena } from "./proposal-arena";
 import { ReplanAudit } from "./replan-audit";
 import { TradeoffPanel } from "./tradeoff-panel";
 import { TripMap } from "./trip-map";
@@ -20,6 +21,7 @@ import {
 } from "../lib/studio";
 import type { Trip } from "../lib/types";
 import { diffTrips, type PlanDiff } from "../lib/replan";
+import { getProposalOptions, type ProposalId, type ProposalOption } from "../lib/proposal-arena";
 
 export { getActiveVetoPreview } from "../lib/studio";
 
@@ -125,6 +127,8 @@ export function getVetoPreviewForTrip(trip: Trip) {
 
 export function TripStudio() {
   const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
+  const [proposalBaseTrip, setProposalBaseTrip] = useState<Trip | null>(null);
+  const [activeProposalId, setActiveProposalId] = useState<ProposalId>("fairness");
   const [planDraft, setPlanDraft] = useState(createPlanDraft);
   const [pendingPlan, setPendingPlan] = useState<PlanRequestPayload | null>(null);
   const [phase, setPhase] = useState<StudioPhase>("landing");
@@ -136,6 +140,10 @@ export function TripStudio() {
   const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const canShowWorkspace = canRenderTripWorkspace(phase, activeTrip);
+  const proposalOptions = useMemo(
+    () => (hasPlanningWorkspace(proposalBaseTrip) ? getProposalOptions(proposalBaseTrip) : []),
+    [proposalBaseTrip],
+  );
   const vetoPreview =
     hasPlanningWorkspace(activeTrip) && !replanAudit
       ? source === "demo"
@@ -170,6 +178,8 @@ export function TripStudio() {
       const selection = getPlanSelection(payload.trip);
 
       setActiveTrip(payload.trip);
+      setProposalBaseTrip(payload.trip);
+      setActiveProposalId("fairness");
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
@@ -202,6 +212,8 @@ export function TripStudio() {
 
       const selection = getPlanSelection(payload.trip);
       setActiveTrip(payload.trip);
+      setProposalBaseTrip(payload.trip);
+      setActiveProposalId("fairness");
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
@@ -217,6 +229,23 @@ export function TripStudio() {
   function selectActivity(activityId: string) {
     setActivePreview(null);
     setSelectedActivityId(activityId);
+  }
+
+  function selectProposal(proposal: ProposalOption) {
+    const proposalFocus = proposal.id === "fairness"
+      ? undefined
+      : proposal.trip.days
+          .flatMap((day) => day.activities.map((activity) => ({ activity, day: day.day })))
+          .find(({ activity }) => activity.id.includes("late-alternative") || activity.id.includes("local-set"));
+    const selection = proposalFocus
+      ? { activityId: proposalFocus.activity.id, day: proposalFocus.day }
+      : getPlanSelection(proposal.trip);
+    setActiveTrip(proposal.trip);
+    setActiveProposalId(proposal.id);
+    setSelectedDay(selection.day);
+    setSelectedActivityId(selection.activityId);
+    setActivePreview(null);
+    setReplanAudit(null);
   }
 
   function toggleVetoPreview() {
@@ -247,6 +276,8 @@ export function TripStudio() {
 
         const selection = getPlanSelection(payload.trip);
         setActiveTrip(payload.trip);
+        setProposalBaseTrip(payload.trip);
+        setActiveProposalId("fairness");
         setSelectedDay(selection.day);
         setSelectedActivityId(selection.activityId);
         setActivePreview(null);
@@ -268,6 +299,8 @@ export function TripStudio() {
 
       const selection = getPlanSelection(payload.trip);
       setActiveTrip(payload.trip);
+      setProposalBaseTrip(payload.trip);
+      setActiveProposalId("fairness");
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
@@ -359,6 +392,14 @@ export function TripStudio() {
         <p className="replanError" role="alert">
           {formatPlanError(errorMessage)}. Try the demo again.
         </p>
+      ) : null}
+
+      {proposalOptions.length ? (
+        <ProposalArena
+          activeProposalId={activeProposalId}
+          onSelect={selectProposal}
+          proposals={proposalOptions}
+        />
       ) : null}
 
       <section className="planningWorkspace" aria-label="Generated planning workspace">

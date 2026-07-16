@@ -9,6 +9,8 @@ import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
 import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
 import { getOsmViewport } from "../components/osm-itinerary-map";
+import { ProposalArena } from "../components/proposal-arena";
+import { getProposalOptions } from "../lib/proposal-arena";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
@@ -130,6 +132,22 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
   assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
   assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
   assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
+});
+
+test("renders three proposal choices with auditable trade-off scores", () => {
+  const html = renderToStaticMarkup(
+    createElement(ProposalArena, {
+      activeProposalId: "fairness",
+      onSelect: () => undefined,
+      proposals: getProposalOptions(trip),
+    }),
+  );
+
+  assert.match(html, /PROPOSAL ARENA/);
+  assert.match(html, /Best fairness/);
+  assert.match(html, /Lowest friction/);
+  assert.match(html, /Most headroom/);
+  assert.match(html, /BUDGET/);
 });
 
 test("uses only the visible nine-tile map viewport and projects known stops", () => {

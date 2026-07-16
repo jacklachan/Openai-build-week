@@ -2115,6 +2115,88 @@ button {
 .tradeoffLedgerRow > span:first-child, .tradeoffNet { color: #eaf4ff; }
 .tradeoffNarration { color: #d9e9ff; background: transparent; border-color: #c0fe04; }
 
+.proposalArena {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 0.9rem;
+  padding: 1.2rem clamp(1rem, 3vw, 3.5rem) 1.35rem;
+  background: linear-gradient(104deg, #081321 0%, #122744 62%, #091424 100%);
+  border-bottom: 1px solid rgba(184, 214, 244, 0.24);
+}
+
+.proposalArenaHeading,
+.proposalCardTopline,
+.proposalScores,
+.proposalCard button {
+  font-family: var(--font-jetbrains-mono);
+}
+
+.proposalArenaHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.proposalArenaHeading p,
+.proposalArenaHeading h2 { margin: 0; }
+.proposalArenaHeading > div > p,
+.proposalArenaHeading > p,
+.proposalCardTopline,
+.proposalScores dt {
+  color: #a8c5e8;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.proposalArenaHeading h2 {
+  margin-top: 0.2rem;
+  color: #ffffff;
+  font-size: clamp(1.15rem, 2vw, 1.7rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.proposalArenaHeading > p { max-width: 19rem; text-align: right; }
+.proposalGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+
+.proposalCard {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.85rem;
+  color: #d9e9ff;
+  background: rgba(6, 16, 29, 0.62);
+  border: 1px solid rgba(184, 214, 244, 0.28);
+}
+
+.proposalCard-selected { border-color: #c0fe04; box-shadow: inset 0 0 0 1px #c0fe04; }
+.proposalCardTopline { display: flex; justify-content: space-between; gap: 0.5rem; }
+.proposalCard-selected .proposalCardTopline span:last-child { color: #07111d; background: #c0fe04; padding: 0.12rem 0.22rem; }
+.proposalCard h3, .proposalCard p { margin: 0; }
+.proposalCard h3 { color: #ffffff; font-size: 1rem; letter-spacing: -0.03em; line-height: 1.1; }
+.proposalCard > p { color: #a8c5e8; font-size: 0.74rem; line-height: 1.3; }
+
+.proposalScores {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.55rem 0;
+  margin: 0;
+  border-top: 1px solid rgba(184, 214, 244, 0.18);
+  border-bottom: 1px solid rgba(184, 214, 244, 0.18);
+}
+
+.proposalScores div { display: grid; gap: 0.1rem; }
+.proposalScores dt, .proposalScores dd { margin: 0; }
+.proposalScores dd { color: #c0fe04; font-size: 1rem; font-weight: 900; letter-spacing: -0.05em; }
+.proposalCard button { justify-self: start; padding: 0.4rem 0.5rem; color: #d9e9ff; background: transparent; border: 1px solid rgba(184, 214, 244, 0.38); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.proposalCard button:hover, .proposalCard-selected button { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
+
 @media (max-width: 1050px) {
   .generatedHeader,
   .judgeGuide {
@@ -2138,6 +2220,10 @@ button {
   .studioWorkspace {
     grid-template-columns: 1fr;
   }
+
+  .proposalGrid { grid-template-columns: 1fr; }
+  .proposalArenaHeading { align-items: start; flex-direction: column; }
+  .proposalArenaHeading > p { text-align: left; }
 
   .mapWorkspace {
     min-height: 38rem;
