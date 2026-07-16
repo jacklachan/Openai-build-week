@@ -10,7 +10,7 @@ test("starts from a generic landing form without the Tokyo fixture", () => {
 
   assert.match(
     html,
-    /Everyone wants something different\. Get a plan that says who gave up what\./,
+    /Turn competing wishes into one visible agreement/,
   );
   assert.match(html, /Destination/);
   assert.match(html, /Load the Tokyo demo/);

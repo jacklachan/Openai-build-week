@@ -331,11 +331,44 @@ export function TripStudio() {
     return (
       <main className={`studioShell studioShell-${phase}`}>
         <section className="landingHero" aria-labelledby="landing-title">
-          <p className="landingKicker">TESSERA // GROUP TRIP NEGOTIATOR</p>
-          <h1 id="landing-title">Build one trip everyone can live with.</h1>
-          <p className="landingSubhead">
-            Everyone wants something different. Get a plan that says who gave up what.
-          </p>
+          <div className="landingCopy">
+            <p className="landingKicker">Tessera · shared travel decisions</p>
+            <h1 id="landing-title">The trip everyone can say yes to.</h1>
+            <p className="landingSubhead">
+              Turn competing wishes into one visible agreement—with every trade-off, route, and fallback made clear.
+            </p>
+            <div className="landingProof" aria-label="How Tessera resolves a group trip">
+              <p>How the room comes together</p>
+              <div className="landingProofRows">
+                <span><b>01</b> Capture what matters to each traveler</span>
+                <span><b>02</b> Compare compromises, not just itineraries</span>
+                <span><b>03</b> Leave with a route everyone understands</span>
+              </div>
+            </div>
+            <div className="landingSignals" aria-label="Tessera benefits">
+              <span>Real places</span>
+              <span>3D route view</span>
+              <span>Explainable pact</span>
+            </div>
+          </div>
+          <aside className="landingPlanner" aria-label="Start a group trip plan">
+            <div className="landingPlannerHeading">
+              <div>
+                <p>Start a decision room</p>
+                <h2>Plan together, without the group-chat spiral.</h2>
+              </div>
+              <span>01</span>
+            </div>
+            <div className="landingDemo">
+              <div>
+                <p>Try the full experience</p>
+                <strong>Tokyo · 3 travelers · 3 days</strong>
+              </div>
+              <button className="demoButton" disabled={isGenerating} onClick={() => void loadDemo()} type="button">
+                {getJudgeStepLabel("load")}
+              </button>
+            </div>
+            <p className="judgeModeIntro">No key needed · load → veto → audit</p>
           {isGenerating && pendingPlan ? (
             <TravelerChips phase="generating" travelers={pendingPlan.travelers} />
           ) : null}
@@ -350,12 +383,10 @@ export function TripStudio() {
             draft={planDraft}
             onDraftChange={setPlanDraft}
             onSubmit={(request) => void requestPlan(request)}
-            submitLabel={isGenerating ? "Generating plan" : phase === "error" ? "Retry" : "Generate plan"}
+            submitLabel={isGenerating ? "Building your agreement..." : phase === "error" ? "Retry plan" : "Create my agreement"}
           />
-          <button className="demoButton" disabled={isGenerating} onClick={() => void loadDemo()} type="button">
-            {getJudgeStepLabel("load")}
-          </button>
           <p className="judgeModeIntro">JUDGE MODE // A deterministic, no-key walkthrough: load → veto → audit.</p>
+          </aside>
         </section>
       </main>
     );
@@ -366,7 +397,7 @@ export function TripStudio() {
   return (
     <main className="studioShell studioShell-ready">
       <header className="generatedHeader">
-        <p>{`PLAN GENERATED // ${source?.toUpperCase() ?? "LIVE"}`}</p>
+        <p><b>TESSERA</b>{` · ${source === "demo" ? "guided demo" : source?.toUpperCase() ?? "LIVE"}`}</p>
         <span>{activeTrip.constraints.destination}</span>
         <TravelerChips phase="ready" travelers={activeTrip.travelers} trip={activeTrip} />
       </header>
