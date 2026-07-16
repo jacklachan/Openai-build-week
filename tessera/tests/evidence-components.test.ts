@@ -143,7 +143,7 @@ test("renders three proposal choices with auditable trade-off scores", () => {
     }),
   );
 
-  assert.match(html, /PROPOSAL ARENA/);
+  assert.match(html, /Three viable futures/);
   assert.match(html, /Best fairness/);
   assert.match(html, /Lowest friction/);
   assert.match(html, /Most headroom/);

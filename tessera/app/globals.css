@@ -2597,3 +2597,186 @@ button {
   .proposalCard { transition: none; }
   .proposalCard:hover { transform: none; }
 }
+
+/* The route is the hero. Every decision layer now sits on the city instead of above it. */
+.studioShell-ready {
+  --tessera-ink: #06111f;
+  --tessera-panel: rgba(8, 25, 43, 0.88);
+  --tessera-line: rgba(193, 222, 247, 0.28);
+  --tessera-signal: #d4ff26;
+  --tessera-coral: #ff8066;
+  background: var(--tessera-ink);
+}
+
+.generatedHeader {
+  min-height: 3.35rem;
+  padding: 0.5rem clamp(1rem, 2.2vw, 2.5rem);
+  background: rgba(6, 17, 31, 0.98);
+}
+.generatedHeader .travelerChips { gap: 0.4rem; }
+.generatedHeader .travelerChip { min-width: 10.5rem; padding: 0.38rem 0.52rem; }
+
+.judgeGuide {
+  min-height: 3.7rem;
+  grid-template-columns: minmax(13rem, 0.7fr) minmax(22rem, 1.8fr) auto;
+  gap: 1.3rem;
+  padding: 0.48rem clamp(1rem, 2.2vw, 2.5rem);
+  background: linear-gradient(90deg, #0b2039 0%, #12375b 52%, #0b1a2d 100%);
+}
+.judgeGuide > div { display: grid; align-content: center; }
+.judgeGuide > div > p { margin-bottom: 0.08rem; }
+.judgeGuide h2 { font-size: clamp(0.88rem, 1.25vw, 1.05rem); letter-spacing: -0.035em; }
+.judgeGuide ol { gap: 0.35rem; }
+.judgeGuide li { min-height: 2rem; padding: 0.42rem 0.52rem; font-size: 0.57rem; }
+.judgeAction { min-height: 2.1rem; padding: 0.45rem 0.68rem; border-radius: 0.35rem; font-size: 0.58rem; }
+
+.studioWorkspace {
+  grid-template-columns: minmax(0, 1fr) minmax(24rem, 29rem);
+  min-height: calc(100vh - 7.05rem);
+}
+.mapWorkspace {
+  min-height: calc(100vh - 7.05rem);
+  border-right: 1px solid var(--tessera-line);
+  background: #0b1c2f;
+}
+.mapLibreItineraryMap::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(180deg, rgba(4, 17, 30, 0.36), transparent 34%, rgba(4, 17, 30, 0.24) 100%);
+}
+.mapLibreCanvas { z-index: 0; }
+.map3dHud,
+.map3dHint,
+.map3dStop { z-index: 4; }
+.map3dHud {
+  top: 1rem;
+  left: 1rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(3, 15, 28, 0.8);
+  border-left-color: var(--tessera-signal);
+  border-radius: 0 0.55rem 0.55rem 0;
+  backdrop-filter: blur(10px);
+}
+.map3dHint {
+  top: auto;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.48rem 0.6rem;
+  border-radius: 0.35rem;
+  backdrop-filter: blur(8px);
+}
+
+.mapWorkspace .proposalArena {
+  position: absolute;
+  z-index: 10;
+  top: 1rem;
+  right: 1rem;
+  left: min(12rem, 20vw);
+  display: grid;
+  gap: 0.65rem;
+  max-width: 62rem;
+  padding: 0.75rem;
+  color: #f4f8ff;
+  background: linear-gradient(125deg, rgba(6, 21, 37, 0.94), rgba(13, 42, 69, 0.84));
+  border: 1px solid rgba(215, 255, 38, 0.34);
+  border-radius: 0.9rem;
+  box-shadow: 0 1.35rem 3.5rem rgba(1, 8, 17, 0.38);
+  backdrop-filter: blur(18px);
+}
+.mapWorkspace .proposalArenaHeading { align-items: center; }
+.mapWorkspace .proposalArenaHeading > div > p,
+.mapWorkspace .proposalArenaHeading > p { color: #b6d0ea; font-size: 0.55rem; }
+.mapWorkspace .proposalArenaHeading h2 { margin-top: 0.12rem; font-size: clamp(1.05rem, 1.5vw, 1.35rem); }
+.mapWorkspace .proposalArenaHeading > p { max-width: 11rem; line-height: 1.25; }
+.mapWorkspace .proposalGrid { gap: 0.45rem; }
+.mapWorkspace .proposalCard {
+  gap: 0.4rem;
+  min-height: 8.2rem;
+  padding: 0.62rem;
+  background: rgba(4, 16, 29, 0.58);
+  border-color: rgba(183, 214, 243, 0.3);
+  border-radius: 0.56rem;
+}
+.mapWorkspace .proposalCard-selected {
+  background: linear-gradient(145deg, rgba(30, 61, 52, 0.92), rgba(7, 25, 38, 0.86));
+  border-color: var(--tessera-signal);
+  box-shadow: inset 0 0 0 1px var(--tessera-signal), 0 0.5rem 1.4rem rgba(0, 0, 0, 0.2);
+}
+.mapWorkspace .proposalCardTopline,
+.mapWorkspace .proposalScores dt { font-size: 0.51rem; }
+.mapWorkspace .proposalCard h3 { font-size: 0.91rem; line-height: 1.08; }
+.mapWorkspace .proposalCard > p { min-height: 1.9em; font-size: 0.66rem; line-height: 1.25; }
+.mapWorkspace .proposalScores { gap: 0.2rem; padding: 0.32rem 0; }
+.mapWorkspace .proposalScores dd { font-size: 0.82rem; }
+.mapWorkspace .proposalCard button {
+  width: 100%;
+  padding: 0.34rem 0.45rem;
+  border-radius: 0.28rem;
+  font-size: 0.53rem;
+}
+
+.itineraryTray {
+  z-index: 9;
+  right: auto;
+  bottom: 1.25rem;
+  left: 1rem;
+  width: min(31rem, calc(100% - 2rem));
+  max-width: none;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  background: rgba(5, 20, 35, 0.88);
+  border-color: rgba(193, 222, 247, 0.38);
+  border-radius: 0.78rem;
+  box-shadow: 0 1.5rem 3.5rem rgba(1, 8, 17, 0.3);
+}
+.itineraryTrayHeading h2 { font-size: clamp(1rem, 1.25vw, 1.18rem); }
+.timelineActivity { min-height: 2rem; font-size: 0.72rem; }
+
+.agreementTranscript {
+  gap: 1.15rem;
+  padding: 1.35rem 1.15rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(212, 255, 38, 0.08), transparent 15rem),
+    #091a2d;
+}
+.transcriptHeading h2 { font-size: clamp(1.45rem, 2vw, 1.9rem); }
+.transcriptHeading .sectionKicker,
+.transcriptSpeaker,
+.budgetLabels,
+.vetoLabel { font-size: 0.6rem; }
+.transcriptTurn { padding-bottom: 0.9rem; }
+.transcriptWant { font-size: 0.89rem; }
+.transcriptGive { font-size: 0.73rem; line-height: 1.42; }
+.transcriptWin { font-size: 1.05rem; }
+.decisionRoom { gap: 0.9rem; }
+.decisionVote { padding: 0.55rem 0; }
+.decisionVote strong { font-size: 0.85rem; }
+.decisionButton,
+.briefButton { min-height: 2rem; padding: 0.4rem 0.55rem; font-size: 0.6rem; border-radius: 0.3rem; }
+
+@media (max-width: 1200px) {
+  .studioWorkspace { grid-template-columns: minmax(0, 1fr) minmax(21rem, 25rem); }
+  .mapWorkspace .proposalArena { left: 1rem; }
+}
+
+@media (max-width: 1050px) {
+  .studioWorkspace { min-height: auto; }
+  .mapWorkspace { min-height: 44rem; }
+  .mapWorkspace .proposalArena { position: relative; top: auto; right: auto; left: auto; margin: 1rem; }
+}
+
+@media (max-width: 700px) {
+  .generatedHeader .travelerChips { display: none; }
+  .judgeGuide { grid-template-columns: 1fr auto; }
+  .judgeGuide > div { display: none; }
+  .judgeGuide ol { display: none; }
+  .mapWorkspace { min-height: 48rem; }
+  .mapWorkspace .proposalArena { margin: 0.75rem; padding: 0.62rem; }
+  .mapWorkspace .proposalArenaHeading > p { display: none; }
+  .mapWorkspace .proposalGrid { grid-template-columns: 1fr; }
+  .mapWorkspace .proposalCard { min-height: auto; }
+  .itineraryTray { bottom: 0.75rem; left: 0.75rem; width: calc(100% - 1.5rem); }
+}

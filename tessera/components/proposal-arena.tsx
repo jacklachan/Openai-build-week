@@ -11,10 +11,10 @@ export function ProposalArena({ activeProposalId, onSelect, proposals }: Proposa
     <section className="proposalArena" aria-labelledby="proposal-arena-title">
       <header className="proposalArenaHeading">
         <div>
-          <p>PROPOSAL ARENA</p>
-          <h2 id="proposal-arena-title">Choose the compromise you can defend.</h2>
+          <p>Three viable futures</p>
+          <h2 id="proposal-arena-title">Same people. Different compromises.</h2>
         </div>
-        <p>SIMULATOR ESTIMATES // MAP UPDATES WITH EACH ROUTE</p>
+        <p>The city shifts with each choice</p>
       </header>
 
       <div className="proposalGrid">

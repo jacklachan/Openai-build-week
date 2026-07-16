@@ -425,14 +425,6 @@ export function TripStudio() {
         </p>
       ) : null}
 
-      {proposalOptions.length ? (
-        <ProposalArena
-          activeProposalId={activeProposalId}
-          onSelect={selectProposal}
-          proposals={proposalOptions}
-        />
-      ) : null}
-
       <section className="planningWorkspace" aria-label="Generated planning workspace">
         {canShowWorkspace ? (
           <div className="studioWorkspace">
@@ -443,6 +435,13 @@ export function TripStudio() {
                 trip={activeTrip}
                 vetoPreview={visibleVetoPreview}
               />
+              {proposalOptions.length ? (
+                <ProposalArena
+                  activeProposalId={activeProposalId}
+                  onSelect={selectProposal}
+                  proposals={proposalOptions}
+                />
+              ) : null}
               <AtlasMotion />
               <ItineraryTray
                 selectedActivityId={selectedActivityId}
