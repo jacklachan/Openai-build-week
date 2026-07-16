@@ -10,8 +10,16 @@ test("reports a dependency-free health payload for demo mode", () => {
   });
 });
 
-test("reports live mode without exposing configuration values", () => {
-  assert.deepEqual(getHealthPayload("false"), {
+test("reports no-key demo mode when the optional provider is not configured", () => {
+  assert.deepEqual(getHealthPayload("false", ""), {
+    mode: "demo",
+    ok: true,
+    service: "tessera-web",
+  });
+});
+
+test("reports live mode without exposing configured provider values", () => {
+  assert.deepEqual(getHealthPayload("false", "configured-provider-key"), {
     mode: "live",
     ok: true,
     service: "tessera-web",

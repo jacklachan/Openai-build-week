@@ -28,14 +28,14 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-For live planning, configure these values in `.env.local` or your deployment provider. Never commit the file.
+For optional live planning, configure these values in `.env.local` or your deployment provider. Never commit the file. Gemini is kept as an optional provider for builders with a free-tier quota; it is never required to run or judge Tessera.
 
 ```dotenv
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
-Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** Gemini or Maps calls.
+Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** Gemini or Maps calls. With no Gemini key, Tessera automatically stays in the same no-key judge mode.
 
 ## Deploy to Google Cloud Run
 
@@ -163,13 +163,13 @@ The included Cloud Build configuration passes the optional browser-only Maps key
 gcloud builds submit --config cloudbuild.yaml --substitutions "_IMAGE=$image,_NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY=$mapsKey"
 ```
 
-## How Codex and Gemini were used
+## How Codex, GPT-5.6, and the optional LLM were used
 
-Codex was used to scaffold the Next.js application, freeze the trip data contract, build the server routes, implement the deterministic budget validator, and create the mock-backed verification scripts. The design decision that drove the build was to make a group compromise visible and challengeable, rather than produce another opaque AI itinerary.
+GPT-5.6 was used through Codex to scaffold the Next.js application, freeze the trip data contract, build the server routes, implement the deterministic budget validator, create the 3D map and Proposal Arena, and write the verification suite. The key product decision was to make a group compromise visible and challengeable, rather than produce another opaque AI itinerary. The dated commit history and the Codex session below are the evidence for that work.
 
-Gemini is the optional server-side negotiation engine for live planning. It returns a JSON itinerary that is parsed and validated on the server; Tessera then recomputes the budget rather than trusting model math. Without a Gemini key, Judge Mode remains fully runnable using the included deterministic Tokyo plan and veto response.
+Gemini is an optional server-side provider for builders who have a free-tier quota. It returns JSON only; Tessera parses it, validates it on the server, and recomputes the budget rather than trusting model math. It is not presented as GPT-5.6. Without a Gemini key, the full judge path remains runnable using the deterministic Tokyo plan, Proposal Arena, 3D map, veto, and agreement export.
 
-Before submission, add the primary Codex `/feedback` session ID here and in the Devpost form.
+Before submission, complete the short evidence checklist in [docs/build-week-submission.md](docs/build-week-submission.md), then add the primary Codex `/feedback` session ID there and in the Devpost form.
 
 ## License
 
