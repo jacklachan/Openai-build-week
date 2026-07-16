@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { OsmItineraryMap } from "./osm-itinerary-map";
+import dynamic from "next/dynamic";
 import { getActiveVetoPreview, getSelectedDay, type VetoPreview } from "../lib/studio";
 import type { Activity, TransportLeg, Trip } from "../lib/types";
+
+const MapLibreItineraryMap = dynamic(
+  () => import("./maplibre-itinerary-map").then((module) => module.MapLibreItineraryMap),
+  { ssr: false },
+);
 
 type LatLng = { lat: number; lng: number };
 type RouteTravelMode = "DRIVING" | "TRANSIT" | "WALKING";
@@ -572,7 +577,7 @@ export function TripMap({ selectedActivityId, selectedDay, trip, vetoPreview }: 
     <div className="mapScene mapSurface" aria-label={`Day ${selectedDay} Trip map`}>
       <div ref={containerRef} className={`mapCanvas${showGeneratedTerrain ? " mapCanvas-hidden" : ""}`} />
       {showGeneratedTerrain ? (
-        <OsmItineraryMap
+        <MapLibreItineraryMap
           activities={mapDay.activities}
           destination={mapDay.destination}
           selectedActivityId={selectedActivityId}

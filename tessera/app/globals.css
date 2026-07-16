@@ -1799,6 +1799,134 @@ button {
 
 .osmAttribution a { color: #c0fe04; }
 
+.mapLibreItineraryMap,
+.mapLibreCanvas {
+  position: absolute;
+  inset: 0;
+}
+
+.mapLibreCanvas.maplibregl-map {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.mapLibreItineraryMap {
+  overflow: hidden;
+  background: #c9d5e1;
+}
+
+.mapLibreCanvas .maplibregl-canvas {
+  outline: none;
+}
+
+.mapLibreCanvas .maplibregl-ctrl-bottom-right {
+  right: 0.35rem;
+  bottom: 0.35rem;
+}
+
+.mapLibreCanvas .maplibregl-ctrl-attrib {
+  color: #eaf5ff;
+  background: rgba(7, 17, 29, 0.82);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.56rem;
+}
+
+.mapLibreCanvas .maplibregl-ctrl-attrib a { color: #c4ff00; }
+
+.map3dStop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 15rem;
+  transform: translateY(0.2rem);
+}
+
+.map3dStop > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.05rem;
+  height: 2.05rem;
+  color: #06101d;
+  background: #c4ff00;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0.32rem rgba(7, 17, 29, 0.16), 0 0.65rem 1.5rem rgba(7, 17, 29, 0.45);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.map3dStop strong {
+  padding: 0.38rem 0.5rem;
+  color: #ffffff;
+  background: rgba(7, 17, 29, 0.9);
+  border-left: 3px solid #c4ff00;
+  box-shadow: 0 0.65rem 1.5rem rgba(7, 17, 29, 0.32);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.map3dStop-selected > span {
+  color: #ffffff;
+  background: #5d18ff;
+  box-shadow: 0 0 0 0.38rem rgba(93, 24, 255, 0.25), 0 0.65rem 1.5rem rgba(7, 17, 29, 0.45);
+}
+
+.map3dStop-selected strong { border-left-color: #ffffff; }
+
+.map3dStop-end {
+  flex-direction: row-reverse;
+  transform: translate(-5rem, 0.2rem);
+}
+
+.map3dHud {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  gap: 0.18rem;
+  min-width: 10rem;
+  padding: 0.8rem 0.85rem;
+  color: #b6d2ee;
+  background: rgba(7, 17, 29, 0.9);
+  border-left: 4px solid #c4ff00;
+  box-shadow: 0 0.8rem 2rem rgba(7, 17, 29, 0.25);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  pointer-events: none;
+}
+
+.map3dHud strong {
+  color: #ffffff;
+  font-family: var(--font-archivo);
+  font-size: 1.14rem;
+  letter-spacing: -0.035em;
+}
+
+.map3dHint {
+  position: absolute;
+  z-index: 2;
+  right: 1rem;
+  top: 1rem;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  color: #ffffff;
+  background: rgba(7, 17, 29, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
 .itineraryTray {
   right: 1rem;
   bottom: 1rem;
@@ -1863,6 +1991,10 @@ button {
   .terrainCaption { display: none; }
   .osmStop { max-width: 9rem; }
   .osmStop strong { font-size: 0.55rem; }
+  .map3dStop { max-width: 9rem; }
+  .map3dStop strong { font-size: 0.57rem; }
+  .map3dHint { display: none; }
   .itineraryTray { max-width: none; }
   .agreementTranscript { min-height: auto; }
 }
+@import "maplibre-gl/dist/maplibre-gl.css";

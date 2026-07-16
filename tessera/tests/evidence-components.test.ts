@@ -6,8 +6,8 @@ import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
+import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
 import { getOsmViewport } from "../components/osm-itinerary-map";
-import { TripMap } from "../components/trip-map";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
@@ -85,26 +85,24 @@ test("renders the non-animated rule element", () => {
   assert.doesNotMatch(html, /atlasParticleField/);
 });
 
-test("renders a real OpenStreetMap route when no browser key is available", () => {
+test("renders the key-free interactive 3D map shell", () => {
   const browserKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
   delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_BROWSER_KEY;
 
   try {
     const preview = getVetoPreview(trip);
     const html = renderToStaticMarkup(
-      createElement(TripMap, {
+      createElement(MapLibreItineraryMap, {
+        activities: trip.days[0]!.activities,
+        destination: trip.constraints.destination,
         selectedActivityId: preview?.activityId ?? null,
-        selectedDay: preview?.day ?? 1,
-        trip,
-        vetoPreview: preview,
+        selectedDay: 1,
       }),
     );
 
-    assert.match(html, /mapSurface/);
-    assert.match(html, /osmItineraryMap/);
-    assert.match(html, /LIVE STREET MAP/);
-    assert.match(html, /OpenStreetMap/);
-    assert.match(html, /Trip map/);
+    assert.match(html, /mapLibreItineraryMap/);
+    assert.match(html, /LIVE 3D CITY MAP/);
+    assert.match(html, /Drag to orbit/);
     assert.match(html, /Tokyo/);
     assert.match(html, /DAY 01/);
   } finally {
