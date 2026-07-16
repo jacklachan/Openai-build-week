@@ -2780,3 +2780,221 @@ button {
   .mapWorkspace .proposalCard { min-height: auto; }
   .itineraryTray { bottom: 0.75rem; left: 0.75rem; width: calc(100% - 1.5rem); }
 }
+
+/* Premium travel concierge: quiet materials, editorial outcome, city as the artwork. */
+.studioShell-ready {
+  --premium-ink: #07131f;
+  --premium-night: #0d1e31;
+  --premium-pearl: #f8f5f0;
+  --premium-mist: #c5d0df;
+  --premium-violet: #8367f7;
+  --premium-gold: #efc678;
+  --premium-glass: rgba(10, 26, 43, 0.78);
+  color: var(--premium-pearl);
+  background: var(--premium-ink);
+  font-family: var(--font-archivo), sans-serif;
+}
+
+.studioShell-ready button,
+.studioShell-ready input,
+.studioShell-ready select { font-family: var(--font-archivo), sans-serif; }
+
+.themeToggle {
+  z-index: 30;
+  top: 0.75rem;
+  right: 0.85rem;
+  min-height: 2.25rem;
+  padding: 0.42rem 0.68rem;
+  color: #f8f5f0;
+  background: rgba(8, 18, 31, 0.76);
+  border: 1px solid rgba(248, 245, 240, 0.42);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.generatedHeader {
+  min-height: 4.2rem;
+  padding: 0.65rem clamp(1.25rem, 3vw, 3.25rem);
+  background: rgba(7, 19, 31, 0.94);
+  border-bottom-color: rgba(248, 245, 240, 0.12);
+  backdrop-filter: blur(18px);
+}
+.generatedHeader p { color: var(--premium-mist); font-family: var(--font-archivo), sans-serif; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.02em; text-transform: none; }
+.generatedHeader p b { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.15rem; font-weight: 600; }
+.generatedHeader > span { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.48rem; font-weight: 600; }
+.generatedHeader .travelerChips { gap: 0.55rem; }
+.generatedHeader .travelerChip {
+  min-width: 9.3rem;
+  padding: 0.46rem 0.58rem;
+  color: var(--premium-pearl);
+  background: rgba(248, 245, 240, 0.07);
+  border: 1px solid rgba(248, 245, 240, 0.14);
+  border-radius: 0.58rem;
+}
+.generatedHeader .travelerChip span { color: var(--premium-pearl); font-size: 0.76rem; font-weight: 650; }
+.generatedHeader .travelerChip small { color: var(--premium-mist); font-family: var(--font-archivo), sans-serif; font-size: 0.64rem; }
+
+.judgeGuide {
+  min-height: 4.2rem;
+  padding: 0.58rem clamp(1.25rem, 3vw, 3.25rem);
+  background: linear-gradient(95deg, #13243a, #21324b 54%, #101b2a);
+  border-bottom-color: rgba(248, 245, 240, 0.1);
+}
+.judgeGuide p,
+.judgeGuide li { color: var(--premium-mist); font-family: var(--font-archivo), sans-serif; letter-spacing: 0.02em; text-transform: none; }
+.judgeGuide h2 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.18rem; font-weight: 600; }
+.judgeGuide li { border: 1px solid rgba(248, 245, 240, 0.18); border-radius: 999px; }
+.judgeGuide .judgeStep-active { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); }
+.judgeGuide .judgeStep-complete { color: var(--premium-pearl); border-color: rgba(248, 245, 240, 0.38); }
+.judgeAction { color: #1e183d; background: var(--premium-gold); border-color: var(--premium-gold); border-radius: 999px; box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.18); }
+.judgeAction:hover:not(:disabled) { color: var(--premium-pearl); background: var(--premium-violet); border-color: var(--premium-violet); }
+
+.mapWorkspace { background: #dce1df; border-right-color: rgba(248, 245, 240, 0.14); }
+.mapWorkspace::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(180deg, rgba(5, 16, 29, 0.2), transparent 30%, rgba(5, 16, 29, 0.18) 100%);
+}
+.mapWorkspace .proposalArena,
+.itineraryTray,
+.agreementTranscript {
+  border: 1px solid rgba(248, 245, 240, 0.22);
+  box-shadow: 0 1.4rem 3.5rem rgba(4, 10, 18, 0.26), inset 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(130%);
+}
+
+.mapWorkspace .proposalArena {
+  top: 1.15rem;
+  right: 1.15rem;
+  max-width: 58rem;
+  padding: 0.9rem;
+  background: linear-gradient(130deg, rgba(16, 29, 48, 0.86), rgba(33, 32, 63, 0.72));
+  border-color: rgba(248, 245, 240, 0.26);
+  border-radius: 1.15rem;
+}
+.mapWorkspace .proposalArenaHeading > div > p,
+.mapWorkspace .proposalArenaHeading > p { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; font-size: 0.63rem; font-weight: 600; letter-spacing: 0.015em; text-transform: none; }
+.mapWorkspace .proposalArenaHeading h2 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: clamp(1.45rem, 2vw, 2rem); font-weight: 600; letter-spacing: -0.045em; }
+.mapWorkspace .proposalCard {
+  min-height: 8.8rem;
+  padding: 0.75rem;
+  background: rgba(4, 13, 25, 0.45);
+  border: 1px solid rgba(248, 245, 240, 0.13);
+  border-radius: 0.78rem;
+}
+.mapWorkspace .proposalCard:hover { transform: translateY(-3px); background: rgba(37, 42, 76, 0.82); border-color: rgba(239, 198, 120, 0.52); }
+.mapWorkspace .proposalCard-selected { background: linear-gradient(145deg, rgba(106, 82, 194, 0.72), rgba(24, 36, 61, 0.86)); border-color: rgba(239, 198, 120, 0.82); box-shadow: inset 0 0 0 1px rgba(239, 198, 120, 0.55), 0 0.7rem 1.8rem rgba(6, 10, 28, 0.22); }
+.mapWorkspace .proposalCardTopline { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; font-size: 0.61rem; letter-spacing: 0.02em; text-transform: none; }
+.mapWorkspace .proposalCard-selected .proposalCardTopline span:last-child { color: #211744; background: var(--premium-gold); border-radius: 999px; }
+.mapWorkspace .proposalCard h3 { color: var(--premium-pearl); font-family: var(--font-archivo), sans-serif; font-size: 0.96rem; font-weight: 650; }
+.mapWorkspace .proposalCard > p { color: #d2d9e7; font-family: var(--font-archivo), sans-serif; font-size: 0.7rem; }
+.mapWorkspace .proposalScores { border-color: rgba(248, 245, 240, 0.15); }
+.mapWorkspace .proposalScores dt { color: #bdc7d8; font-family: var(--font-archivo), sans-serif; letter-spacing: 0; }
+.mapWorkspace .proposalScores dd { color: var(--premium-gold); font-family: var(--font-playfair), Georgia, serif; font-size: 1rem; }
+.mapWorkspace .proposalCard button { color: var(--premium-pearl); border-color: rgba(248, 245, 240, 0.32); border-radius: 999px; font-family: var(--font-archivo), sans-serif; font-size: 0.62rem; text-transform: none; }
+.mapWorkspace .proposalCard-selected button { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); }
+
+.map3dHud { top: 1.25rem; left: 1.25rem; min-width: 11.5rem; padding: 0.75rem 0.82rem; color: #dce5ef; background: rgba(9, 22, 37, 0.76); border: 1px solid rgba(248, 245, 240, 0.25); border-left: 0; border-radius: 0.85rem; font-family: var(--font-archivo), sans-serif; font-size: 0.64rem; letter-spacing: 0.02em; }
+.map3dHud strong { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.26rem; font-weight: 600; }
+.map3dHint { color: var(--premium-pearl); background: rgba(9, 22, 37, 0.72); border-color: rgba(248, 245, 240, 0.26); border-radius: 999px; font-family: var(--font-archivo), sans-serif; letter-spacing: 0.01em; text-transform: none; }
+.map3dStop > span { color: #201841; background: var(--premium-gold); border-color: var(--premium-pearl); }
+.map3dStop strong { background: rgba(9, 22, 37, 0.88); border-left: 0; border-radius: 0.45rem; font-family: var(--font-archivo), sans-serif; }
+.map3dStop-selected > span { background: var(--premium-violet); }
+
+.itineraryTray {
+  bottom: 1.25rem;
+  left: 1.25rem;
+  width: min(32rem, calc(100% - 2.5rem));
+  padding: 1rem;
+  background: rgba(8, 23, 39, 0.82);
+  border-radius: 1.05rem;
+}
+.itineraryTrayHeading p { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; font-size: 0.67rem; font-weight: 600; letter-spacing: 0.015em; text-transform: none; }
+.itineraryTrayHeading h2 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.48rem; font-weight: 600; line-height: 1.03; }
+.itineraryTrayHeading > span { color: #201841; background: var(--premium-gold); border-radius: 999px; font-family: var(--font-archivo), sans-serif; text-transform: none; }
+.timelineDayControls { gap: 0.4rem; border-bottom: 0; }
+.timelineDay { color: #d9e1ec; background: rgba(248, 245, 240, 0.08); border: 0; border-radius: 999px; font-family: var(--font-archivo), sans-serif; font-size: 0.68rem; }
+.timelineDay:hover, .timelineDay-selected { color: #201841; background: var(--premium-gold); border-color: var(--premium-gold); }
+.timelineHour { color: #c6d1df; font-family: var(--font-archivo), sans-serif; font-size: 0.7rem; }
+.timelineActivity, .activityTone-neutral { color: var(--premium-pearl); background: rgba(248, 245, 240, 0.09); border: 1px solid rgba(248, 245, 240, 0.12); border-radius: 0.45rem; font-family: var(--font-archivo), sans-serif; font-size: 0.76rem; }
+.timelineActivity-selected { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); }
+.rationalePanel { color: #2b2354; background: #e4dcff; border: 0; border-radius: 0.55rem; }
+.rationalePanel p { color: #2b2354; font-family: var(--font-archivo), sans-serif; font-size: 0.75rem; }
+
+.agreementTranscript {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  padding: 1.65rem 1.4rem;
+  overflow-y: auto;
+  color: var(--premium-pearl);
+  background: linear-gradient(165deg, rgba(13, 29, 48, 0.98), rgba(7, 18, 32, 0.98));
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.transcriptHeading { padding-bottom: 1rem; border-bottom: 1px solid rgba(248, 245, 240, 0.16); }
+.sectionKicker { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; font-size: 0.67rem; font-weight: 600; letter-spacing: 0.015em; text-transform: none; }
+.transcriptHeading h2 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: clamp(2rem, 2.5vw, 2.6rem); font-weight: 600; letter-spacing: -0.055em; line-height: 0.92; }
+.decisionRoom { padding-top: 1.1rem; border-top: 0; }
+.decisionRoomHeading p, .decisionVote span, .decisionCount { color: #bdc7d8; font-family: var(--font-archivo), sans-serif; font-size: 0.65rem; letter-spacing: 0.015em; text-transform: none; }
+.decisionRoomHeading h3 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.2rem; font-weight: 600; }
+.decisionCount-ready { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); border-radius: 999px; }
+.decisionVote { border-bottom-color: rgba(248, 245, 240, 0.12); }
+.decisionVote strong { color: var(--premium-pearl); font-family: var(--font-archivo), sans-serif; font-size: 0.88rem; }
+.decisionButton, .briefButton { color: var(--premium-pearl); background: rgba(248, 245, 240, 0.06); border-color: rgba(248, 245, 240, 0.2); border-radius: 999px; font-family: var(--font-archivo), sans-serif; font-size: 0.62rem; letter-spacing: 0.01em; text-transform: none; }
+.decisionButton:hover, .decisionButton-active, .briefButton:hover { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); }
+.transcriptTurn { padding: 1rem 0; border-bottom-color: rgba(248, 245, 240, 0.12); }
+.transcriptSpeaker { color: #c5b8ff; font-family: var(--font-archivo), sans-serif; font-size: 0.72rem; font-weight: 650; letter-spacing: 0; text-transform: none; }
+.transcriptWin { color: var(--premium-gold); font-family: var(--font-playfair), Georgia, serif; font-size: 1.28rem; font-weight: 600; }
+.transcriptBody { color: #e7ecf4; font-family: var(--font-archivo), sans-serif; font-size: 0.82rem; line-height: 1.5; }
+.dataLeftRule { border-left-color: var(--premium-violet); }
+.budgetBar { padding: 1rem 0; border-bottom-color: rgba(248, 245, 240, 0.12); }
+.budgetLabels { color: #bdc7d8; font-family: var(--font-archivo), sans-serif; font-size: 0.64rem; letter-spacing: 0.01em; text-transform: none; }
+.budgetValues, .budgetValue { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.42rem; }
+.budgetTrack { height: 0.38rem; background: rgba(248, 245, 240, 0.16); border-radius: 999px; }
+.budgetTrack span { background: linear-gradient(90deg, var(--premium-violet), var(--premium-gold)); border-radius: inherit; }
+.vetoPanel { display: grid; gap: 0.6rem; padding: 0.9rem; background: rgba(131, 103, 247, 0.16); border: 1px solid rgba(209, 197, 255, 0.42); border-radius: 0.8rem; }
+.vetoLabel { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; font-size: 0.66rem; letter-spacing: 0.01em; text-transform: none; }
+.vetoSummary { color: var(--premium-pearl); font-family: var(--font-archivo), sans-serif; font-size: 0.84rem; }
+.signalButton, .inkButton { color: #211744; background: var(--premium-gold); border: 0; border-radius: 999px; font-family: var(--font-archivo), sans-serif; font-weight: 700; text-transform: none; }
+.signalButton:hover { color: var(--premium-pearl); background: var(--premium-violet); }
+
+.tradeoffPanel {
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1.25rem, 6vw, 7rem);
+  background: linear-gradient(135deg, #0c1e31, #16243b);
+  border-top: 1px solid rgba(248, 245, 240, 0.12);
+}
+.tradeoffPanelHeading { padding-left: 0; border-left: 0; }
+.tradeoffPanelHeading p, .tradeoffLedgerHeader { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; letter-spacing: 0.015em; text-transform: none; }
+.tradeoffPanelHeading h2 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: clamp(2rem, 3.4vw, 3.25rem); font-weight: 600; letter-spacing: -0.06em; line-height: 0.95; }
+.tradeoffLedger { border-color: rgba(248, 245, 240, 0.18); }
+.tradeoffLedgerRow { color: #e7ecf4; border-color: rgba(248, 245, 240, 0.13); }
+.tradeoffLedgerRow > span:first-child { color: var(--premium-pearl); font-family: var(--font-archivo), sans-serif; }
+.tradeoffGot { color: var(--premium-gold); }
+.tradeoffGaveUp { color: #e5dff8; }
+.tradeoffNet { color: #d2c9ff; font-family: var(--font-archivo), sans-serif; }
+.tradeoffNarration { color: #e8e3fb; background: rgba(131, 103, 247, 0.15); border: 1px solid rgba(209, 197, 255, 0.28); border-radius: 0.85rem; font-family: var(--font-playfair), Georgia, serif; font-size: 1.08rem; line-height: 1.45; }
+
+@media (max-width: 1050px) {
+  .agreementTranscript { position: relative; max-height: none; }
+}
+
+@media (max-width: 700px) {
+  .generatedHeader > span { font-size: 1.25rem; }
+  .mapWorkspace .proposalArena { border-radius: 0.8rem; }
+  .itineraryTray { left: 0.75rem; width: calc(100% - 1.5rem); padding: 0.8rem; }
+  .agreementTranscript { padding: 1.25rem 1rem; }
+  .transcriptHeading h2 { font-size: 2.1rem; }
+}

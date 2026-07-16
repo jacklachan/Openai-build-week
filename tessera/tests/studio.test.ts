@@ -226,7 +226,7 @@ test("uses one non-Tokyo activity for the Veto day, preview, and replaced itiner
     }),
   );
 
-  assert.match(agreementHtml, /VETO \/\/ DAY 04/);
+  assert.match(agreementHtml, /A change for day 04/);
   assert.ok(agreementHtml.includes("Alfama Fado late set"));
   assert.ok(agreementHtml.includes("Pastel de nata break"));
   assert.ok(itineraryHtml.includes("Pastel de nata break"));

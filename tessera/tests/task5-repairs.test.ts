@@ -47,7 +47,7 @@ test("derives a Veto from a generated activity without mount-takao", () => {
   );
 
   assert.match(html, /vetoPanel/);
-  assert.match(html, new RegExp(`VETO // DAY ${String(preview.day).padStart(2, "0")}`));
+  assert.match(html, new RegExp(`A change for day ${String(preview.day).padStart(2, "0")}`));
   assert.ok(html.includes(preview.removedActivity));
   assert.ok(html.includes(preview.replacement));
 });
@@ -84,7 +84,7 @@ test("keeps the seeded Veto and derives its labels from the selected activity da
   );
 
   assert.match(html, /vetoPanel/);
-  assert.ok(html.includes(`VETO // DAY ${String(previewDay?.day ?? 1).padStart(2, "0")}`));
+  assert.ok(html.includes(`A change for day ${String(previewDay?.day ?? 1).padStart(2, "0")}`));
   assert.match(html, /class="inkButton"/);
   assert.match(html, />Vetoed</);
   assert.ok(html.includes(preview.removedActivity));

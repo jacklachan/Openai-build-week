@@ -50,9 +50,9 @@ export function GroupAgreement({
       <div className="transcriptTurns">
         {agreement.map(({ concession, mustDo, traveler }) => (
           <article className="transcriptTurn" key={traveler.id}>
-            <p className="transcriptSpeaker">TRAVELER // {traveler.name.toUpperCase()}</p>
+            <p className="transcriptSpeaker">{traveler.name}</p>
             <p className="transcriptWin">{mustDo}</p>
-            <p className="transcriptSpeaker">THE TRADE-OFF</p>
+            <p className="transcriptSpeaker">Their trade-off</p>
             <p className="transcriptBody dataLeftRule">{concession}</p>
           </article>
         ))}
@@ -86,7 +86,7 @@ export function GroupAgreement({
 
       {veto ? (
         <section className="vetoPanel" aria-live="polite">
-          <p className="vetoLabel">{`VETO // DAY ${String(veto.day).padStart(2, "0")}`}</p>
+          <p className="vetoLabel">{`A change for day ${String(veto.day).padStart(2, "0")}`}</p>
           <p className="vetoSummary">
             {showPreview ? "Vetoed // later start proposed" : "Preview a later start proposal"}
           </p>

@@ -16,7 +16,7 @@ function canDeriveTravelerTone(trip: Trip) {
 export function TravelerChips({ phase, travelers, trip }: TravelerChipsProps) {
   return (
     <ul className={`travelerChips travelerChips-${phase}`} aria-label="Traveler preferences">
-      {travelers.map((traveler, index) => {
+      {travelers.map((traveler) => {
         const tone =
           phase === "ready" && trip && canDeriveTravelerTone(trip)
             ? getTravelerTone(trip, traveler.id)
@@ -24,7 +24,7 @@ export function TravelerChips({ phase, travelers, trip }: TravelerChipsProps) {
 
         return (
           <li className={`travelerChip travelerChip-${tone}`} key={traveler.id}>
-            <span>{`T${String(index + 1).padStart(2, "0")} // ${traveler.name}`}</span>
+            <span>{traveler.name}</span>
             <small>{formatTravelerConflict(traveler)}</small>
           </li>
         );
