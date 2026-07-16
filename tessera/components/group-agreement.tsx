@@ -40,16 +40,16 @@ export function GroupAgreement({
   return (
     <aside className="agreementTranscript" aria-labelledby="agreement-title">
       <header className="transcriptHeading">
-        <p className="sectionKicker">GROUP AGREEMENT</p>
-        <h2 id="agreement-title">Negotiation transcript</h2>
+        <p className="sectionKicker">THE TRIP PACT</p>
+        <h2 id="agreement-title">Everyone gets a win.</h2>
       </header>
 
       <div className="transcriptTurns">
         {agreement.map(({ concession, mustDo, traveler }) => (
           <article className="transcriptTurn" key={traveler.id}>
             <p className="transcriptSpeaker">TRAVELER // {traveler.name.toUpperCase()}</p>
-            <p className="transcriptBody">{mustDo}</p>
-            <p className="transcriptSpeaker">SYSTEM // CONCESSION</p>
+            <p className="transcriptWin">{mustDo}</p>
+            <p className="transcriptSpeaker">THE TRADE-OFF</p>
             <p className="transcriptBody dataLeftRule">{concession}</p>
           </article>
         ))}

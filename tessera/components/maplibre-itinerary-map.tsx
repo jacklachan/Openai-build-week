@@ -30,9 +30,20 @@ function markerElement(activity: MappedActivity, index: number, selected: boolea
   return element;
 }
 
-function fitMap(map: MapLibreMap, activities: MappedActivity[]) {
+function fitMap(map: MapLibreMap, activities: MappedActivity[], selectedActivityId: string | null) {
   if (!activities.length) {
     map.jumpTo({ center: DEFAULT_TOKYO, zoom: 13.7, pitch: 65, bearing: -24 });
+    return;
+  }
+
+  const selectedActivity = activities.find((activity) => activity.id === selectedActivityId);
+  if (selectedActivity) {
+    map.jumpTo({
+      center: [selectedActivity.lng, selectedActivity.lat],
+      zoom: 14.45,
+      pitch: 65,
+      bearing: -24,
+    });
     return;
   }
 
@@ -141,7 +152,7 @@ export function MapLibreItineraryMap({
         markers.push(marker);
       });
 
-      fitMap(map, mappedActivities);
+      fitMap(map, mappedActivities, selectedActivityId);
     });
 
     map.on("error", (event) => {

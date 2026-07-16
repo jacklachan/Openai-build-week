@@ -28,6 +28,13 @@ export function ItineraryTray({
 
   return (
     <section className="itineraryTray" aria-label="Trip itinerary by day">
+      <header className="itineraryTrayHeading">
+        <div>
+          <p>{`DAY ${String(selectedDay).padStart(2, "0")} // THE FLOW`}</p>
+          <h2>{selectedPlan?.summary ?? "Your shared itinerary"}</h2>
+        </div>
+        <span>{`${activities.length} ${activities.length === 1 ? "stop" : "stops"}`}</span>
+      </header>
       <nav className="timelineDayControls" aria-label="Select itinerary day">
         {timelineDays.map(({ day, label }) => {
           const isSelected = day.day === selectedDay;

@@ -1939,6 +1939,45 @@ button {
   backdrop-filter: blur(14px);
 }
 
+.itineraryTrayHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.itineraryTrayHeading p,
+.itineraryTrayHeading h2,
+.itineraryTrayHeading > span {
+  margin: 0;
+}
+
+.itineraryTrayHeading p,
+.itineraryTrayHeading > span {
+  color: #a8c5e8;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.itineraryTrayHeading > span {
+  flex: 0 0 auto;
+  padding: 0.28rem 0.38rem;
+  color: #07111d;
+  background: #c0fe04;
+}
+
+.itineraryTrayHeading h2 {
+  max-width: 27rem;
+  color: #ffffff;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
 .timelineDayControls { border-color: rgba(184, 214, 244, 0.24); }
 .timelineDay { color: #a8c5e8; background: transparent; border-color: rgba(184, 214, 244, 0.3); }
 .timelineDay:hover, .timelineDay-selected { color: #07111d; background: #c0fe04; border-color: #c0fe04; }
@@ -1959,6 +1998,14 @@ button {
 .transcriptHeading h2, .transcriptBody, .budgetValues, .budgetValue, .vetoSummary { color: #f5f9ff; }
 .sectionKicker, .transcriptSpeaker, .budgetLabels, .vetoLabel { color: #a8c5e8; }
 .transcriptTurn, .budgetBar, .vetoPreview { border-color: rgba(184, 214, 244, 0.2); }
+.transcriptWin {
+  margin: 0.22rem 0 0.58rem;
+  color: #c0fe04;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
 .budgetTrack { background: rgba(184, 214, 244, 0.2); border-color: transparent; }
 .budgetTrack span { background: #c0fe04; }
 .vetoPanel { background: rgba(17, 38, 62, 0.78); border-color: #c0fe04; }
@@ -1981,6 +2028,36 @@ button {
 .tradeoffLedgerRow > span:first-child, .tradeoffNet { color: #eaf4ff; }
 .tradeoffNarration { color: #d9e9ff; background: transparent; border-color: #c0fe04; }
 
+@media (max-width: 1050px) {
+  .generatedHeader,
+  .judgeGuide {
+    grid-template-columns: 1fr;
+  }
+
+  .generatedHeader p,
+  .generatedHeader > span,
+  .generatedHeader .travelerChips {
+    grid-column: 1;
+  }
+
+  .generatedHeader .travelerChips {
+    justify-content: flex-start;
+  }
+
+  .judgeGuide {
+    gap: 0.7rem;
+  }
+
+  .studioWorkspace {
+    grid-template-columns: 1fr;
+  }
+
+  .mapWorkspace {
+    min-height: 38rem;
+    border-right: 0;
+  }
+}
+
 @media (max-width: 760px) {
   .generatedHeader, .judgeGuide { grid-template-columns: 1fr; }
   .generatedHeader .travelerChips { grid-column: 1; }
@@ -1995,6 +2072,7 @@ button {
   .map3dStop strong { font-size: 0.57rem; }
   .map3dHint { display: none; }
   .itineraryTray { max-width: none; }
+  .itineraryTrayHeading { align-items: start; }
   .agreementTranscript { min-height: auto; }
 }
 @import "maplibre-gl/dist/maplibre-gl.css";
