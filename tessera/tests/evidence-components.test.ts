@@ -4,6 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
+import { DecisionReplay } from "../components/decision-replay";
 import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
@@ -148,6 +149,33 @@ test("renders three proposal choices with auditable trade-off scores", () => {
   assert.match(html, /Lowest friction/);
   assert.match(html, /Most headroom/);
   assert.match(html, /BUDGET/);
+});
+
+test("renders the seeded decision replay as conflict, choice, ripple, and pact", () => {
+  const proposals = getProposalOptions(trip);
+  const sharedProps = {
+    activeProposalId: "fairness" as const,
+    onChallenge: () => undefined,
+    onChoose: () => undefined,
+    onFinish: () => undefined,
+    onNext: () => undefined,
+    proposals,
+    travelers: trip.travelers,
+  };
+
+  const conflict = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "conflict" }));
+  const choice = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "choice" }));
+  const ripple = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "ripple" }));
+  const pact = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "pact" }));
+
+  assert.match(conflict, /Three people asked for a different Tokyo/);
+  assert.match(conflict, /Skip replay/);
+  assert.match(choice, /What should the group protect/);
+  assert.match(choice, /Best fairness/);
+  assert.match(ripple, /Visible consequence/);
+  assert.match(ripple, /Everyone keeps the thing they named/);
+  assert.match(pact, /This trip comes with receipts/);
+  assert.match(pact, /Challenge one promise/);
 });
 
 test("uses only the visible nine-tile map viewport and projects known stops", () => {

@@ -3,6 +3,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 
 import { AtlasMotion } from "./atlas-motion";
+import { DecisionReplay, type ReplayStep } from "./decision-replay";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { createPlanDraft, PlanForm, type PlanRequestPayload } from "./plan-form";
@@ -136,6 +137,7 @@ export function TripStudio() {
   const [selectedDay, setSelectedDay] = useState(1);
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [activePreview, setActivePreview] = useState<VetoPreview | null>(null);
+  const [replayStep, setReplayStep] = useState<ReplayStep | null>(null);
   const [replanAudit, setReplanAudit] = useState<PlanDiff | null>(null);
   const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -183,6 +185,7 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplayStep(null);
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -217,6 +220,7 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplayStep("conflict");
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -246,6 +250,43 @@ export function TripStudio() {
     setSelectedActivityId(selection.activityId);
     setActivePreview(null);
     setReplanAudit(null);
+  }
+
+  function chooseReplayProposal(proposal: ProposalOption) {
+    selectProposal(proposal);
+    setReplayStep("ripple");
+  }
+
+  function advanceReplay() {
+    if (replayStep === "conflict") {
+      setReplayStep("choice");
+      return;
+    }
+    if (replayStep === "ripple") {
+      setReplayStep("pact");
+    }
+  }
+
+  function finishReplay() {
+    setReplayStep(null);
+  }
+
+  function challengeReplayPact() {
+    const fairnessProposal = proposalOptions.find((proposal) => proposal.id === "fairness");
+    if (fairnessProposal) {
+      selectProposal(fairnessProposal);
+      const preview = source === "demo"
+        ? getDemoVetoPreview(fairnessProposal.trip)
+        : getVetoPreviewForTrip(fairnessProposal.trip);
+
+      if (preview) {
+        const selection = getVetoPreviewSelection(preview);
+        setSelectedDay(selection.selectedDay);
+        setSelectedActivityId(selection.selectedActivityId);
+        setActivePreview(preview);
+      }
+    }
+    setReplayStep(null);
   }
 
   function toggleVetoPreview() {
@@ -281,6 +322,7 @@ export function TripStudio() {
         setSelectedDay(selection.day);
         setSelectedActivityId(selection.activityId);
         setActivePreview(null);
+        setReplayStep(null);
         setReplanAudit(diffTrips(activeTrip, payload.trip));
         setSource("demo");
         return;
@@ -304,6 +346,7 @@ export function TripStudio() {
       setSelectedDay(selection.day);
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
+      setReplayStep(null);
       setReplanAudit(payload.diff ?? null);
       setSource(payload.source);
     } catch (error) {
@@ -402,7 +445,7 @@ export function TripStudio() {
         <TravelerChips phase="ready" travelers={activeTrip.travelers} trip={activeTrip} />
       </header>
 
-      {showsJudgeMode ? (
+      {showsJudgeMode && !replayStep ? (
       <section className="judgeGuide" aria-labelledby="judge-guide-title">
         <div>
           <p>JUDGE MODE // NO KEY REQUIRED</p>
@@ -435,7 +478,19 @@ export function TripStudio() {
                 trip={activeTrip}
                 vetoPreview={visibleVetoPreview}
               />
-              {proposalOptions.length ? (
+              {replayStep ? (
+                <DecisionReplay
+                  activeProposalId={activeProposalId}
+                  onChallenge={challengeReplayPact}
+                  onChoose={chooseReplayProposal}
+                  onFinish={finishReplay}
+                  onNext={advanceReplay}
+                  proposals={proposalOptions}
+                  step={replayStep}
+                  travelers={activeTrip.travelers}
+                />
+              ) : null}
+              {proposalOptions.length && !replayStep ? (
                 <ProposalArena
                   activeProposalId={activeProposalId}
                   onSelect={selectProposal}
