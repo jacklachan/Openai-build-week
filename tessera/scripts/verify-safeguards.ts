@@ -10,7 +10,7 @@ import {
 } from "../lib/cache";
 import { checkRateLimit } from "../lib/rate-limit";
 
-const key = cacheKey({ destination: "Tokyo", travelers: ["ravi", "priya", "mei"] });
+const key = cacheKey({ destination: "Japan", travelers: ["ravi", "priya", "mei"] });
 const demo = getDemoTrip();
 setCachedPlan(key, demo);
 const cached = getCachedPlan(key);
@@ -21,7 +21,7 @@ assert.notEqual(getCachedPlan(key)?.id, "mutated-copy");
 
 const replan = getDemoReplan();
 assert.equal(replan.version, demo.version + 1);
-assert.ok(replan.days.flatMap((day) => day.activities).some((activity) => activity.id === "teamlab-planets"));
+assert.ok(replan.days.flatMap((day) => day.activities).some((activity) => activity.id === "hakone-open-air-museum"));
 
 const now = 1_000;
 for (let count = 0; count < 5; count += 1) {

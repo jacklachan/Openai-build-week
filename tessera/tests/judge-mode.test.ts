@@ -52,14 +52,14 @@ test("renders an auditable before-and-after veto record", () => {
   assert.match(markup, /UPDATED/);
 });
 
-test("uses the seeded Priya Mount Takao veto that the demo replan actually applies", () => {
+test("uses the seeded Priya Mount Fuji veto that the demo replan actually applies", () => {
   assert.deepEqual(getDemoVetoPreview(seedTrip as Trip), {
-    activityId: "mount-takao",
+    activityId: "mount-fuji",
     afterTime: "11:00",
-    beforeTime: "08:30",
+    beforeTime: "05:30",
     day: 2,
-    removedActivity: "Mount Takao summit trail",
-    replacement: "teamLab Planets",
+    removedActivity: "Mount Fuji 5th Station sunrise",
+    replacement: "Hakone Open-Air Museum",
   });
 });
 

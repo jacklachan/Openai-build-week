@@ -3,8 +3,8 @@
 ## What a judge can test without credentials
 
 1. Open the deployed app or run `npm install && npm run dev`.
-2. Select **Load the Tokyo demo**.
-3. Follow **Ask the one question** and answer Priya's 08:30-start prompt. The route, decision receipt, and pact update together.
+2. Select **Load the Japan demo**.
+3. Follow **Ask the one question** and answer Priya's 05:30-start prompt. The Tokyo → Fuji/Hakone → Kyoto → Osaka route, decision receipt, and pact update together.
 4. Compare **Best fairness**, **Lowest friction**, and **Most headroom** in Proposal Arena.
 5. Select **Pressure-test this pact**. The simulated disruption drill names the traveler who carries the risk and exposes the consequence of changing the pact.
 6. Use the Veto flow, complete group check-in, and share/download the agreement brief.

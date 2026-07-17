@@ -83,7 +83,7 @@ async function main() {
   const trip = await negotiateTrip(request, fakeClient);
 
   assert.equal(trip.id, seed.id);
-  assert.equal(trip.budget.total, 870);
+  assert.equal(trip.budget.total, 1574);
   assert.equal(inputs.length, 4);
   assert.equal(responses.length, 0);
   console.log("Mock GPT-5.6 orchestration completed a grounded, budget-validated Trip.");

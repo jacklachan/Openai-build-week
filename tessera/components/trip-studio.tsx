@@ -67,8 +67,8 @@ export function isJudgeModeSource(source: PlanSource | null) {
 function getJudgeStepLabel(step: JudgeDemoStep) {
   return {
     apply: "Apply the veto",
-    complete: "Restart the Tokyo demo",
-    load: "Load the Tokyo demo",
+    complete: "Restart the Japan demo",
+    load: "Load the Japan demo",
     preview: "Preview the conflict",
   }[step];
 }
@@ -411,7 +411,7 @@ export function TripStudio() {
             <div className="landingDemo">
               <div>
                 <p>Try the full experience</p>
-                <strong>Tokyo · 3 travelers · 3 days</strong>
+                <strong>Japan · 3 travelers · 4 days</strong>
               </div>
               <button className="demoButton" disabled={isGenerating} onClick={() => void loadDemo()} type="button">
                 {getJudgeStepLabel("load")}

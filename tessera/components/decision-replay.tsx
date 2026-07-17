@@ -31,12 +31,12 @@ const replayCopy: Record<ProposalId, { consequence: string; title: string }> = {
     title: "The premium dinner changes. The ritual stays.",
   },
   fairness: {
-    consequence: "Ravi keeps his summit, Priya keeps one exceptional dinner, and Mei still gets Tokyo after dark.",
+    consequence: "Ravi keeps his Fuji sunrise, Priya keeps one exceptional dinner, and Mei still gets Tokyo after dark.",
     title: "Everyone keeps the thing they named.",
   },
   pace: {
-    consequence: "Priya gets a humane start and a lower-impact day. Ravi gives up the hardest stop for a shared indoor highlight.",
-    title: "The early summit becomes a late shared moment.",
+    consequence: "Priya gets a humane start and a lower-impact day. Ravi gives up the Fuji sunrise for a shared Hakone highlight.",
+    title: "The Fuji sunrise becomes a late shared moment.",
   },
 };
 
@@ -100,7 +100,7 @@ export function DecisionReplay({
       <div className="decisionReplayBackdrop" aria-hidden="true" />
       <div className="decisionReplayPanel">
         <header className="decisionReplayHeader">
-          <p>Tokyo decision replay</p>
+          <p>Japan decision replay</p>
           <button className="decisionReplaySkip" onClick={onFinish} type="button">
             Skip replay
           </button>
@@ -118,7 +118,7 @@ export function DecisionReplay({
         {step === "conflict" ? (
           <div className="decisionReplayScene" key="conflict">
             <p className="decisionReplayEyebrow">Before there is a route, there is a conflict.</p>
-            <h2 id="decision-replay-title">Three people asked for a different Tokyo.</h2>
+            <h2 id="decision-replay-title">Three people asked for a different Japan.</h2>
             <div className="decisionReplayPeople">
               {travelers.map((traveler) => (
                 <article key={traveler.id}>
@@ -131,7 +131,7 @@ export function DecisionReplay({
               ))}
             </div>
             <p className="decisionReplayConflict">
-              Ravi wants a summit. Priya cannot start at dawn. Mei wants the city after dark. A normal itinerary has no way to make that trade visible.
+              Ravi wants a Fuji sunrise. Priya cannot start at dawn. Mei wants Tokyo after dark. A normal itinerary has no way to make that trade visible.
             </p>
             <button className="decisionReplayPrimary" onClick={onNext} type="button">
               Ask the one question
@@ -142,9 +142,9 @@ export function DecisionReplay({
         {step === "question" ? (
           <div className="decisionReplayScene decisionReplayQuestion" key="question">
             <p className="decisionReplayEyebrow">The one answer that changes this trip.</p>
-            <h2 id="decision-replay-title">Priya, would you take one 08:30 start?</h2>
+            <h2 id="decision-replay-title">Priya, would you take one 05:30 start?</h2>
             <p className="decisionReplayLead">
-              That one answer decides whether Ravi keeps Mount Takao—and whether the group has to make Priya carry the hidden cost of the plan.
+              That one answer decides whether Ravi keeps Mount Fuji—and whether the group has to make Priya carry the hidden cost of the plan.
             </p>
             <div className="decisionQuestionSignal">
               <span>Silent-loser check</span>
@@ -160,8 +160,8 @@ export function DecisionReplay({
                 type="button"
               >
                 <span>Yes — protect Ravi&apos;s hike</span>
-                <strong>Ravi keeps Mount Takao. Priya keeps her special dinner.</strong>
-                <small>The route starts once at 08:30; the compromise is written into the pact.</small>
+                <strong>Ravi keeps Mount Fuji. Priya keeps her special dinner.</strong>
+                <small>The route starts once at 05:30; the compromise is written into the pact.</small>
               </button>
               <button
                 className="decisionQuestionAnswer decisionQuestionAnswer-pace"
@@ -172,7 +172,7 @@ export function DecisionReplay({
                 type="button"
               >
                 <span>No — protect Priya&apos;s pace</span>
-                <strong>Priya gets a later start. Ravi trades the summit for teamLab.</strong>
+                <strong>Priya gets a later start. Ravi trades the sunrise for Hakone art.</strong>
                 <small>The map changes immediately, so the cost of this answer stays visible.</small>
               </button>
             </div>

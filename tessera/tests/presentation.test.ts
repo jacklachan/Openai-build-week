@@ -43,11 +43,11 @@ test("budget states use the supplied ceiling", () => {
 });
 
 test("timeline controls derive from every supplied day", () => {
-  const fourDayTrip = { ...trip, days: [...trip.days, { ...trip.days[0]!, day: 4 }] };
+  const fiveDayTrip = { ...trip, days: [...trip.days, { ...trip.days[0]!, day: 5 }] };
 
   assert.deepEqual(
-    getTimelineDays(fourDayTrip).map((item) => item.label),
-    ["D01", "D02", "D03", "D04"],
+    getTimelineDays(fiveDayTrip).map((item) => item.label),
+    ["D01", "D02", "D03", "D04", "D05"],
   );
 });
 

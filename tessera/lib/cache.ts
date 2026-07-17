@@ -29,23 +29,23 @@ export function getDemoReplan(): Trip {
   const trip = getDemoTrip();
   trip.version += 1;
   const day = trip.days[1];
-  day.activities = day.activities.filter((activity) => activity.id !== "mount-takao");
+  day.activities = day.activities.filter((activity) => activity.id !== "mount-fuji");
   day.activities.unshift({
-    id: "teamlab-planets",
-    title: "teamLab Planets",
-    lat: 35.6491,
-    lng: 139.789,
+    id: "hakone-open-air-museum",
+    title: "Hakone Open-Air Museum",
+    lat: 35.2479,
+    lng: 139.0492,
     category: "city",
     startTime: "11:00",
     durationMin: 120,
     estCostPerPerson: 28,
     rationale:
-      "This late, mostly indoor alternative honors Priya's veto while preserving a memorable shared experience.",
+      "This later, mostly outdoor-and-indoor Hakone alternative honors Priya's veto while preserving a memorable shared experience.",
     satisfies: ["priya", "ravi", "mei"],
-    tension: "Ravi gives up his Mount Takao hike for a lower-intensity group activity.",
+    tension: "Ravi gives up his Mount Fuji sunrise for a lower-intensity shared Hakone activity.",
   });
   trip.tradeoffs = [
-    "Priya vetoed the early Mount Takao hike, so the group swaps it for a late teamLab visit; Ravi gives up the adventure day.",
+    "Priya vetoed the pre-dawn Mount Fuji start, so the group swaps it for a later Hakone art stop; Ravi gives up the sunrise adventure.",
     "The premium vegetarian dinner remains the single planned splurge, so the revised plan stays within budget.",
   ];
   trip.budget = { ceiling: trip.constraints.budgetCeiling, ...estimateBudget(trip) };

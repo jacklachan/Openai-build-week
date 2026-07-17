@@ -36,7 +36,7 @@ async function main() {
       headers: { "content-type": "application/json", "x-forwarded-for": "demo-no-key-edit" },
       body: JSON.stringify({
         trip: noKeyPayload.trip,
-        command: "Priya vetoes the 6am Mount Takao hike.",
+        command: "Priya vetoes the 5:30am Mount Fuji start.",
       }),
     }),
   );
@@ -90,7 +90,7 @@ async function main() {
       headers: { "content-type": "application/json", "x-forwarded-for": "demo-edit" },
       body: JSON.stringify({
         trip: planPayload.trip,
-        command: "Priya vetoes the 6am Mount Takao hike.",
+        command: "Priya vetoes the 5:30am Mount Fuji start.",
       }),
     }),
   );

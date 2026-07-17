@@ -15,7 +15,7 @@ export type DisruptionScenario = {
 function findAffectedActivity(trip: Trip): Activity | undefined {
   for (const day of trip.days) {
     const weatherExposedCriticalStop = day.activities.find((activity) =>
-      /hike|summit|trail|beach|outdoor/i.test(activity.title),
+      /hike|summit|sunrise|mount|trail|beach|outdoor/i.test(activity.title),
     );
     if (weatherExposedCriticalStop) return weatherExposedCriticalStop;
   }

@@ -154,7 +154,7 @@ test("derives the seeded agreement and activity-based veto preview", () => {
 
   assert.equal(getSelectedDay(trip, 2)?.day, 2);
   assert.equal(agreement[1].traveler.name, "Priya");
-  assert.match(agreement[1].concession, /early/i);
+  assert.match(agreement[1].concession, /pre-dawn/i);
   assert.match(agreement[0].concession, /^Ravi accepts/i);
   assert.match(agreement[2].concession, /^Mei gets/i);
   assert.ok(
@@ -236,14 +236,14 @@ test("uses one non-Tokyo activity for the Veto day, preview, and replaced itiner
 
 test("returns the correct itinerary for the selected day", () => {
   assert.notEqual(getSelectedDay(trip, 1)?.summary, getSelectedDay(trip, 3)?.summary);
-  assert.equal(getSelectedDay(trip, 3)?.activities[0]?.title, "Tsukiji Outer Market breakfast");
+  assert.equal(getSelectedDay(trip, 3)?.activities[0]?.title, "Fushimi Inari lower torii walk");
 });
 
 test("derives honest Atlas status signals from the trip contract", () => {
   const signals = getAtlasSignals(trip);
 
   assert.equal(signals.agreementCount, trip.travelers.length);
-  assert.equal(signals.budgetRatio, 19);
+  assert.equal(signals.budgetRatio, 35);
   assert.equal(signals.nextStop, "Shinjuku Gyoen National Garden");
 });
 

@@ -32,7 +32,7 @@ test("requests a local JSON-only Ollama plan and validates its budget", async ()
     assert.match(String(requestInit?.body), /\"format\":\"json\"/);
     assert.match(String(requestInit?.body), /\"stream\":false/);
     assert.match(String(requestInit?.body), /test-local-model/);
-    assert.equal(result.budget.total, 870);
+    assert.equal(result.budget.total, 1574);
   } finally {
     if (oldHost === undefined) delete process.env.OLLAMA_HOST;
     else process.env.OLLAMA_HOST = oldHost;

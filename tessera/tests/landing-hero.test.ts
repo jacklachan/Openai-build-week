@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { TripStudio } from "../components/trip-studio";
 
-test("starts from a generic landing form without the Tokyo fixture", () => {
+test("starts from a generic landing form without the Japan fixture", () => {
   const html = renderToStaticMarkup(createElement(TripStudio));
 
   assert.match(
@@ -13,8 +13,8 @@ test("starts from a generic landing form without the Tokyo fixture", () => {
     /Turn competing wishes into one visible agreement/,
   );
   assert.match(html, /Destination/);
-  assert.match(html, /Load the Tokyo demo/);
-  assert.doesNotMatch(html, /Mount Takao|Akihabara/);
+  assert.match(html, /Load the Japan demo/);
+  assert.doesNotMatch(html, /Mount Fuji|Akihabara/);
 });
 
 test("uses an ink ground for the base landing hero", async () => {

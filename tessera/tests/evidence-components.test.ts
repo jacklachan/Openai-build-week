@@ -81,11 +81,12 @@ test("renders sequential timeline controls, truthful preview values, and selecte
   assert.match(html, />D01</);
   assert.match(html, />D02</);
   assert.match(html, />D03</);
+  assert.match(html, />D04</);
   assert.match(html, /activityTone-tension/);
   assert.ok(html.includes(preview.replacement));
   assert.ok(html.includes(preview.afterTime));
   assert.match(html, /rationalePanel/);
-  assert.match(html, /without requiring an early start for Priya/);
+  assert.match(html, /without forcing an early start for Priya/);
 });
 
 test("renders the non-animated rule element", () => {
@@ -135,14 +136,14 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
     unanimous: true,
   });
   assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
-  assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
-  assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
+  assert.match(createAgreementBrief(trip, agreement), /Japan — Tokyo, Fuji, Kyoto & Osaka/);
+  assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Mount Fuji sunrise/);
   const pactCard = createPactCardSvg(trip, agreement);
   assert.match(pactCard, /TESSERA \/ GROUP PACT/);
-  assert.match(pactCard, /Tokyo, Japan/);
-  assert.match(pactCard, /Hike Mount Takao/);
-  assert.equal(getPactCardFilename("Tokyo, Japan"), "tessera-tokyo-japan-pact-card.svg");
-  assert.match(createGroupShareText(trip, agreement), /Ravi: Hike Mount Takao/);
+  assert.match(pactCard, /Japan — Tokyo, Fuji, Kyoto &amp; Osaka/);
+  assert.match(pactCard, /Mount Fuji sunrise/);
+  assert.equal(getPactCardFilename("Japan — Tokyo, Fuji, Kyoto & Osaka"), "tessera-japan-tokyo-fuji-kyoto-osaka-pact-card.svg");
+  assert.match(createGroupShareText(trip, agreement), /Ravi: Mount Fuji sunrise/);
   assert.match(getWhatsAppShareUrl("Tessera pact"), /^https:\/\/wa\.me\/\?text=Tessera%20pact$/);
 
   const html = renderToStaticMarkup(createElement(DecisionRoom, { agreement, trip }));
@@ -151,7 +152,7 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
   assert.match(html, /Flag a concern/);
   assert.match(html, /Share with group/);
   assert.match(html, /WhatsApp/);
-  assert.match(html, /Hike Mount Takao/);
+  assert.match(html, /Mount Fuji sunrise/);
 });
 
 test("renders three proposal choices with auditable trade-off scores", () => {
@@ -176,7 +177,7 @@ test("turns a named promise into an honest, visible disruption drill", () => {
   const proposals = getProposalOptions(trip);
   const drill = getDisruptionDrill(trip, proposals);
   assert.ok(drill);
-  assert.equal(drill.affectedActivity, "Mount Takao summit trail");
+  assert.equal(drill.affectedActivity, "Mount Fuji 5th Station sunrise");
   assert.equal(drill.affectedTraveler, "Ravi");
   assert.deepEqual(getDisruptionScenarios(trip, proposals).map((scenario) => scenario.id), ["weather", "budget"]);
 
@@ -220,11 +221,11 @@ test("renders the seeded decision replay as one question, choices, ripple, and p
   const ripple = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "ripple" }));
   const pact = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "pact" }));
 
-  assert.match(conflict, /Three people asked for a different Tokyo/);
+  assert.match(conflict, /Three people asked for a different Japan/);
   assert.match(conflict, /Ask the one question/);
   assert.match(conflict, /Skip replay/);
   assert.match(question, /The one answer that changes this trip/);
-  assert.match(question, /Priya, would you take one 08:30 start/);
+  assert.match(question, /Priya, would you take one 05:30 start/);
   assert.match(question, /Silent-loser check/);
   assert.match(question, /Show all three deals instead/);
   assert.match(choice, /What should the group protect/);
@@ -235,7 +236,7 @@ test("renders the seeded decision replay as one question, choices, ripple, and p
   assert.match(pact, /Challenge one promise/);
 
   const paceReceipt = getDecisionReceipt(trip, proposals[1]!, trip.constraints.currency);
-  assert.equal(paceReceipt.changed, "Mount Takao summit trail becomes teamLab Planets.");
+  assert.equal(paceReceipt.changed, "Mount Fuji 5th Station sunrise becomes Hakone Open-Air Museum.");
   assert.match(paceReceipt.budget, /added to the total|stays in reserve|Total holds/);
 });
 

@@ -31,8 +31,8 @@ test("requests a JSON-only Gemini plan and re-computes its budget", async () => 
     assert.match(requestUrl, /generativelanguage\.googleapis\.com/);
     assert.equal((requestInit?.headers as Record<string, string>)["x-goog-api-key"], "test-key");
     assert.match(String(requestInit?.body), /responseMimeType/);
-    assert.equal(result.budget.total, 870);
-    assert.equal(result.constraints.destination, "Tokyo, Japan");
+    assert.equal(result.budget.total, 1574);
+    assert.equal(result.constraints.destination, "Japan — Tokyo, Fuji, Kyoto & Osaka");
   } finally {
     if (previousKey === undefined) delete process.env.GEMINI_API_KEY;
     else process.env.GEMINI_API_KEY = previousKey;

@@ -26,7 +26,7 @@ export type ChatDecisionQuestion = {
   traveler: string;
 };
 
-export const TOKYO_GROUP_CHAT = `[08/09/2026, 18:12] Ravi: Tokyo is locked. I really want one proper summit day, ideally Mount Takao.\n[08/09/2026, 18:13] Priya: I am in for Tokyo, but I cannot do 6am starts every day or long walking days.\n[08/09/2026, 18:15] Mei: Please do not make this a museum-only trip. I need one anime or Akihabara night.\n[08/09/2026, 18:17] Priya: I would love one special vegetarian dinner, then I am happy keeping the rest casual.\n[08/09/2026, 18:19] Ravi: Fine with that if we protect the hike.\n[08/09/2026, 18:21] Mei: Late evening is fine for me, but I do not need nightlife every night.`;
+export const TOKYO_GROUP_CHAT = `[08/09/2026, 18:12] Ravi: Japan is locked. I really want one Mount Fuji sunrise day.\n[08/09/2026, 18:13] Priya: I am in for Japan, but I cannot do 6am starts every day or long walking days.\n[08/09/2026, 18:15] Mei: Please do not make this a temple-only trip. I need one anime or Akihabara night.\n[08/09/2026, 18:17] Priya: I would love one special vegetarian dinner, then I am happy keeping the rest casual.\n[08/09/2026, 18:19] Ravi: Fine with that if we protect the Fuji sunrise.\n[08/09/2026, 18:21] Mei: Late evening is fine for me, but I do not need nightlife every night.`;
 
 const androidMessage = /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{2,4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM|am|pm)?\s+-\s+([^:]+):\s*(.+)$/;
 const iosMessage = /^\[[^\]]+\]\s*([^:]+):\s*(.+)$/;
@@ -34,7 +34,7 @@ const spokenMessage = /^([^:\n]{1,40}):\s*(.+)$/;
 const systemMessage = /(?:messages and calls are end-to-end encrypted|created group|added|removed|joined using)/i;
 
 const interestSignals: Record<Interest, RegExp> = {
-  adventure: /\b(hike|hiking|summit|trek|adventure|climb)\b/i,
+  adventure: /\b(hike|hiking|summit|sunrise|trek|adventure|climb)\b/i,
   anime: /\b(anime|manga|akihabara|gaming)\b/i,
   beach: /\b(beach|coast|sea|ocean)\b/i,
   city: /\b(city|urban|skyline|neighbourhood|neighborhood)\b/i,

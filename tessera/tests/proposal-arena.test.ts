@@ -15,9 +15,9 @@ test("creates three genuinely different, deterministic negotiation proposals", (
 
   assert.equal(proposals.length, 3);
   assert.ok(fairness && pace && budget);
-  assert.ok(fairness.trip.days.flatMap((day) => day.activities).some((activity) => activity.id === "mount-takao"));
-  assert.ok(pace.trip.days.flatMap((day) => day.activities).some((activity) => activity.title === "teamLab Planets"));
-  assert.ok(!pace.trip.days.flatMap((day) => day.activities).some((activity) => activity.id === "mount-takao"));
+  assert.ok(fairness.trip.days.flatMap((day) => day.activities).some((activity) => activity.id === "mount-fuji"));
+  assert.ok(pace.trip.days.flatMap((day) => day.activities).some((activity) => activity.title === "Hakone Open-Air Museum"));
+  assert.ok(!pace.trip.days.flatMap((day) => day.activities).some((activity) => activity.id === "mount-fuji"));
   assert.ok(budget.trip.days.flatMap((day) => day.activities).some((activity) => activity.title === "Local vegetarian set dinner"));
   assert.ok(budget.trip.budget.total < fairness.trip.budget.total);
   assert.ok(pace.scores.pace > fairness.scores.pace);

@@ -19,12 +19,12 @@ export interface VetoPreview {
 }
 
 const DEMO_VETO = {
-  activityId: "mount-takao",
+  activityId: "mount-fuji",
   afterTime: "11:00",
-  beforeTime: "08:30",
+  beforeTime: "05:30",
   day: 2,
-  removedActivity: "Mount Takao summit trail",
-  replacement: "teamLab Planets",
+  removedActivity: "Mount Fuji 5th Station sunrise",
+  replacement: "Hakone Open-Air Museum",
 } as const satisfies VetoPreview;
 
 /** Returns the one fixed veto whose result is available from the no-key demo endpoint. */

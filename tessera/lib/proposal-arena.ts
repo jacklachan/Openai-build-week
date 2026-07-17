@@ -30,27 +30,27 @@ function findActivity(trip: Trip, predicate: (activity: Activity) => boolean) {
 
 function makePaceProposal(base: Trip): Trip {
   const trip = cloneTrip(base, "pace");
-  const target = findActivity(trip, (activity) => activity.id === "mount-takao") ??
+  const target = findActivity(trip, (activity) => activity.id === "mount-fuji") ??
     findActivity(trip, (activity) => Boolean(activity.tension));
   if (!target) return trip;
 
   const original = target.day.activities[target.index]!;
   target.day.activities[target.index] = {
     ...original,
-    category: "city",
+    category: "culture",
     durationMin: 120,
-    estCostPerPerson: 28,
+    estCostPerPerson: 24,
     id: `${original.id}-late-alternative`,
-    lat: 35.6491,
-    lng: 139.789,
-    rationale: "A later, mostly indoor alternative lowers the walking and early-start burden without losing a shared highlight.",
+    lat: 35.2479,
+    lng: 139.0492,
+    rationale: "A later Hakone art stop lowers the early-start burden without breaking the wider Japan route.",
     startTime: "11:00",
     tension: "The group trades the most demanding stop for a lower-friction shared experience.",
-    title: "teamLab Planets",
+    title: "Hakone Open-Air Museum",
   };
   trip.tradeoffs = [
-    "The early, high-effort stop is replaced with a late indoor experience so the group protects a slower pace.",
-    "Ravi gives up the biggest adventure moment; everyone keeps a memorable shared highlight.",
+    "The pre-dawn Fuji stop becomes a later Hakone art stop so the group protects a slower pace.",
+    "Ravi gives up the sunrise adventure; everyone keeps a memorable shared Hakone highlight.",
   ];
   return withBudget(trip);
 }

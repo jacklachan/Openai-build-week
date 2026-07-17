@@ -119,7 +119,7 @@ export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntak
 
       <div className="chatIntakeActions">
         <button disabled={disabled} onClick={() => fileInput.current?.click()} type="button">Import WhatsApp .txt</button>
-        <button disabled={disabled} onClick={() => inspectChat(TOKYO_GROUP_CHAT)} type="button">Try the Tokyo chat</button>
+        <button disabled={disabled} onClick={() => inspectChat(TOKYO_GROUP_CHAT)} type="button">Try the Japan chat</button>
         <button disabled={disabled} onClick={captureVoiceNote} type="button">{isListening ? "Stop voice note" : "Capture voice note"}</button>
         <input accept="text/plain,.txt" aria-label="Import a WhatsApp chat export" disabled={disabled} onChange={handleFile} ref={fileInput} type="file" />
       </div>

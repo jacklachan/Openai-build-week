@@ -1,9 +1,9 @@
 {
   "id": "seed-japan-2026",
   "constraints": {
-    "destination": "Tokyo, Japan",
+    "destination": "Japan — Tokyo, Fuji, Kyoto & Osaka",
     "startDate": "2026-10-09",
-    "days": 3,
+    "days": 4,
     "currency": "USD",
     "budgetCeiling": 4500,
     "originCity": "New Delhi"
@@ -17,7 +17,7 @@
       "interests": ["adventure", "nature", "food"],
       "dietary": [],
       "accessibility": [],
-      "mustDo": ["Hike Mount Takao"],
+      "mustDo": ["Mount Fuji sunrise"],
       "dealbreakers": ["Fine dining every night"]
     },
     {
@@ -39,7 +39,7 @@
       "interests": ["anime", "nightlife", "city"],
       "dietary": [],
       "accessibility": [],
-      "mustDo": ["Akihabara at night"],
+      "mustDo": ["Akihabara after dark"],
       "dealbreakers": ["Skipping Tokyo nightlife"]
     }
   ],
@@ -47,7 +47,7 @@
     {
       "day": 1,
       "date": "2026-10-09",
-      "summary": "A gentle arrival day balances Priya's slow pace with an evening for Mei.",
+      "summary": "Tokyo begins gently, protecting Priya's arrival pace while Mei gets the city after dark.",
       "activities": [
         {
           "id": "shinjuku-garden",
@@ -58,7 +58,7 @@
           "durationMin": 120,
           "category": "nature",
           "estCostPerPerson": 4,
-          "rationale": "A late, low-impact outdoor start gives Priya an easy arrival while Ravi still gets a nature stop.",
+          "rationale": "A late, low-impact Tokyo start gives Priya an easy arrival while Ravi still gets a nature stop.",
           "satisfies": ["priya", "ravi"]
         },
         {
@@ -70,7 +70,7 @@
           "durationMin": 60,
           "category": "meal",
           "estCostPerPerson": 14,
-          "rationale": "A vegetarian-friendly, casual lunch protects the group budget before the planned splurge dinner.",
+          "rationale": "A vegetarian-friendly, casual lunch protects the group budget before the single planned splurge dinner.",
           "satisfies": ["priya", "ravi", "mei"]
         },
         {
@@ -82,7 +82,7 @@
           "durationMin": 150,
           "category": "anime",
           "estCostPerPerson": 18,
-          "rationale": "This gives Mei her essential nightlife and anime evening without requiring an early start for Priya.",
+          "rationale": "Mei gets her non-negotiable Tokyo anime evening without forcing an early start for Priya.",
           "satisfies": ["mei"],
           "tension": "Ravi gives up a late hiking prep night."
         }
@@ -100,143 +100,195 @@
     {
       "day": 2,
       "date": "2026-10-10",
-      "summary": "Ravi's hike is paired with a relaxed cultural afternoon and the trip's single splurge meal.",
+      "summary": "A Fuji sunrise protects Ravi's must-do, then the group slows down across Hakone before continuing west.",
       "activities": [
         {
-          "id": "mount-takao",
-          "title": "Mount Takao summit trail",
-          "lat": 35.6254,
-          "lng": 139.2434,
-          "startTime": "08:30",
-          "durationMin": 300,
+          "id": "mount-fuji",
+          "title": "Mount Fuji 5th Station sunrise",
+          "lat": 35.3606,
+          "lng": 138.7274,
+          "startTime": "05:30",
+          "durationMin": 180,
           "category": "adventure",
-          "estCostPerPerson": 12,
-          "rationale": "The single early, active day satisfies Ravi's must-do while the cable car limits walking for Priya.",
+          "estCostPerPerson": 18,
+          "rationale": "The one early, active day gives Ravi his named Fuji moment; a coach and viewpoint avoid a long trekking burden for Priya.",
           "satisfies": ["ravi", "priya"],
-          "tension": "Priya compromises on one early start."
+          "tension": "Priya compromises on one pre-dawn start."
         },
         {
-          "id": "asakusa-culture",
-          "title": "Asakusa and Senso-ji",
-          "lat": 35.7148,
-          "lng": 139.7967,
-          "startTime": "15:30",
-          "durationMin": 120,
-          "category": "culture",
-          "estCostPerPerson": 6,
-          "rationale": "A compact, accessible cultural stop rewards Priya's flexibility on the morning hike.",
-          "satisfies": ["priya", "mei"]
+          "id": "lake-ashi",
+          "title": "Lake Ashi scenic cruise",
+          "lat": 35.2209,
+          "lng": 138.9972,
+          "startTime": "12:30",
+          "durationMin": 80,
+          "category": "relaxation",
+          "estCostPerPerson": 22,
+          "rationale": "A seated Hakone cruise gives Priya a low-friction recovery stop after Ravi's sunrise and keeps the route visibly shared.",
+          "satisfies": ["priya", "ravi", "mei"]
         },
         {
-          "id": "special-dinner",
-          "title": "Vegetarian kaiseki dinner",
-          "lat": 35.6718,
-          "lng": 139.7659,
-          "startTime": "19:00",
+          "id": "hakone-kaiseki",
+          "title": "Vegetarian kaiseki at Hakone",
+          "lat": 35.2324,
+          "lng": 139.1069,
+          "startTime": "18:30",
           "durationMin": 120,
           "category": "meal",
-          "estCostPerPerson": 130,
-          "rationale": "This is the itinerary's one planned splurge, meeting Priya's special-dinner request while keeping other meals casual.",
+          "estCostPerPerson": 120,
+          "rationale": "The itinerary's single splurge is a vegetarian dinner in Hakone, meeting Priya's ritual while every other meal remains casual.",
           "satisfies": ["priya"],
-          "tension": "Ravi accepts one premium meal in exchange for the Mount Takao day."
+          "tension": "Ravi accepts one premium meal in exchange for the Mount Fuji day."
         }
       ],
       "transportLegs": [
         {
-          "mode": "train",
-          "fromName": "Shinjuku",
-          "toName": "Mount Takao",
-          "durationMin": 55,
-          "estCost": 72
+          "mode": "bus",
+          "fromName": "Tokyo",
+          "toName": "Mount Fuji 5th Station",
+          "durationMin": 150,
+          "estCost": 90
         },
         {
-          "mode": "metro",
-          "fromName": "Asakusa",
-          "toName": "Ginza",
-          "durationMin": 20,
-          "estCost": 15
+          "mode": "train",
+          "fromName": "Hakone",
+          "toName": "Kyoto",
+          "durationMin": 150,
+          "estCost": 320
         }
       ]
     },
     {
       "day": 3,
       "date": "2026-10-11",
-      "summary": "A shared city finale gives everyone a final preference match without another expensive evening.",
+      "summary": "Kyoto gives Priya a cultural day with short, intentional stops before the final move to Osaka.",
       "activities": [
         {
-          "id": "tsukiji-food",
-          "title": "Tsukiji Outer Market breakfast",
-          "lat": 35.6654,
-          "lng": 139.7707,
-          "startTime": "10:00",
-          "durationMin": 90,
+          "id": "fushimi-inari",
+          "title": "Fushimi Inari lower torii walk",
+          "lat": 34.9671,
+          "lng": 135.7727,
+          "startTime": "10:30",
+          "durationMin": 75,
+          "category": "culture",
+          "estCostPerPerson": 0,
+          "rationale": "The lower torii route gives Priya a meaningful Kyoto cultural moment without turning the day into a long climb.",
+          "satisfies": ["priya", "ravi", "mei"]
+        },
+        {
+          "id": "nishiki-lunch",
+          "title": "Nishiki Market vegetarian lunch",
+          "lat": 35.0045,
+          "lng": 135.7647,
+          "startTime": "13:00",
+          "durationMin": 75,
           "category": "food",
           "estCostPerPerson": 18,
-          "rationale": "A later breakfast keeps Priya's preferred pace while letting the whole group explore Tokyo's food culture.",
-          "satisfies": ["ravi", "priya", "mei"]
+          "rationale": "A flexible Kyoto market lunch keeps food discovery high while preserving the single special-dinner budget rule.",
+          "satisfies": ["priya", "ravi", "mei"]
         },
         {
-          "id": "harajuku-shopping",
-          "title": "Harajuku design and shopping walk",
-          "lat": 35.6702,
-          "lng": 139.7026,
-          "startTime": "13:00",
-          "durationMin": 150,
-          "category": "shopping",
-          "estCostPerPerson": 25,
-          "rationale": "A flexible afternoon lets Priya browse at her pace while Mei stays close to the city's pop-culture scene.",
+          "id": "gion-tea",
+          "title": "Gion tea ceremony",
+          "lat": 35.0037,
+          "lng": 135.7785,
+          "startTime": "16:30",
+          "durationMin": 75,
+          "category": "culture",
+          "estCostPerPerson": 40,
+          "rationale": "A seated Gion ritual makes the Kyoto day feel intentional, not like a rushed transfer between major cities.",
           "satisfies": ["priya", "mei"]
-        },
-        {
-          "id": "shibuya-sky",
-          "title": "Shibuya Sky at sunset",
-          "lat": 35.658,
-          "lng": 139.7016,
-          "startTime": "17:30",
-          "durationMin": 90,
-          "category": "city",
-          "estCostPerPerson": 18,
-          "rationale": "A single shared finale gives each traveler a memorable city view without adding another nightlife expense.",
-          "satisfies": ["ravi", "priya", "mei"]
         }
       ],
       "transportLegs": [
         {
           "mode": "metro",
-          "fromName": "Tsukiji",
-          "toName": "Harajuku",
+          "fromName": "Fushimi Inari",
+          "toName": "Gion",
+          "durationMin": 26,
+          "estCost": 20
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "date": "2026-10-12",
+      "summary": "Osaka closes on Mei's pace: playful city energy, good food, and one final shared skyline.",
+      "activities": [
+        {
+          "id": "dotonbori-food",
+          "title": "Dotonbori vegetarian street-food crawl",
+          "lat": 34.6687,
+          "lng": 135.5013,
+          "startTime": "12:00",
+          "durationMin": 105,
+          "category": "food",
+          "estCostPerPerson": 22,
+          "rationale": "A casual Osaka food crawl keeps the final day social and protects the budget after the Hakone splurge.",
+          "satisfies": ["priya", "ravi", "mei"]
+        },
+        {
+          "id": "den-den-town",
+          "title": "Den Den Town pop-culture stop",
+          "lat": 34.6585,
+          "lng": 135.5064,
+          "startTime": "15:00",
+          "durationMin": 90,
+          "category": "anime",
+          "estCostPerPerson": 10,
+          "rationale": "Mei gets a second, optional pop-culture stop while the route stays compact for the whole group.",
+          "satisfies": ["mei"]
+        },
+        {
+          "id": "umeda-sky",
+          "title": "Umeda Sky Building at sunset",
+          "lat": 34.7053,
+          "lng": 135.4906,
+          "startTime": "18:30",
+          "durationMin": 90,
+          "category": "city",
+          "estCostPerPerson": 14,
+          "rationale": "A shared Osaka finale gives everyone a skyline moment without adding another expensive nightlife commitment.",
+          "satisfies": ["ravi", "priya", "mei"]
+        }
+      ],
+      "transportLegs": [
+        {
+          "mode": "train",
+          "fromName": "Kyoto",
+          "toName": "Osaka",
           "durationMin": 32,
-          "estCost": 18
+          "estCost": 210
         },
         {
           "mode": "metro",
-          "fromName": "Harajuku",
-          "toName": "Shibuya",
-          "durationMin": 12,
-          "estCost": 12
+          "fromName": "Dotonbori",
+          "toName": "Umeda",
+          "durationMin": 18,
+          "estCost": 16
         }
       ]
     }
   ],
   "budget": {
     "ceiling": 4500,
-    "total": 870,
+    "total": 1574,
     "lines": [
-      { "category": "adventure", "estimate": 36 },
-      { "category": "anime", "estimate": 54 },
-      { "category": "city", "estimate": 54 },
-      { "category": "culture", "estimate": 18 },
-      { "category": "food", "estimate": 54 },
-      { "category": "meal", "estimate": 432 },
+      { "category": "adventure", "estimate": 54 },
+      { "category": "anime", "estimate": 84 },
+      { "category": "city", "estimate": 42 },
+      { "category": "culture", "estimate": 120 },
+      { "category": "food", "estimate": 120 },
+      { "category": "meal", "estimate": 402 },
       { "category": "nature", "estimate": 12 },
-      { "category": "shopping", "estimate": 75 },
-      { "category": "transport", "estimate": 135 }
+      { "category": "relaxation", "estimate": 66 },
+      { "category": "transport", "estimate": 674 }
     ]
   },
   "tradeoffs": [
-    "Priya accepts one early Mount Takao start so Ravi gets his must-do hike; the cable car limits the walking burden.",
-    "Ravi accepts one premium vegetarian kaiseki dinner; every other meal stays casual to preserve the group budget.",
-    "Mei gets an Akihabara evening, while the final night stays low-cost rather than extending nightlife plans."
+    "Priya accepts one pre-dawn Mount Fuji start so Ravi gets his named sunrise; the coach and viewpoint limit the walking burden.",
+    "Ravi accepts one premium vegetarian kaiseki dinner in Hakone; every other meal stays casual to preserve the Japan-wide group budget.",
+    "Mei gets Akihabara after dark in Tokyo and an optional Osaka pop-culture stop, while the final evening remains low-cost rather than extending nightlife plans."
   ],
   "version": 1
 }

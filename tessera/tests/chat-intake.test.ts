@@ -7,27 +7,26 @@ import { analyzeChat, createPlanDraftFromChat, getChatDecisionQuestion, parseWha
 test("parses a WhatsApp export and keeps only human decision signals", () => {
   const messages = parseWhatsAppExport(`${TOKYO_GROUP_CHAT}\nA continuation of the last thought.`);
   const intake = analyzeChat(messages);
+  const question = getChatDecisionQuestion(intake);
 
   assert.equal(intake.participants.length, 3);
   assert.deepEqual(intake.participants, ["Ravi", "Priya", "Mei"]);
   assert.ok(intake.signals.some((signal) => signal.kind === "must-do" && signal.sender === "Ravi"));
   assert.ok(intake.signals.some((signal) => signal.kind === "dealbreaker" && signal.sender === "Priya"));
   assert.match(messages.at(-1)?.text ?? "", /continuation/);
-  assert.deepEqual(getChatDecisionQuestion(intake), {
-    protectedTraveler: "Ravi",
-    question: "Priya, what is the smallest compromise you could accept to protect Ravi's named must-do?",
-    source: "Priya: “I am in for Tokyo, but I cannot do 6am starts every day or long walking days.” · Ravi: “Tokyo is locked. I really want one proper summit day, ideally Mount Takao.”",
-    traveler: "Priya",
-  });
+  assert.equal(question?.protectedTraveler, "Ravi");
+  assert.equal(question?.traveler, "Priya");
+  assert.match(question?.source ?? "", /Mount Fuji sunrise/);
+  assert.match(question?.source ?? "", /cannot do 6am starts/);
 });
 
 test("turns a chat intake into an editable group-planning draft", () => {
   const intake = analyzeChat(parseWhatsAppExport(TOKYO_GROUP_CHAT));
-  const draft = createPlanDraftFromChat(intake, { ...createPlanDraft(), destination: "Tokyo, Japan" });
+  const draft = createPlanDraftFromChat(intake, { ...createPlanDraft(), destination: "Japan" });
   const priya = draft.travelers.find((traveler) => traveler.name === "Priya");
   const ravi = draft.travelers.find((traveler) => traveler.name === "Ravi");
 
-  assert.equal(draft.destination, "Tokyo, Japan");
+  assert.equal(draft.destination, "Japan");
   assert.equal(draft.travelers.length, 3);
   assert.equal(priya?.pace, "slow");
   assert.match(priya?.dealbreakers ?? "", /cannot do 6am starts/i);
