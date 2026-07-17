@@ -221,19 +221,19 @@ test("renders the seeded decision replay as one question, choices, ripple, and p
   const ripple = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "ripple" }));
   const pact = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "pact" }));
 
-  assert.match(conflict, /Three people asked for a different Japan/);
-  assert.match(conflict, /Ask the one question/);
+  assert.match(conflict, /One early morning is blocking this trip/);
+  assert.match(conflict, /See the one decision/);
   assert.match(conflict, /Skip replay/);
-  assert.match(question, /The one answer that changes this trip/);
-  assert.match(question, /Priya, would you take one 05:30 start/);
-  assert.match(question, /Silent-loser check/);
-  assert.match(question, /Show all three deals instead/);
+  assert.match(question, /Your choice/);
+  assert.match(question, /Should Priya take one 05:30 start/);
+  assert.match(question, /Why this matters/);
+  assert.match(question, /Compare all three deals instead/);
   assert.match(choice, /What should the group protect/);
   assert.match(choice, /Best fairness/);
-  assert.match(ripple, /Visible consequence/);
+  assert.match(ripple, /What the group gets/);
   assert.match(ripple, /Everyone keeps the thing they named/);
-  assert.match(pact, /This trip comes with receipts/);
-  assert.match(pact, /Challenge one promise/);
+  assert.match(pact, /Everyone can see what they get and give up/);
+  assert.match(pact, /Challenge a promise/);
 
   const paceReceipt = getDecisionReceipt(trip, proposals[1]!, trip.constraints.currency);
   assert.equal(paceReceipt.changed, "Mount Fuji 5th Station sunrise becomes Hakone Open-Air Museum.");

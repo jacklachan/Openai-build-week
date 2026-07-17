@@ -46,6 +46,13 @@ const protectedCopy: Record<ProposalId, string> = {
   pace: "Priya's later, lower-friction day and a shared highlight.",
 };
 
+const replayProgressLabels: Record<Exclude<ReplayStep, "choice">, string> = {
+  conflict: "The conflict",
+  question: "Your choice",
+  ripple: "What changes",
+  pact: "The agreement",
+};
+
 function formatCurrency(value: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     currency,
@@ -110,15 +117,15 @@ export function DecisionReplay({
           {(["conflict", "question", "ripple", "pact"] as ReplayStep[]).map((item, index) => (
             <li aria-current={item === step ? "step" : undefined} className={item === step ? "decisionReplayProgress-active" : undefined} key={item}>
               <span>{index + 1}</span>
-              {item}
+              {replayProgressLabels[item]}
             </li>
           ))}
         </ol>
 
         {step === "conflict" ? (
           <div className="decisionReplayScene" key="conflict">
-            <p className="decisionReplayEyebrow">Before there is a route, there is a conflict.</p>
-            <h2 id="decision-replay-title">Three people asked for a different Japan.</h2>
+            <p className="decisionReplayEyebrow">Start here</p>
+            <h2 id="decision-replay-title">One early morning is blocking this trip.</h2>
             <div className="decisionReplayPeople">
               {travelers.map((traveler) => (
                 <article key={traveler.id}>
@@ -131,24 +138,24 @@ export function DecisionReplay({
               ))}
             </div>
             <p className="decisionReplayConflict">
-              Ravi wants a Fuji sunrise. Priya cannot start at dawn. Mei wants Tokyo after dark. A normal itinerary has no way to make that trade visible.
+              Ravi wants Mount Fuji at sunrise. Priya cannot do a 05:30 start. Mei already has her Tokyo night. Your job is to decide whether the Fuji sunrise is worth Priya&apos;s early start.
             </p>
             <button className="decisionReplayPrimary" onClick={onNext} type="button">
-              Ask the one question
+              See the one decision
             </button>
           </div>
         ) : null}
 
         {step === "question" ? (
           <div className="decisionReplayScene decisionReplayQuestion" key="question">
-            <p className="decisionReplayEyebrow">The one answer that changes this trip.</p>
-            <h2 id="decision-replay-title">Priya, would you take one 05:30 start?</h2>
+            <p className="decisionReplayEyebrow">Your choice</p>
+            <h2 id="decision-replay-title">Should Priya take one 05:30 start so Ravi can keep Mount Fuji?</h2>
             <p className="decisionReplayLead">
               That one answer decides whether Ravi keeps Mount Fuji—and whether the group has to make Priya carry the hidden cost of the plan.
             </p>
             <div className="decisionQuestionSignal">
-              <span>Silent-loser check</span>
-              <p>Without an explicit answer, Priya absorbs the early start while everyone else gets what they asked for.</p>
+              <span>Why this matters</span>
+              <p>Without a clear choice, Priya quietly pays for a plan that looks good to everyone else.</p>
             </div>
             <div className="decisionQuestionAnswers">
               <button
@@ -177,7 +184,7 @@ export function DecisionReplay({
               </button>
             </div>
             <button className="decisionReplayTextButton" onClick={onShowOptions} type="button">
-              Show all three deals instead
+              Compare all three deals instead
             </button>
           </div>
         ) : null}
@@ -207,7 +214,7 @@ export function DecisionReplay({
 
         {step === "ripple" ? (
           <div className="decisionReplayScene" key="ripple">
-            <p className="decisionReplayEyebrow">The city has already changed behind this card.</p>
+            <p className="decisionReplayEyebrow">What changes</p>
             <h2 id="decision-replay-title">{activeCopy.title}</h2>
             {receipt ? (
               <dl className="decisionReceipt" aria-label="Decision receipt">
@@ -226,31 +233,31 @@ export function DecisionReplay({
               </dl>
             ) : null}
             <div className="decisionReplayRipple">
-              <span>Visible consequence</span>
+              <span>What the group gets</span>
               <p>{activeCopy.consequence}</p>
             </div>
-            <p className="decisionReplayLead">The route, timeline, and budget now reflect this choice. Nothing is silently optimized away.</p>
+            <p className="decisionReplayLead">The route, timeline, and budget now reflect the decision. Everyone can see what changed before they agree.</p>
             <button className="decisionReplayPrimary" onClick={onNext} type="button">
-              Turn it into a pact
+              Review the group agreement
             </button>
           </div>
         ) : null}
 
         {step === "pact" ? (
           <div className="decisionReplayScene" key="pact">
-            <p className="decisionReplayEyebrow">A plan is not an agreement until people can challenge it.</p>
-            <h2 id="decision-replay-title">This trip comes with receipts.</h2>
+            <p className="decisionReplayEyebrow">The agreement</p>
+            <h2 id="decision-replay-title">Everyone can see what they get and give up.</h2>
             <ul className="decisionReplayPact">
-              <li>Every traveler keeps a named must-do.</li>
-              <li>Every concession is written in plain language.</li>
-              <li>Any person can veto one promise and see the ripple before committing.</li>
+              <li>Each traveler keeps a named priority.</li>
+              <li>Each trade-off is written in plain language.</li>
+              <li>Anyone can challenge one promise before agreeing.</li>
             </ul>
             <div className="decisionReplayActions">
               <button className="decisionReplayPrimary" onClick={onFinish} type="button">
-                Open the trip pact
+                Open the agreement
               </button>
               <button className="decisionReplaySecondary" onClick={onChallenge} type="button">
-                Challenge one promise
+                Challenge a promise
               </button>
             </div>
           </div>

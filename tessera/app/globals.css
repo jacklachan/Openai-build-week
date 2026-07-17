@@ -3414,12 +3414,22 @@ button {
 .decisionReplayPrimary:hover { color: var(--premium-pearl); background: var(--premium-violet); border-color: var(--premium-violet); }
 .decisionReplaySecondary:hover { background: rgba(248, 245, 240, 0.1); }
 
+/* The demo has one job: explain the choice before exposing the power-user tools. */
+.landingCustomAction { width: 100%; min-height: 2.75rem; margin-top: 0.9rem; color: #e9e4ff; background: transparent; border: 1px solid rgba(197, 184, 255, 0.54); border-radius: 0.45rem; font-family: var(--font-archivo), sans-serif; font-size: 0.75rem; font-weight: 720; cursor: pointer; transition: background 180ms ease, border-color 180ms ease; }
+.landingCustomAction:hover { background: rgba(197, 184, 255, 0.12); border-color: var(--premium-gold); }
+.landingCustomPlan { display: grid; gap: 1rem; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(248, 245, 240, 0.15); }
+.advancedReveal { position: absolute; z-index: 11; top: 1.15rem; right: 1.15rem; display: grid; gap: 0.16rem; width: min(22rem, calc(100% - 2.3rem)); padding: 0.8rem 0.9rem; color: var(--premium-pearl); text-align: left; background: rgba(11, 24, 40, 0.84); border: 1px solid rgba(248, 245, 240, 0.24); border-radius: 0.65rem; box-shadow: 0 1rem 3rem rgba(4, 10, 18, 0.24); cursor: pointer; backdrop-filter: blur(16px); }
+.advancedReveal span { font-family: var(--font-playfair), Georgia, serif; font-size: 1rem; font-weight: 600; }
+.advancedReveal small { color: #bdc7d8; font-family: var(--font-archivo), sans-serif; font-size: 0.65rem; }
+.advancedReveal:hover { border-color: var(--premium-gold); background: rgba(41, 33, 76, 0.9); }
+
 @keyframes decisionReplayEnter {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 700px) {
+  .advancedReveal { top: 0.75rem; right: 0.75rem; width: calc(100% - 1.5rem); }
   .decisionReplay { place-items: start center; padding: 0.75rem; overflow: auto; }
   .decisionReplayPanel { margin: 0.5rem 0; padding: 1rem; border-radius: 1rem; }
   .decisionReplayProgress { gap: 0.28rem; font-size: 0.58rem; }

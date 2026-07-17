@@ -141,6 +141,8 @@ export function TripStudio() {
   const [activePreview, setActivePreview] = useState<VetoPreview | null>(null);
   const [replayStep, setReplayStep] = useState<ReplayStep | null>(null);
   const [isDisruptionDrillOpen, setIsDisruptionDrillOpen] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [isCustomPlanOpen, setIsCustomPlanOpen] = useState(false);
   const [replanAudit, setReplanAudit] = useState<PlanDiff | null>(null);
   const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -190,6 +192,7 @@ export function TripStudio() {
       setActivePreview(null);
       setReplayStep(null);
       setIsDisruptionDrillOpen(false);
+      setIsAdvancedOpen(false);
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -226,6 +229,7 @@ export function TripStudio() {
       setActivePreview(null);
       setReplayStep("conflict");
       setIsDisruptionDrillOpen(false);
+      setIsAdvancedOpen(false);
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -417,25 +421,36 @@ export function TripStudio() {
                 {getJudgeStepLabel("load")}
               </button>
             </div>
-            <p className="judgeModeIntro">No key needed · load → veto → audit</p>
-            <ChatIntake disabled={isGenerating} draft={planDraft} onDraftChange={setPlanDraft} />
-          {isGenerating && pendingPlan ? (
-            <TravelerChips phase="generating" travelers={pendingPlan.travelers} />
-          ) : null}
-          {isGenerating && pendingPlan ? <GenerationTimeline days={pendingPlan.constraints.days} /> : null}
-          {phase === "error" ? (
-            <p className="planError" role="alert">
-              PLAN FAILED // {formatPlanError(errorMessage)}. RETRY.
-            </p>
-          ) : null}
-          <PlanForm
-            disabled={isGenerating}
-            draft={planDraft}
-            onDraftChange={setPlanDraft}
-            onSubmit={(request) => void requestPlan(request)}
-            submitLabel={isGenerating ? "Building your agreement..." : phase === "error" ? "Retry plan" : "Create my agreement"}
-          />
-          <p className="judgeModeIntro">JUDGE MODE // A deterministic, no-key walkthrough: load → veto → audit.</p>
+            <p className="judgeModeIntro">No key needed. Start with the demo, make one choice, then review the agreement.</p>
+            <button
+              aria-expanded={isCustomPlanOpen}
+              className="landingCustomAction"
+              onClick={() => setIsCustomPlanOpen((open) => !open)}
+              type="button"
+            >
+              {isCustomPlanOpen ? "Hide custom trip form" : "Plan a different trip"}
+            </button>
+            {isCustomPlanOpen ? (
+              <div className="landingCustomPlan">
+                <ChatIntake disabled={isGenerating} draft={planDraft} onDraftChange={setPlanDraft} />
+                {isGenerating && pendingPlan ? (
+                  <TravelerChips phase="generating" travelers={pendingPlan.travelers} />
+                ) : null}
+                {isGenerating && pendingPlan ? <GenerationTimeline days={pendingPlan.constraints.days} /> : null}
+                {phase === "error" ? (
+                  <p className="planError" role="alert">
+                    PLAN FAILED // {formatPlanError(errorMessage)}. RETRY.
+                  </p>
+                ) : null}
+                <PlanForm
+                  disabled={isGenerating}
+                  draft={planDraft}
+                  onDraftChange={setPlanDraft}
+                  onSubmit={(request) => void requestPlan(request)}
+                  submitLabel={isGenerating ? "Building your agreement..." : phase === "error" ? "Retry plan" : "Create my agreement"}
+                />
+              </div>
+            ) : null}
           </aside>
         </section>
       </main>
@@ -501,7 +516,12 @@ export function TripStudio() {
                 />
               ) : null}
               {proposalOptions.length && !replayStep ? (
-                isDisruptionDrillOpen ? (
+                !isAdvancedOpen ? (
+                  <button className="advancedReveal" onClick={() => setIsAdvancedOpen(true)} type="button">
+                    <span>Compare three alternative deals</span>
+                    <small>Only if the group needs another option.</small>
+                  </button>
+                ) : isDisruptionDrillOpen ? (
                   <DisruptionDrill
                     baseTrip={proposalBaseTrip ?? activeTrip}
                     currency={activeTrip.constraints.currency}

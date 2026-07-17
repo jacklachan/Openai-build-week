@@ -5,14 +5,14 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { TripStudio } from "../components/trip-studio";
 
-test("starts from a generic landing form without the Japan fixture", () => {
+test("starts from a focused landing screen without the Japan fixture", () => {
   const html = renderToStaticMarkup(createElement(TripStudio));
 
   assert.match(
     html,
     /Turn competing wishes into one visible agreement/,
   );
-  assert.match(html, /Destination/);
+  assert.match(html, /Plan a different trip/);
   assert.match(html, /Load the Japan demo/);
   assert.doesNotMatch(html, /Mount Fuji|Akihabara/);
 });
