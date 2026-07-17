@@ -14,6 +14,7 @@ import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
 import { getOsmViewport } from "../components/osm-itinerary-map";
 import { ProposalArena } from "../components/proposal-arena";
 import { getProposalOptions } from "../lib/proposal-arena";
+import { createPactCardSvg, getPactCardFilename } from "../lib/pact-card";
 import { getDisruptionDrill, getDisruptionScenarios } from "../lib/disruption";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
@@ -136,6 +137,11 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
   assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
   assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
   assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
+  const pactCard = createPactCardSvg(trip, agreement);
+  assert.match(pactCard, /TESSERA \/ GROUP PACT/);
+  assert.match(pactCard, /Tokyo, Japan/);
+  assert.match(pactCard, /Hike Mount Takao/);
+  assert.equal(getPactCardFilename("Tokyo, Japan"), "tessera-tokyo-japan-pact-card.svg");
   assert.match(createGroupShareText(trip, agreement), /Ravi: Hike Mount Takao/);
   assert.match(getWhatsAppShareUrl("Tessera pact"), /^https:\/\/wa\.me\/\?text=Tessera%20pact$/);
 

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import type { AgreementEntry } from "../lib/studio";
+import { createPactCardSvg, getPactCardFilename } from "../lib/pact-card";
 import type { Trip } from "../lib/types";
 
 type Decision = "ready" | "needs-change" | "unanswered";
@@ -63,6 +64,16 @@ function downloadAgreementBrief(trip: Trip, agreement: AgreementEntry[]) {
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = `tessera-${trip.constraints.destination.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-agreement.txt`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadPactCard(trip: Trip, agreement: AgreementEntry[]) {
+  const blob = new Blob([createPactCardSvg(trip, agreement)], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = getPactCardFilename(trip.constraints.destination);
   anchor.click();
   URL.revokeObjectURL(url);
 }
@@ -170,6 +181,11 @@ export function DecisionRoom({
           <button className="briefButton" onClick={() => downloadAgreementBrief(trip, agreement)} type="button">
             {summary.unanimous ? "Download signed pact" : "Download brief"}
           </button>
+          {summary.unanimous ? (
+            <button className="briefButton briefButton-card" onClick={() => downloadPactCard(trip, agreement)} type="button">
+              Download pact card
+            </button>
+          ) : null}
           {shareStatus ? <span className="pactShareStatus" role="status">{shareStatus}</span> : null}
         </div>
       </footer>
