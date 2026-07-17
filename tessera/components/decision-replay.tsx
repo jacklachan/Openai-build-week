@@ -1,10 +1,14 @@
 import type { ProposalId, ProposalOption } from "../lib/proposal-arena";
+import { diffTrips } from "../lib/replan";
+import type { Trip } from "../lib/types";
 import type { TravelerProfile } from "../lib/types";
 
 export type ReplayStep = "choice" | "conflict" | "pact" | "ripple";
 
 type DecisionReplayProps = {
   activeProposalId: ProposalId;
+  baseTrip: Trip;
+  currency: string;
   onChallenge: () => void;
   onChoose: (proposal: ProposalOption) => void;
   onFinish: () => void;
@@ -12,6 +16,12 @@ type DecisionReplayProps = {
   proposals: ProposalOption[];
   step: ReplayStep;
   travelers: TravelerProfile[];
+};
+
+export type DecisionReceipt = {
+  budget: string;
+  changed: string;
+  protected: string;
 };
 
 const replayCopy: Record<ProposalId, { consequence: string; title: string }> = {
@@ -29,12 +39,48 @@ const replayCopy: Record<ProposalId, { consequence: string; title: string }> = {
   },
 };
 
+const protectedCopy: Record<ProposalId, string> = {
+  budget: "The shared dinner ritual, with more room for the group budget.",
+  fairness: "Every named must-do stays in the agreement.",
+  pace: "Priya's later, lower-friction day and a shared highlight.",
+};
+
+function formatCurrency(value: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    currency,
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(Math.abs(value));
+}
+
+/** Turns a proposal into a concrete receipt, so the replay never hand-waves the consequence. */
+export function getDecisionReceipt(baseTrip: Trip, proposal: ProposalOption, currency: string): DecisionReceipt {
+  const diff = diffTrips(baseTrip, proposal.trip);
+  const removed = diff.removedActivities[0]?.title;
+  const added = diff.addedActivities[0]?.title;
+  const budget = diff.budget.delta;
+
+  return {
+    budget: budget === 0
+      ? `Total holds at ${formatCurrency(diff.budget.after, currency)}.`
+      : budget < 0
+        ? `${formatCurrency(budget, currency)} stays in reserve.`
+        : `${formatCurrency(budget, currency)} is added to the total.`,
+    changed: removed && added
+      ? `${removed} becomes ${added}.`
+      : "No named stop is removed from the route.",
+    protected: protectedCopy[proposal.id],
+  };
+}
+
 function getTravelerNeed(traveler: TravelerProfile) {
   return (traveler.mustDo[0] ?? traveler.interests.slice(0, 2).join(" and ")) || "A trip that feels like theirs";
 }
 
 export function DecisionReplay({
   activeProposalId,
+  baseTrip,
+  currency,
   onChallenge,
   onChoose,
   onFinish,
@@ -44,6 +90,8 @@ export function DecisionReplay({
   travelers,
 }: DecisionReplayProps) {
   const activeCopy = replayCopy[activeProposalId];
+  const activeProposal = proposals.find((proposal) => proposal.id === activeProposalId) ?? proposals[0];
+  const receipt = activeProposal ? getDecisionReceipt(baseTrip, activeProposal, currency) : undefined;
 
   return (
     <section className="decisionReplay" aria-labelledby="decision-replay-title">
@@ -116,6 +164,22 @@ export function DecisionReplay({
           <div className="decisionReplayScene" key="ripple">
             <p className="decisionReplayEyebrow">The city has already changed behind this card.</p>
             <h2 id="decision-replay-title">{activeCopy.title}</h2>
+            {receipt ? (
+              <dl className="decisionReceipt" aria-label="Decision receipt">
+                <div>
+                  <dt>Protected</dt>
+                  <dd>{receipt.protected}</dd>
+                </div>
+                <div>
+                  <dt>Route shift</dt>
+                  <dd>{receipt.changed}</dd>
+                </div>
+                <div>
+                  <dt>Budget</dt>
+                  <dd>{receipt.budget}</dd>
+                </div>
+              </dl>
+            ) : null}
             <div className="decisionReplayRipple">
               <span>Visible consequence</span>
               <p>{activeCopy.consequence}</p>

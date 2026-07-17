@@ -481,6 +481,8 @@ export function TripStudio() {
               {replayStep ? (
                 <DecisionReplay
                   activeProposalId={activeProposalId}
+                  baseTrip={proposalBaseTrip ?? activeTrip}
+                  currency={activeTrip.constraints.currency}
                   onChallenge={challengeReplayPact}
                   onChoose={chooseReplayProposal}
                   onFinish={finishReplay}

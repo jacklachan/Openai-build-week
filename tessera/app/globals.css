@@ -3174,6 +3174,28 @@ button {
 .decisionReplayChoice strong { color: var(--premium-pearl); font-size: 0.86rem; line-height: 1.2; }
 .decisionReplayChoice small { color: #c7d1df; font-size: 0.69rem; line-height: 1.25; }
 
+.decisionReceipt {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 1rem;
+  overflow: hidden;
+  background: rgba(248, 245, 240, 0.18);
+  border: 1px solid rgba(248, 245, 240, 0.2);
+  border-radius: 0.85rem;
+}
+.decisionReceipt > div { min-height: 6.4rem; padding: 0.8rem; background: rgba(7, 16, 30, 0.56); }
+.decisionReceipt dt {
+  margin-bottom: 0.45rem;
+  color: var(--premium-gold);
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.decisionReceipt dd { margin: 0; color: var(--premium-pearl); font-size: 0.82rem; line-height: 1.35; }
+
 .decisionReplayRipple {
   max-width: 42rem;
   padding: 1rem;
@@ -3218,6 +3240,8 @@ button {
   .decisionReplayProgress li::after { width: 0.65rem; }
   .decisionReplayPeople { grid-template-columns: 1fr; }
   .decisionReplayChoice { grid-template-columns: 1fr; gap: 0.25rem; }
+  .decisionReceipt { grid-template-columns: 1fr; }
+  .decisionReceipt > div { min-height: auto; }
   .decisionReplayActions { align-items: stretch; flex-direction: column; }
   .decisionReplayActions button { width: 100%; }
 }

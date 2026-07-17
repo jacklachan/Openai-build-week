@@ -4,7 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
-import { DecisionReplay } from "../components/decision-replay";
+import { DecisionReplay, getDecisionReceipt } from "../components/decision-replay";
 import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
@@ -155,6 +155,8 @@ test("renders the seeded decision replay as conflict, choice, ripple, and pact",
   const proposals = getProposalOptions(trip);
   const sharedProps = {
     activeProposalId: "fairness" as const,
+    baseTrip: trip,
+    currency: trip.constraints.currency,
     onChallenge: () => undefined,
     onChoose: () => undefined,
     onFinish: () => undefined,
@@ -176,6 +178,10 @@ test("renders the seeded decision replay as conflict, choice, ripple, and pact",
   assert.match(ripple, /Everyone keeps the thing they named/);
   assert.match(pact, /This trip comes with receipts/);
   assert.match(pact, /Challenge one promise/);
+
+  const paceReceipt = getDecisionReceipt(trip, proposals[1]!, trip.constraints.currency);
+  assert.equal(paceReceipt.changed, "Mount Takao summit trail becomes teamLab Planets.");
+  assert.match(paceReceipt.budget, /added to the total|stays in reserve|Total holds/);
 });
 
 test("uses only the visible nine-tile map viewport and projects known stops", () => {
