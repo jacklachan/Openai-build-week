@@ -158,7 +158,7 @@ test("renders three proposal choices with auditable trade-off scores", () => {
   assert.match(html, /BUDGET/);
 });
 
-test("renders the seeded decision replay as conflict, choice, ripple, and pact", () => {
+test("renders the seeded decision replay as one question, choices, ripple, and pact", () => {
   const proposals = getProposalOptions(trip);
   const sharedProps = {
     activeProposalId: "fairness" as const,
@@ -168,17 +168,24 @@ test("renders the seeded decision replay as conflict, choice, ripple, and pact",
     onChoose: () => undefined,
     onFinish: () => undefined,
     onNext: () => undefined,
+    onShowOptions: () => undefined,
     proposals,
     travelers: trip.travelers,
   };
 
   const conflict = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "conflict" }));
+  const question = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "question" }));
   const choice = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "choice" }));
   const ripple = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "ripple" }));
   const pact = renderToStaticMarkup(createElement(DecisionReplay, { ...sharedProps, step: "pact" }));
 
   assert.match(conflict, /Three people asked for a different Tokyo/);
+  assert.match(conflict, /Ask the one question/);
   assert.match(conflict, /Skip replay/);
+  assert.match(question, /The one answer that changes this trip/);
+  assert.match(question, /Priya, would you take one 08:30 start/);
+  assert.match(question, /Silent-loser check/);
+  assert.match(question, /Show all three deals instead/);
   assert.match(choice, /What should the group protect/);
   assert.match(choice, /Best fairness/);
   assert.match(ripple, /Visible consequence/);

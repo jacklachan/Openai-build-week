@@ -3,7 +3,7 @@ import { diffTrips } from "../lib/replan";
 import type { Trip } from "../lib/types";
 import type { TravelerProfile } from "../lib/types";
 
-export type ReplayStep = "choice" | "conflict" | "pact" | "ripple";
+export type ReplayStep = "choice" | "conflict" | "pact" | "question" | "ripple";
 
 type DecisionReplayProps = {
   activeProposalId: ProposalId;
@@ -13,6 +13,7 @@ type DecisionReplayProps = {
   onChoose: (proposal: ProposalOption) => void;
   onFinish: () => void;
   onNext: () => void;
+  onShowOptions: () => void;
   proposals: ProposalOption[];
   step: ReplayStep;
   travelers: TravelerProfile[];
@@ -85,6 +86,7 @@ export function DecisionReplay({
   onChoose,
   onFinish,
   onNext,
+  onShowOptions,
   proposals,
   step,
   travelers,
@@ -105,7 +107,7 @@ export function DecisionReplay({
         </header>
 
         <ol className="decisionReplayProgress" aria-label="Decision replay progress">
-          {(["conflict", "choice", "ripple", "pact"] as ReplayStep[]).map((item, index) => (
+          {(["conflict", "question", "ripple", "pact"] as ReplayStep[]).map((item, index) => (
             <li aria-current={item === step ? "step" : undefined} className={item === step ? "decisionReplayProgress-active" : undefined} key={item}>
               <span>{index + 1}</span>
               {item}
@@ -132,7 +134,50 @@ export function DecisionReplay({
               Ravi wants a summit. Priya cannot start at dawn. Mei wants the city after dark. A normal itinerary has no way to make that trade visible.
             </p>
             <button className="decisionReplayPrimary" onClick={onNext} type="button">
-              Show me the collision
+              Ask the one question
+            </button>
+          </div>
+        ) : null}
+
+        {step === "question" ? (
+          <div className="decisionReplayScene decisionReplayQuestion" key="question">
+            <p className="decisionReplayEyebrow">The one answer that changes this trip.</p>
+            <h2 id="decision-replay-title">Priya, would you take one 08:30 start?</h2>
+            <p className="decisionReplayLead">
+              That one answer decides whether Ravi keeps Mount Takao—and whether the group has to make Priya carry the hidden cost of the plan.
+            </p>
+            <div className="decisionQuestionSignal">
+              <span>Silent-loser check</span>
+              <p>Without an explicit answer, Priya absorbs the early start while everyone else gets what they asked for.</p>
+            </div>
+            <div className="decisionQuestionAnswers">
+              <button
+                className="decisionQuestionAnswer decisionQuestionAnswer-keep"
+                onClick={() => {
+                  const proposal = proposals.find((item) => item.id === "fairness");
+                  if (proposal) onChoose(proposal);
+                }}
+                type="button"
+              >
+                <span>Yes — protect Ravi&apos;s hike</span>
+                <strong>Ravi keeps Mount Takao. Priya keeps her special dinner.</strong>
+                <small>The route starts once at 08:30; the compromise is written into the pact.</small>
+              </button>
+              <button
+                className="decisionQuestionAnswer decisionQuestionAnswer-pace"
+                onClick={() => {
+                  const proposal = proposals.find((item) => item.id === "pace");
+                  if (proposal) onChoose(proposal);
+                }}
+                type="button"
+              >
+                <span>No — protect Priya&apos;s pace</span>
+                <strong>Priya gets a later start. Ravi trades the summit for teamLab.</strong>
+                <small>The map changes immediately, so the cost of this answer stays visible.</small>
+              </button>
+            </div>
+            <button className="decisionReplayTextButton" onClick={onShowOptions} type="button">
+              Show all three deals instead
             </button>
           </div>
         ) : null}

@@ -3051,7 +3051,11 @@ button {
 .decisionReplayProgress,
 .decisionReplayChoice span,
 .decisionReplayChoice small,
-.decisionReplayRipple span {
+.decisionReplayRipple span,
+.decisionQuestionAnswer span,
+.decisionQuestionAnswer small,
+.decisionQuestionSignal span,
+.decisionReplayTextButton {
   font-family: var(--font-archivo), sans-serif;
   font-size: 0.68rem;
   font-weight: 650;
@@ -3182,6 +3186,37 @@ button {
 .decisionReplayChoice strong { color: var(--premium-pearl); font-size: 0.86rem; line-height: 1.2; }
 .decisionReplayChoice small { color: #c7d1df; font-size: 0.69rem; line-height: 1.25; }
 
+.decisionReplayQuestion h2 { max-width: 14ch; }
+.decisionQuestionSignal {
+  padding: 0.85rem 0.95rem;
+  margin: 0 0 0.8rem;
+  background: linear-gradient(110deg, rgba(255, 111, 119, 0.16), rgba(131, 103, 247, 0.13));
+  border: 1px solid rgba(255, 174, 181, 0.3);
+  border-left: 3px solid #ff8c96;
+  border-radius: 0.7rem;
+}
+.decisionQuestionSignal span { color: #ffc1c6; }
+.decisionQuestionSignal p { margin: 0.32rem 0 0; color: #e7edf7; font-size: 0.82rem; line-height: 1.4; }
+.decisionQuestionAnswers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
+.decisionQuestionAnswer {
+  display: grid;
+  gap: 0.45rem;
+  min-height: 11.5rem;
+  padding: 1rem;
+  color: var(--premium-pearl);
+  border: 1px solid rgba(248, 245, 240, 0.22);
+  border-radius: 0.85rem;
+  text-align: left;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.decisionQuestionAnswer-keep { background: linear-gradient(145deg, rgba(45, 133, 123, 0.38), rgba(7, 35, 42, 0.62)); }
+.decisionQuestionAnswer-pace { background: linear-gradient(145deg, rgba(91, 68, 164, 0.4), rgba(25, 26, 68, 0.62)); }
+.decisionQuestionAnswer:hover { border-color: var(--premium-gold); box-shadow: 0 0.85rem 1.8rem rgba(0, 0, 0, 0.22); transform: translateY(-3px); }
+.decisionQuestionAnswer span { color: var(--premium-gold); }
+.decisionQuestionAnswer strong { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.04em; line-height: 0.98; }
+.decisionQuestionAnswer small { color: #d1dceb; font-size: 0.71rem; line-height: 1.4; }
+.decisionReplayTextButton { justify-self: start; padding: 0.75rem 0; color: #d8ccff; background: transparent; border: 0; text-decoration: underline; text-underline-offset: 0.22rem; }
+
 .decisionReceipt {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3248,6 +3283,8 @@ button {
   .decisionReplayProgress li::after { width: 0.65rem; }
   .decisionReplayPeople { grid-template-columns: 1fr; }
   .decisionReplayChoice { grid-template-columns: 1fr; gap: 0.25rem; }
+  .decisionQuestionAnswers { grid-template-columns: 1fr; }
+  .decisionQuestionAnswer { min-height: auto; }
   .decisionReceipt { grid-template-columns: 1fr; }
   .decisionReceipt > div { min-height: auto; }
   .decisionReplayActions { align-items: stretch; flex-direction: column; }

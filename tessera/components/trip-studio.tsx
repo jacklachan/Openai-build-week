@@ -260,7 +260,7 @@ export function TripStudio() {
 
   function advanceReplay() {
     if (replayStep === "conflict") {
-      setReplayStep("choice");
+      setReplayStep("question");
       return;
     }
     if (replayStep === "ripple") {
@@ -489,6 +489,7 @@ export function TripStudio() {
                   onChoose={chooseReplayProposal}
                   onFinish={finishReplay}
                   onNext={advanceReplay}
+                  onShowOptions={() => setReplayStep("choice")}
                   proposals={proposalOptions}
                   step={replayStep}
                   travelers={activeTrip.travelers}
