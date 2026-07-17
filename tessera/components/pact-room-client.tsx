@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-import type { PactRoomEvent, PactRoomSnapshot } from "@/lib/pact-room";
+import {
+  createPactRoomUpdate,
+  getPactRoomReadiness,
+  type PactRoomEvent,
+  type PactRoomSnapshot,
+} from "@/lib/pact-room";
 
 function formatTime(iso: string) {
   const date = new Date(iso);
@@ -21,6 +26,8 @@ export function PactRoomClient({ roomId }: { roomId: string }) {
   const [status, setStatus] = useState("Opening private room…");
   const [isSending, setIsSending] = useState(false);
   const statusMessage = token ? status : "This private link is incomplete. Ask the organizer to send the full invite again.";
+  const readiness = snapshot ? getPactRoomReadiness(snapshot) : null;
+  const ownPromise = snapshot?.agreement.find((entry) => entry.traveler.id === snapshot.viewer.travelerId);
 
   const loadRoom = useCallback(async (inviteToken: string, quiet = false) => {
     if (!inviteToken) return;
@@ -68,6 +75,16 @@ export function PactRoomClient({ roomId }: { roomId: string }) {
     }
   }
 
+  async function copyRoomUpdate() {
+    if (!snapshot) return;
+    try {
+      await navigator.clipboard.writeText(createPactRoomUpdate(snapshot));
+      setStatus("Room update copied. It contains no invite links or imported chat.");
+    } catch {
+      setStatus("Unable to copy the room update from this browser.");
+    }
+  }
+
   return (
     <main className="pactRoomShell">
       <header className="pactRoomHero">
@@ -78,42 +95,65 @@ export function PactRoomClient({ roomId }: { roomId: string }) {
       </header>
 
       {snapshot ? (
-        <div className="pactRoomGrid">
-          <section className="pactRoomPromise" aria-labelledby="pact-promises-title">
-            <p>THE AGREEMENT</p>
-            <h2 id="pact-promises-title">What everyone is protecting.</h2>
-            <div className="pactRoomPromiseList">
-              {snapshot.agreement.map((entry) => (
-                <article key={entry.traveler.id}>
-                  <span>{entry.traveler.name}</span>
-                  <strong>{entry.mustDo}</strong>
-                  <p>{entry.concession}</p>
+        <>
+          <section className="pactRoomReadiness" aria-label="Group readiness">
+            <div>
+              <p>GROUP READINESS</p>
+              <strong>{readiness?.ready}/{readiness?.items.length} ready</strong>
+            </div>
+            <div className="pactRoomReadinessRail">
+              {readiness?.items.map((item) => (
+                <article className={`pactRoomReadiness-${item.decision}`} key={item.travelerId}>
+                  <span>{item.name}</span>
+                  <strong>{item.decision === "ready" ? "Ready" : item.decision === "concern" ? "Needs attention" : "Waiting"}</strong>
+                  <p>{item.mustDo}</p>
                 </article>
               ))}
             </div>
           </section>
-
-          <aside className="pactRoomActivity" aria-live="polite">
-            <p>LIVE DECISION FEED</p>
-            <h2>{snapshot.events.length ? "The room is moving." : "No decisions yet."}</h2>
-            {snapshot.role === "traveler" ? (
-              <div className="pactRoomActions">
-                <button disabled={isSending} onClick={() => void sendDecision("accepted")} type="button">I&apos;m in</button>
-                <button disabled={isSending} onClick={() => void sendDecision("concern")} type="button">Flag a concern</button>
+          <div className="pactRoomGrid">
+            <section className="pactRoomPromise" aria-labelledby="pact-promises-title">
+              <p>THE AGREEMENT</p>
+              <h2 id="pact-promises-title">What everyone is protecting.</h2>
+              <div className="pactRoomPromiseList">
+                {snapshot.agreement.map((entry) => (
+                  <article key={entry.traveler.id}>
+                    <span>{entry.traveler.name}</span>
+                    <strong>{entry.mustDo}</strong>
+                    <p>{entry.concession}</p>
+                  </article>
+                ))}
               </div>
-            ) : (
-              <p className="pactRoomHint">Share the traveler-specific invite links. Each person can only record their own decision.</p>
-            )}
-            <ol>
-              {snapshot.events.map((event) => (
-                <li className={`pactRoomEvent pactRoomEvent-${event.action}`} key={event.id}>
-                  <span>{formatTime(event.createdAt)}</span>
-                  <p>{event.message}</p>
-                </li>
-              ))}
-            </ol>
-          </aside>
-        </div>
+            </section>
+
+            <aside className="pactRoomActivity" aria-live="polite">
+              <p>LIVE DECISION FEED</p>
+              <h2>{readiness?.concerns ? "Resolve the concern before booking." : readiness?.waiting ? "Waiting for every traveler." : "Everyone is ready to book."}</h2>
+              {snapshot.role === "traveler" ? (
+                <>
+                  <p className="pactRoomViewer">Your promise: <strong>{ownPromise?.mustDo ?? "Review the group agreement"}</strong></p>
+                  <div className="pactRoomActions">
+                    <button disabled={isSending} onClick={() => void sendDecision("accepted")} type="button">Keep my promise</button>
+                    <button disabled={isSending} onClick={() => void sendDecision("concern")} type="button">Flag a concern</button>
+                  </div>
+                </>
+              ) : (
+                <div className="pactRoomOrganizerActions">
+                  <p className="pactRoomHint">Share the traveler-specific invite links. Each person can only record their own decision.</p>
+                  <button onClick={() => void copyRoomUpdate()} type="button">Copy room update</button>
+                </div>
+              )}
+              <ol>
+                {snapshot.events.map((event) => (
+                  <li className={`pactRoomEvent pactRoomEvent-${event.action}`} key={event.id}>
+                    <span>{formatTime(event.createdAt)}</span>
+                    <p>{event.message}</p>
+                  </li>
+                ))}
+              </ol>
+            </aside>
+          </div>
+        </>
       ) : null}
       {statusMessage ? <p className="pactRoomStatus" role="status">{statusMessage}</p> : null}
       <p className="pactRoomPrivacy">Invite tokens stay in the link fragment, never in this page request. The room refreshes every five seconds.</p>

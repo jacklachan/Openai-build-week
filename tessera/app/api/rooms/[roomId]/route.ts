@@ -91,7 +91,14 @@ export async function GET(request: Request, context: RouteContext<"/api/rooms/[r
   if (!isRoomId(roomId)) return NextResponse.json({ error: "Invalid Pact Room id." }, { status: 400 });
   try {
     const [invite, { room, events }] = await Promise.all([authorize(request, roomId), readRoom(roomId)]);
-    const snapshot: PactRoomSnapshot = { agreement: room.agreement, events, role: invite.role, roomId, trip: room.trip };
+    const snapshot: PactRoomSnapshot = {
+      agreement: room.agreement,
+      events,
+      role: invite.role,
+      roomId,
+      trip: room.trip,
+      viewer: { label: invite.label, travelerId: invite.traveler_id },
+    };
     return NextResponse.json(snapshot, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unable to open this Pact Room.";

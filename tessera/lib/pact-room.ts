@@ -21,7 +21,53 @@ export type PactRoomSnapshot = {
   role: PactRoomRole;
   roomId: string;
   trip: Trip;
+  viewer: { label: string; travelerId: string | null };
 };
+
+export type PactRoomReadinessItem = {
+  decision: "ready" | "concern" | "waiting";
+  mustDo: string;
+  name: string;
+  travelerId: string;
+};
+
+/** Reduces an append-only event history to the one decision the group needs to act on now. */
+export function getPactRoomReadiness(snapshot: Pick<PactRoomSnapshot, "agreement" | "events">) {
+  const latestByTraveler = new Map<string, PactRoomEvent>();
+  for (const event of snapshot.events) {
+    if (event.travelerId && !latestByTraveler.has(event.travelerId)) latestByTraveler.set(event.travelerId, event);
+  }
+  const items: PactRoomReadinessItem[] = snapshot.agreement.map((entry) => ({
+    travelerId: entry.traveler.id,
+    name: entry.traveler.name,
+    mustDo: entry.mustDo,
+    decision: latestByTraveler.get(entry.traveler.id)?.action === "accepted"
+      ? "ready"
+      : latestByTraveler.has(entry.traveler.id)
+        ? "concern"
+        : "waiting",
+  }));
+  return {
+    items,
+    ready: items.filter((item) => item.decision === "ready").length,
+    concerns: items.filter((item) => item.decision === "concern").length,
+    waiting: items.filter((item) => item.decision === "waiting").length,
+  };
+}
+
+/** Compact, share-safe room status: it reports decisions without exposing the imported chat or invite tokens. */
+export function createPactRoomUpdate(snapshot: Pick<PactRoomSnapshot, "agreement" | "events" | "trip">) {
+  const readiness = getPactRoomReadiness(snapshot);
+  const attention = readiness.items
+    .filter((item) => item.decision !== "ready")
+    .map((item) => `${item.name}: ${item.decision === "concern" ? "needs a change" : "waiting"}`)
+    .join(" · ");
+  return [
+    `Tessera room update — ${snapshot.trip.constraints.destination}`,
+    `${readiness.ready}/${readiness.items.length} travelers are ready.`,
+    attention || "Everyone is ready to book.",
+  ].join("\n");
+}
 
 export type PactRoomInvite = {
   label: string;
