@@ -57,7 +57,15 @@ function downloadAgreementBrief(trip: Trip, agreement: AgreementEntry[]) {
   URL.revokeObjectURL(url);
 }
 
-export function DecisionRoom({ agreement, trip }: { agreement: AgreementEntry[]; trip: Trip }) {
+export function DecisionRoom({
+  agreement,
+  onRequestChange,
+  trip,
+}: {
+  agreement: AgreementEntry[];
+  onRequestChange?: () => void;
+  trip: Trip;
+}) {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const summary = useMemo(() => getDecisionRoomSummary(agreement, decisions), [agreement, decisions]);
 
@@ -76,29 +84,40 @@ export function DecisionRoom({ agreement, trip }: { agreement: AgreementEntry[];
       </header>
 
       <div className="decisionVotes">
-        {agreement.map((entry) => {
+        {agreement.map((entry, index) => {
           const decision = decisions[entry.traveler.id] ?? "unanswered";
           return (
             <div className="decisionVote" key={entry.traveler.id}>
-              <div>
-                <strong>{entry.traveler.name}</strong>
-                <span>{getDecisionLabel(decision)}</span>
+              <div className="decisionTraveler">
+                <span className="decisionTravelerIndex">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{entry.traveler.name}</strong>
+                  <p>{entry.mustDo}</p>
+                </div>
               </div>
-              <div className="decisionActions">
+              <div className="decisionResponse">
+                <span>{getDecisionLabel(decision)}</span>
+                <div className="decisionActions">
                 <button
+                  aria-pressed={decision === "ready"}
                   className={decision === "ready" ? "decisionButton decisionButton-active" : "decisionButton"}
                   onClick={() => setDecisions((current) => ({ ...current, [entry.traveler.id]: "ready" }))}
                   type="button"
                 >
-                  Works
+                  I&apos;m in
                 </button>
                 <button
+                  aria-pressed={decision === "needs-change"}
                   className={decision === "needs-change" ? "decisionButton decisionButton-warning" : "decisionButton"}
-                  onClick={() => setDecisions((current) => ({ ...current, [entry.traveler.id]: "needs-change" }))}
+                  onClick={() => {
+                    setDecisions((current) => ({ ...current, [entry.traveler.id]: "needs-change" }));
+                    onRequestChange?.();
+                  }}
                   type="button"
                 >
-                  Change
+                  Flag a concern
                 </button>
+                </div>
               </div>
             </div>
           );
@@ -108,11 +127,13 @@ export function DecisionRoom({ agreement, trip }: { agreement: AgreementEntry[];
       <footer className="decisionRoomFooter">
         <p>
           {summary.needsChange
-            ? `${summary.needsChange} traveler${summary.needsChange === 1 ? "" : "s"} has a concern to resolve.`
-            : "Check in with the group, then take the agreement with you."}
+            ? `${summary.needsChange} traveler${summary.needsChange === 1 ? "" : "s"} flagged a concern. The map is ready for a visible alternative.`
+            : summary.unanimous
+              ? "All travelers are in. Take the signed pact with you."
+              : "Each traveler can accept their promise or surface a concern."}
         </p>
         <button className="briefButton" onClick={() => downloadAgreementBrief(trip, agreement)} type="button">
-          Download brief
+          {summary.unanimous ? "Download signed pact" : "Download brief"}
         </button>
       </footer>
     </section>

@@ -45,7 +45,12 @@ export function GroupAgreement({
         <h2 id="agreement-title">Everyone gets a win.</h2>
       </header>
 
-      <DecisionRoom agreement={agreement} key={`${trip.id}-${trip.version}`} trip={trip} />
+      <DecisionRoom
+        agreement={agreement}
+        key={`${trip.id}-${trip.version}`}
+        onRequestChange={onTogglePreview}
+        trip={trip}
+      />
 
       <div className="transcriptTurns">
         {agreement.map(({ concession, mustDo, traveler }) => (

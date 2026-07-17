@@ -2950,10 +2950,18 @@ button {
 .decisionRoomHeading p, .decisionVote span, .decisionCount { color: #bdc7d8; font-family: var(--font-archivo), sans-serif; font-size: 0.65rem; letter-spacing: 0.015em; text-transform: none; }
 .decisionRoomHeading h3 { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.2rem; font-weight: 600; }
 .decisionCount-ready { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); border-radius: 999px; }
-.decisionVote { border-bottom-color: rgba(248, 245, 240, 0.12); }
+.decisionVote { gap: 0.55rem; padding: 0.65rem 0; border-bottom-color: rgba(248, 245, 240, 0.12); }
+.decisionTraveler { display: flex !important; gap: 0.55rem; align-items: center; min-width: 0; }
+.decisionTravelerIndex { display: grid; flex: 0 0 auto; width: 1.7rem; aspect-ratio: 1; place-items: center; color: #211744 !important; background: var(--premium-gold); border-radius: 50%; font-size: 0.58rem !important; font-weight: 800; }
+.decisionTraveler > div { min-width: 0; }
 .decisionVote strong { color: var(--premium-pearl); font-family: var(--font-archivo), sans-serif; font-size: 0.88rem; }
+.decisionVote p { overflow: hidden; max-width: 11rem; margin: 0.1rem 0 0; color: #c8d2e0; font-size: 0.68rem; text-overflow: ellipsis; white-space: nowrap; }
+.decisionResponse { display: grid; flex: 0 0 auto; gap: 0.35rem; justify-items: end; }
+.decisionResponse > span { color: #bdc7d8; font-size: 0.58rem; }
 .decisionButton, .briefButton { color: var(--premium-pearl); background: rgba(248, 245, 240, 0.06); border-color: rgba(248, 245, 240, 0.2); border-radius: 999px; font-family: var(--font-archivo), sans-serif; font-size: 0.62rem; letter-spacing: 0.01em; text-transform: none; }
 .decisionButton:hover, .decisionButton-active, .briefButton:hover { color: #211744; background: var(--premium-gold); border-color: var(--premium-gold); }
+.decisionButton-warning { color: #25143d; background: #f3b7c9; border-color: #f3b7c9; }
+.decisionRoomFooter p { max-width: 17rem; }
 .transcriptTurn { padding: 1rem 0; border-bottom-color: rgba(248, 245, 240, 0.12); }
 .transcriptSpeaker { color: #c5b8ff; font-family: var(--font-archivo), sans-serif; font-size: 0.72rem; font-weight: 650; letter-spacing: 0; text-transform: none; }
 .transcriptWin { color: var(--premium-gold); font-family: var(--font-playfair), Georgia, serif; font-size: 1.28rem; font-weight: 600; }

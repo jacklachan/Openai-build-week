@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
 import { DecisionReplay, getDecisionReceipt } from "../components/decision-replay";
+import { DecisionRoom } from "../components/decision-room";
 import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
@@ -133,6 +134,12 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
   assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
   assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
   assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
+
+  const html = renderToStaticMarkup(createElement(DecisionRoom, { agreement, trip }));
+  assert.match(html, /Each traveler can accept their promise/);
+  assert.match(html, /I&#x27;m in/);
+  assert.match(html, /Flag a concern/);
+  assert.match(html, /Hike Mount Takao/);
 });
 
 test("renders three proposal choices with auditable trade-off scores", () => {
