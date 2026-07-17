@@ -5,6 +5,7 @@ import { useRef, useState, type ChangeEvent } from "react";
 import {
   analyzeChat,
   createPlanDraftFromChat,
+  getChatDecisionQuestion,
   parseWhatsAppExport,
   TOKYO_GROUP_CHAT,
   type ChatIntake,
@@ -28,6 +29,7 @@ export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntak
   const [text, setText] = useState("");
   const [intake, setIntake] = useState<ChatIntake | null>(null);
   const [error, setError] = useState("");
+  const decisionQuestion = intake ? getChatDecisionQuestion(intake) : null;
 
   function inspectChat(nextText: string) {
     const messages = parseWhatsAppExport(nextText);
@@ -97,6 +99,13 @@ export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntak
               </article>
             ))}
           </div>
+          {decisionQuestion ? (
+            <div className="chatOneQuestion">
+              <span>The one question Tessera would ask</span>
+              <strong>{decisionQuestion.question}</strong>
+              <p>{decisionQuestion.source}</p>
+            </div>
+          ) : null}
           <button className="chatIntakeApply" onClick={reviewBrief} type="button">Review this group brief</button>
         </div>
       ) : null}

@@ -19,6 +19,13 @@ export type ChatIntake = {
   signals: ChatSignal[];
 };
 
+export type ChatDecisionQuestion = {
+  protectedTraveler: string;
+  question: string;
+  source: string;
+  traveler: string;
+};
+
 export const TOKYO_GROUP_CHAT = `[08/09/2026, 18:12] Ravi: Tokyo is locked. I really want one proper summit day, ideally Mount Takao.\n[08/09/2026, 18:13] Priya: I am in for Tokyo, but I cannot do 6am starts every day or long walking days.\n[08/09/2026, 18:15] Mei: Please do not make this a museum-only trip. I need one anime or Akihabara night.\n[08/09/2026, 18:17] Priya: I would love one special vegetarian dinner, then I am happy keeping the rest casual.\n[08/09/2026, 18:19] Ravi: Fine with that if we protect the hike.\n[08/09/2026, 18:21] Mei: Late evening is fine for me, but I do not need nightlife every night.`;
 
 const androidMessage = /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{2,4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM|am|pm)?\s+-\s+([^:]+):\s*(.+)$/;
@@ -75,6 +82,23 @@ export function analyzeChat(messages: ChatMessage[]): ChatIntake {
   });
 
   return { messages, participants, signals };
+}
+
+/** Identifies one explicit conflict from the imported words, not an invented AI preference. */
+export function getChatDecisionQuestion(intake: ChatIntake): ChatDecisionQuestion | null {
+  const constraint = intake.signals.find((signal) => signal.kind === "dealbreaker");
+  const promise = intake.signals.find(
+    (signal) => signal.kind === "must-do" && signal.sender !== constraint?.sender,
+  );
+
+  if (!constraint || !promise) return null;
+
+  return {
+    protectedTraveler: promise.sender,
+    question: `${constraint.sender}, what is the smallest compromise you could accept to protect ${promise.sender}'s named must-do?`,
+    source: `${constraint.sender}: “${constraint.text}” · ${promise.sender}: “${promise.text}”`,
+    traveler: constraint.sender,
+  };
 }
 
 function interestsFromMessages(messages: ChatMessage[]) {

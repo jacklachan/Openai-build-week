@@ -3415,6 +3415,10 @@ button {
 .chatSignalList span { color: var(--premium-gold); font-size: 0.58rem; }
 .chatSignalList strong { color: var(--premium-pearl); font-size: 0.73rem; }
 .chatSignalList p { grid-column: 1 / -1; margin: 0; color: #d5deeb; font-size: 0.72rem; line-height: 1.4; }
+.chatOneQuestion { display: grid; gap: 0.36rem; padding: 0.76rem; background: linear-gradient(115deg, rgba(239, 198, 120, 0.2), rgba(131, 103, 247, 0.15)); border: 1px solid rgba(239, 198, 120, 0.42); border-radius: 0.64rem; }
+.chatOneQuestion span { color: var(--premium-gold); font-family: var(--font-archivo), sans-serif; font-size: 0.61rem; font-weight: 700; letter-spacing: 0.015em; }
+.chatOneQuestion strong { color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.05rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+.chatOneQuestion p { margin: 0; color: #d5deeb; font-size: 0.66rem; line-height: 1.35; }
 .chatIntakeApply { justify-self: start; }
 @media (max-width: 700px) {
   .chatIntake { padding: 0.85rem; }

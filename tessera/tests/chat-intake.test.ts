@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createPlanDraft } from "../components/plan-form";
-import { analyzeChat, createPlanDraftFromChat, parseWhatsAppExport, TOKYO_GROUP_CHAT } from "../lib/chat-intake";
+import { analyzeChat, createPlanDraftFromChat, getChatDecisionQuestion, parseWhatsAppExport, TOKYO_GROUP_CHAT } from "../lib/chat-intake";
 
 test("parses a WhatsApp export and keeps only human decision signals", () => {
   const messages = parseWhatsAppExport(`${TOKYO_GROUP_CHAT}\nA continuation of the last thought.`);
@@ -13,6 +13,12 @@ test("parses a WhatsApp export and keeps only human decision signals", () => {
   assert.ok(intake.signals.some((signal) => signal.kind === "must-do" && signal.sender === "Ravi"));
   assert.ok(intake.signals.some((signal) => signal.kind === "dealbreaker" && signal.sender === "Priya"));
   assert.match(messages.at(-1)?.text ?? "", /continuation/);
+  assert.deepEqual(getChatDecisionQuestion(intake), {
+    protectedTraveler: "Ravi",
+    question: "Priya, what is the smallest compromise you could accept to protect Ravi's named must-do?",
+    source: "Priya: “I am in for Tokyo, but I cannot do 6am starts every day or long walking days.” · Ravi: “Tokyo is locked. I really want one proper summit day, ideally Mount Takao.”",
+    traveler: "Priya",
+  });
 });
 
 test("turns a chat intake into an editable group-planning draft", () => {
