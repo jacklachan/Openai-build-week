@@ -16,6 +16,16 @@ The included zero-cost Tokyo scenario has three friends with incompatible needs:
 
 The product outcome is not just an itinerary. It is a Group Agreement: the must-dos each traveler receives, their explicit concessions, why every activity exists, and a deterministic budget.
 
+## The product loop
+
+Tessera is built around a group decision, not a prettier itinerary:
+
+1. **Import the conversation.** A WhatsApp `.txt` export or pasted group chat is read locally into editable traveler preferences. The raw chat is not sent by this step.
+2. **Ask one consequential question.** The guided Tokyo demo identifies the hidden conflict and asks Priya the single answer that changes the route.
+3. **Make the pact inspectable.** The 3D route, explicit trade-offs, individual check-in, and veto are tied to the same trip contract.
+4. **Pressure-test reality.** The simulated disruption drill names who would lose if conditions change, then makes the alternative route and budget visible before the group agrees.
+5. **Take it back to the group.** Share uses the device share sheet, copy fallback, or a WhatsApp handoff; the user chooses the destination group and no WhatsApp credential is needed.
+
 ## Run locally
 
 Requirements: Node.js 22+ and npm.
@@ -167,9 +177,9 @@ gcloud builds submit --config cloudbuild.yaml --substitutions "_IMAGE=$image,_NE
 
 GPT-5.6 was used through Codex to scaffold the Next.js application, freeze the trip data contract, build the server routes, implement the deterministic budget validator, create the 3D map and Proposal Arena, and write the verification suite. The key product decision was to make a group compromise visible and challengeable, rather than produce another opaque AI itinerary. The dated commit history and the Codex session below are the evidence for that work.
 
-Gemini is an optional server-side provider for builders who have a free-tier quota. It returns JSON only; Tessera parses it, validates it on the server, and recomputes the budget rather than trusting model math. It is not presented as GPT-5.6. Without a Gemini key, the full judge path remains runnable using the deterministic Tokyo plan, Proposal Arena, 3D map, veto, and agreement export.
+Gemini is an optional server-side provider for builders who have a free-tier quota. It returns JSON only; Tessera parses it, validates it on the server, and recomputes the budget rather than trusting model math. It is not presented as GPT-5.6. Without a Gemini key, the full judge path remains runnable using the deterministic Tokyo plan, One Question replay, Proposal Arena, 3D map, disruption drill, veto, and agreement export.
 
-Before submission, complete the short evidence checklist in [docs/build-week-submission.md](docs/build-week-submission.md), then add the primary Codex `/feedback` session ID there and in the Devpost form.
+Before submission, use the [three-minute judge run](docs/judge-demo.md), complete the short evidence checklist in [docs/build-week-submission.md](docs/build-week-submission.md), then add the primary Codex `/feedback` session ID there and in the Devpost form.
 
 ## License
 

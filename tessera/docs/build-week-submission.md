@@ -4,9 +4,10 @@
 
 1. Open the deployed app or run `npm install && npm run dev`.
 2. Select **Load the Tokyo demo**.
-3. Compare **Best fairness**, **Lowest friction**, and **Most headroom** in Proposal Arena.
-4. Select **Lowest friction**: the 3D map focuses on the substituted Day 2 stop and the Trip Pact names the compromise.
-5. Use the Veto flow, complete group check-in, and download the agreement brief.
+3. Follow **Ask the one question** and answer Priya's 08:30-start prompt. The route, decision receipt, and pact update together.
+4. Compare **Best fairness**, **Lowest friction**, and **Most headroom** in Proposal Arena.
+5. Select **Pressure-test this pact**. The simulated disruption drill names the traveler who carries the risk and exposes the consequence of changing the pact.
+6. Use the Veto flow, complete group check-in, and share/download the agreement brief.
 
 No model key, Maps key, payment method, or account is required for that path.
 
@@ -21,6 +22,8 @@ No model key, Maps key, payment method, or account is required for that path.
 - A no-key deterministic trip and revision make the critical demo reproducible.
 - Every plan is parsed against the Trip contract; code recomputes budget totals and rejects malformed data.
 - Proposal Arena creates and compares three concrete compromises, including itinerary changes that update the 3D route.
+- The One Question replay and disruption drill make the costly human decision explicit before the route changes; the drill is visibly labelled a simulation, not live weather data.
+- Group sharing is a device/WhatsApp handoff. Tessera never asks for WhatsApp credentials or imports a live group conversation.
 - The test suite covers demo mode, replan diffs, safeguards, UI evidence, health status, and proposal mutations.
 
 ## Video outline — under 90 seconds
@@ -30,6 +33,10 @@ No model key, Maps key, payment method, or account is required for that path.
 3. **Arena (27–52s):** Switch among the three compromises; show the 3D map jump to the changed stop.
 4. **Decision (52–72s):** Show the Trip Pact, veto, and check-in reaching a group decision.
 5. **Build evidence (72–90s):** “Built with GPT-5.6 through Codex; the no-key demo is guarded by contract validation and a tested decision engine.”
+
+## Current recording script
+
+Use [docs/judge-demo.md](judge-demo.md) as the current three-minute recording script. The key proof points are the imported signal, One Question replay, visible route consequence, simulated disruption, pact check-in, and Codex/GPT-5.6 build evidence.
 
 ## Final submission checklist
 
