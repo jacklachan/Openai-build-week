@@ -6,7 +6,7 @@ import seedTrip from "../data/seed-demo-trip.json";
 import { AtlasMotion } from "../components/atlas-motion";
 import { DecisionReplay, getDecisionReceipt } from "../components/decision-replay";
 import { DecisionRoom } from "../components/decision-room";
-import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
+import { createAgreementBrief, createGroupShareText, getDecisionRoomSummary, getWhatsAppShareUrl } from "../components/decision-room";
 import { DisruptionDrill } from "../components/disruption-drill";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
@@ -136,11 +136,15 @@ test("turns an explicit group check-in into a ready-to-book outcome and exportab
   assert.match(createAgreementBrief(trip, agreement), /Tessera group agreement/);
   assert.match(createAgreementBrief(trip, agreement), /Tokyo, Japan/);
   assert.match(createAgreementBrief(trip, agreement), /Ravi keeps: Hike Mount Takao/);
+  assert.match(createGroupShareText(trip, agreement), /Ravi: Hike Mount Takao/);
+  assert.match(getWhatsAppShareUrl("Tessera pact"), /^https:\/\/wa\.me\/\?text=Tessera%20pact$/);
 
   const html = renderToStaticMarkup(createElement(DecisionRoom, { agreement, trip }));
   assert.match(html, /Each traveler can accept their promise/);
   assert.match(html, /I&#x27;m in/);
   assert.match(html, /Flag a concern/);
+  assert.match(html, /Share with group/);
+  assert.match(html, /WhatsApp/);
   assert.match(html, /Hike Mount Takao/);
 });
 

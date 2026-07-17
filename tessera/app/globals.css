@@ -2219,6 +2219,10 @@ button {
 .disruptionDrillFooter p { max-width: 34rem; font-size: 0.68rem; }
 .disruptionDrillFooter button { padding: 0.5rem 0.62rem; color: #07111d; background: #ffc98c; border: 1px solid #ffc98c; white-space: nowrap; }
 
+.pactShareActions { display: flex; flex-wrap: wrap; justify-content: end; gap: 0.4rem; }
+.briefButton-whatsapp { border-color: rgba(118, 224, 164, 0.72); }
+.pactShareStatus { width: 100%; color: #c8d2e0; font-size: 0.66rem; line-height: 1.3; text-align: right; }
+
 .proposalCard {
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
@@ -2309,6 +2313,9 @@ button {
   .disruptionDrill { top: 0.75rem; right: 0.75rem; left: 0.75rem; padding: 0.9rem; }
   .disruptionChoices { grid-template-columns: 1fr; }
   .disruptionDrillFooter { align-items: start; flex-direction: column; }
+  .decisionRoomFooter { align-items: start; flex-direction: column; }
+  .pactShareActions { justify-content: start; }
+  .pactShareStatus { text-align: left; }
 }
 @import "maplibre-gl/dist/maplibre-gl.css";
 

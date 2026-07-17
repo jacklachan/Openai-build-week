@@ -47,6 +47,16 @@ export function createAgreementBrief(trip: Trip, agreement: AgreementEntry[]) {
   ].join("\n");
 }
 
+/** A short, legible handoff for a real group chat. It contains no private chat export. */
+export function createGroupShareText(trip: Trip, agreement: AgreementEntry[]) {
+  const promises = agreement.map((entry) => `${entry.traveler.name}: ${entry.mustDo}`).join(" · ");
+  return `Tessera pact for ${trip.constraints.destination} is ready. ${promises}. Review the trade-offs before booking.`;
+}
+
+export function getWhatsAppShareUrl(text: string) {
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+}
+
 function downloadAgreementBrief(trip: Trip, agreement: AgreementEntry[]) {
   const blob = new Blob([createAgreementBrief(trip, agreement)], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -67,7 +77,29 @@ export function DecisionRoom({
   trip: Trip;
 }) {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
+  const [shareStatus, setShareStatus] = useState("");
   const summary = useMemo(() => getDecisionRoomSummary(agreement, decisions), [agreement, decisions]);
+  const shareText = useMemo(() => createGroupShareText(trip, agreement), [agreement, trip]);
+
+  async function sharePact() {
+    try {
+      if (navigator.share) {
+        await navigator.share({ text: shareText, title: `Tessera pact — ${trip.constraints.destination}` });
+        setShareStatus("Share sheet opened.");
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareText);
+      setShareStatus("Pact summary copied.");
+    } catch {
+      setShareStatus("Sharing was cancelled. Download or copy the pact instead.");
+    }
+  }
+
+  function shareToWhatsApp() {
+    window.open(getWhatsAppShareUrl(shareText), "_blank", "noopener,noreferrer");
+    setShareStatus("Choose the group in WhatsApp to send the pact.");
+  }
 
   return (
     <section className="decisionRoom" aria-labelledby="decision-room-title">
@@ -132,9 +164,14 @@ export function DecisionRoom({
               ? "All travelers are in. Take the signed pact with you."
               : "Each traveler can accept their promise or surface a concern."}
         </p>
-        <button className="briefButton" onClick={() => downloadAgreementBrief(trip, agreement)} type="button">
-          {summary.unanimous ? "Download signed pact" : "Download brief"}
-        </button>
+        <div className="pactShareActions">
+          <button className="briefButton" onClick={() => void sharePact()} type="button">Share with group</button>
+          <button className="briefButton briefButton-whatsapp" onClick={shareToWhatsApp} type="button">WhatsApp</button>
+          <button className="briefButton" onClick={() => downloadAgreementBrief(trip, agreement)} type="button">
+            {summary.unanimous ? "Download signed pact" : "Download brief"}
+          </button>
+          {shareStatus ? <span className="pactShareStatus" role="status">{shareStatus}</span> : null}
+        </div>
       </footer>
     </section>
   );
