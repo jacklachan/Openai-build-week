@@ -2161,7 +2161,63 @@ button {
 }
 
 .proposalArenaHeading > p { max-width: 19rem; text-align: right; }
+.proposalArenaTools { display: grid; justify-items: end; gap: 0.42rem; }
+.proposalArenaTools > p { max-width: 19rem; margin: 0; color: #a8c5e8; font-family: var(--font-jetbrains-mono); font-size: 0.58rem; font-weight: 800; letter-spacing: 0.075em; text-align: right; text-transform: uppercase; }
+.proposalArenaTools button {
+  padding: 0.36rem 0.52rem;
+  color: #d9e9ff;
+  background: rgba(192, 254, 4, 0.08);
+  border: 1px solid rgba(192, 254, 4, 0.56);
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.proposalArenaTools button:hover { color: #07111d; background: #c0fe04; }
 .proposalGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.65rem; }
+
+.disruptionDrill {
+  position: absolute;
+  z-index: 12;
+  top: 1.1rem;
+  right: clamp(1rem, 3vw, 3rem);
+  left: clamp(1rem, 3vw, 3rem);
+  display: grid;
+  gap: 0.8rem;
+  max-width: 58rem;
+  padding: 1.15rem;
+  margin: 0 auto;
+  color: #edf6ff;
+  background: linear-gradient(135deg, rgba(9, 22, 40, 0.96), rgba(31, 37, 77, 0.95));
+  border: 1px solid rgba(255, 181, 101, 0.5);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(22px);
+}
+.disruptionDrillHeader { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.disruptionDrillHeader p,
+.disruptionCondition span,
+.disruptionHumanCost span,
+.disruptionChoice span,
+.disruptionDrillFooter button { margin: 0; color: #ffc98c; font-family: var(--font-jetbrains-mono); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.disruptionDrillHeader h2 { max-width: 16ch; margin: 0.3rem 0 0; color: #fff; font-size: clamp(1.55rem, 3vw, 2.5rem); letter-spacing: -0.055em; line-height: 0.98; }
+.disruptionDrillHeader > button { padding: 0.36rem 0; color: #cfe0f4; background: transparent; border: 0; font-family: var(--font-jetbrains-mono); font-size: 0.62rem; text-decoration: underline; text-underline-offset: 0.22rem; }
+.disruptionCondition { display: grid; gap: 0.28rem; padding: 0.9rem; background: linear-gradient(105deg, rgba(244, 126, 77, 0.18), rgba(255, 198, 133, 0.08)); border-left: 3px solid #ff9b54; }
+.disruptionCondition strong { color: #fff4e9; font-size: 1.03rem; }
+.disruptionCondition p,
+.disruptionHumanCost p,
+.disruptionDrillFooter p { margin: 0; color: #cfe0f4; font-size: 0.8rem; line-height: 1.45; }
+.disruptionHumanCost { display: grid; gap: 0.26rem; padding: 0.78rem 0.9rem; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(211, 227, 246, 0.18); }
+.disruptionChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+.disruptionChoice { display: grid; gap: 0.4rem; min-height: 8.5rem; padding: 0.85rem; color: #edf6ff; border: 1px solid rgba(211, 227, 246, 0.28); text-align: left; transition: transform 180ms ease, border-color 180ms ease; }
+.disruptionChoice:hover { border-color: #ffc98c; transform: translateY(-2px); }
+.disruptionChoice-hold { background: rgba(7, 17, 29, 0.54); }
+.disruptionChoice-swap { background: linear-gradient(145deg, rgba(129, 92, 231, 0.35), rgba(20, 58, 81, 0.72)); }
+.disruptionChoice strong { color: #fff; font-size: 0.96rem; line-height: 1.18; }
+.disruptionChoice small { color: #cfe0f4; font-size: 0.71rem; line-height: 1.35; }
+.disruptionDrillFooter { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 0.1rem; }
+.disruptionDrillFooter p { max-width: 34rem; font-size: 0.68rem; }
+.disruptionDrillFooter button { padding: 0.5rem 0.62rem; color: #07111d; background: #ffc98c; border: 1px solid #ffc98c; white-space: nowrap; }
 
 .proposalCard {
   display: grid;
@@ -2224,6 +2280,8 @@ button {
   .proposalGrid { grid-template-columns: 1fr; }
   .proposalArenaHeading { align-items: start; flex-direction: column; }
   .proposalArenaHeading > p { text-align: left; }
+  .proposalArenaTools { justify-items: start; }
+  .proposalArenaTools > p { text-align: left; }
 
   .mapWorkspace {
     min-height: 38rem;
@@ -2248,6 +2306,9 @@ button {
   .itineraryTrayHeading { align-items: start; }
   .decisionRoomFooter { align-items: start; }
   .agreementTranscript { min-height: auto; }
+  .disruptionDrill { top: 0.75rem; right: 0.75rem; left: 0.75rem; padding: 0.9rem; }
+  .disruptionChoices { grid-template-columns: 1fr; }
+  .disruptionDrillFooter { align-items: start; flex-direction: column; }
 }
 @import "maplibre-gl/dist/maplibre-gl.css";
 

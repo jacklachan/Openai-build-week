@@ -7,12 +7,14 @@ import { AtlasMotion } from "../components/atlas-motion";
 import { DecisionReplay, getDecisionReceipt } from "../components/decision-replay";
 import { DecisionRoom } from "../components/decision-room";
 import { createAgreementBrief, getDecisionRoomSummary } from "../components/decision-room";
+import { DisruptionDrill } from "../components/disruption-drill";
 import { GroupAgreement } from "../components/group-agreement";
 import { ItineraryTray } from "../components/itinerary-tray";
 import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
 import { getOsmViewport } from "../components/osm-itinerary-map";
 import { ProposalArena } from "../components/proposal-arena";
 import { getProposalOptions } from "../lib/proposal-arena";
+import { getDisruptionDrill } from "../lib/disruption";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
@@ -146,6 +148,7 @@ test("renders three proposal choices with auditable trade-off scores", () => {
   const html = renderToStaticMarkup(
     createElement(ProposalArena, {
       activeProposalId: "fairness",
+      onRunDisruption: () => undefined,
       onSelect: () => undefined,
       proposals: getProposalOptions(trip),
     }),
@@ -156,6 +159,31 @@ test("renders three proposal choices with auditable trade-off scores", () => {
   assert.match(html, /Lowest friction/);
   assert.match(html, /Most headroom/);
   assert.match(html, /BUDGET/);
+  assert.match(html, /Pressure-test this pact/);
+});
+
+test("turns a named promise into an honest, visible disruption drill", () => {
+  const proposals = getProposalOptions(trip);
+  const drill = getDisruptionDrill(trip, proposals);
+  assert.ok(drill);
+  assert.equal(drill.affectedActivity, "Mount Takao summit trail");
+  assert.equal(drill.affectedTraveler, "Ravi");
+
+  const html = renderToStaticMarkup(
+    createElement(DisruptionDrill, {
+      baseTrip: trip,
+      currency: trip.constraints.currency,
+      onClose: () => undefined,
+      onOpenOptions: () => undefined,
+      onSelect: () => undefined,
+      proposals,
+    }),
+  );
+
+  assert.match(html, /SIMULATED DISRUPTION DRILL/);
+  assert.match(html, /Nothing here is live weather data/);
+  assert.match(html, /Who carries the cost/);
+  assert.match(html, /Switch to Trade the hardest stop/);
 });
 
 test("renders the seeded decision replay as one question, choices, ripple, and pact", () => {

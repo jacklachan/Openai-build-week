@@ -2,11 +2,12 @@ import type { ProposalId, ProposalOption } from "../lib/proposal-arena";
 
 interface ProposalArenaProps {
   activeProposalId: ProposalId;
+  onRunDisruption: () => void;
   onSelect: (proposal: ProposalOption) => void;
   proposals: ProposalOption[];
 }
 
-export function ProposalArena({ activeProposalId, onSelect, proposals }: ProposalArenaProps) {
+export function ProposalArena({ activeProposalId, onRunDisruption, onSelect, proposals }: ProposalArenaProps) {
   return (
     <section className="proposalArena" aria-labelledby="proposal-arena-title">
       <header className="proposalArenaHeading">
@@ -14,7 +15,10 @@ export function ProposalArena({ activeProposalId, onSelect, proposals }: Proposa
           <p>Three viable futures</p>
           <h2 id="proposal-arena-title">Same people. Different compromises.</h2>
         </div>
-        <p>The city shifts with each choice</p>
+        <div className="proposalArenaTools">
+          <p>The city shifts with each choice</p>
+          <button onClick={onRunDisruption} type="button">Pressure-test this pact</button>
+        </div>
       </header>
 
       <div className="proposalGrid">

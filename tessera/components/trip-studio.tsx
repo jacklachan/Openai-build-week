@@ -5,6 +5,7 @@ import { useMemo, useState, type CSSProperties } from "react";
 import { AtlasMotion } from "./atlas-motion";
 import { ChatIntake } from "./chat-intake";
 import { DecisionReplay, type ReplayStep } from "./decision-replay";
+import { DisruptionDrill } from "./disruption-drill";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
 import { createPlanDraft, PlanForm, type PlanRequestPayload } from "./plan-form";
@@ -139,6 +140,7 @@ export function TripStudio() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [activePreview, setActivePreview] = useState<VetoPreview | null>(null);
   const [replayStep, setReplayStep] = useState<ReplayStep | null>(null);
+  const [isDisruptionDrillOpen, setIsDisruptionDrillOpen] = useState(false);
   const [replanAudit, setReplanAudit] = useState<PlanDiff | null>(null);
   const [isApplyingVeto, setIsApplyingVeto] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -187,6 +189,7 @@ export function TripStudio() {
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
       setReplayStep(null);
+      setIsDisruptionDrillOpen(false);
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -222,6 +225,7 @@ export function TripStudio() {
       setSelectedActivityId(selection.activityId);
       setActivePreview(null);
       setReplayStep("conflict");
+      setIsDisruptionDrillOpen(false);
       setReplanAudit(null);
       setSource(payload.source);
       setPhase("ready");
@@ -251,6 +255,7 @@ export function TripStudio() {
     setSelectedActivityId(selection.activityId);
     setActivePreview(null);
     setReplanAudit(null);
+    setIsDisruptionDrillOpen(false);
   }
 
   function chooseReplayProposal(proposal: ProposalOption) {
@@ -496,11 +501,26 @@ export function TripStudio() {
                 />
               ) : null}
               {proposalOptions.length && !replayStep ? (
-                <ProposalArena
-                  activeProposalId={activeProposalId}
-                  onSelect={selectProposal}
-                  proposals={proposalOptions}
-                />
+                isDisruptionDrillOpen ? (
+                  <DisruptionDrill
+                    baseTrip={proposalBaseTrip ?? activeTrip}
+                    currency={activeTrip.constraints.currency}
+                    onClose={() => setIsDisruptionDrillOpen(false)}
+                    onOpenOptions={() => setIsDisruptionDrillOpen(false)}
+                    onSelect={(proposal) => {
+                      selectProposal(proposal);
+                      setIsDisruptionDrillOpen(false);
+                    }}
+                    proposals={proposalOptions}
+                  />
+                ) : (
+                  <ProposalArena
+                    activeProposalId={activeProposalId}
+                    onRunDisruption={() => setIsDisruptionDrillOpen(true)}
+                    onSelect={selectProposal}
+                    proposals={proposalOptions}
+                  />
+                )
               ) : null}
               <AtlasMotion />
               <ItineraryTray
