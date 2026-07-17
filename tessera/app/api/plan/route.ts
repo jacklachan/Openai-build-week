@@ -2,10 +2,17 @@ import { NextResponse } from "next/server";
 
 import { cacheKey, getCachedPlan, getDemoTrip, isDemoOnly, setCachedPlan } from "@/lib/cache";
 import { negotiateTrip, type PlanRequest } from "@/lib/gemini";
+import { negotiateWithOllama } from "@/lib/ollama";
 import { checkRateLimit, clientKey } from "@/lib/rate-limit";
 import type { Interest, TravelerProfile, TripConstraints } from "@/lib/types";
 
 export const runtime = "nodejs";
+
+function getConfiguredProvider() {
+  if (process.env.GEMINI_API_KEY) return "gemini" as const;
+  if (process.env.OLLAMA_MODEL) return "ollama" as const;
+  return null;
+}
 
 const interestValues = new Set<Interest>([
   "nature",
@@ -101,9 +108,12 @@ export async function POST(request: Request) {
   try {
     const planRequest = parsePlanRequest(await request.json());
     const key = cacheKey(planRequest);
-    const demoOnly = isDemoOnly() || !process.env.GEMINI_API_KEY;
+    const provider = getConfiguredProvider();
+    const demoOnly = isDemoOnly() || provider === null;
     const cachedTrip = demoOnly ? undefined : getCachedPlan(key);
-    const trip = demoOnly ? getDemoTrip() : cachedTrip || (await negotiateTrip(planRequest));
+    const trip = demoOnly
+      ? getDemoTrip()
+      : cachedTrip || (provider === "ollama" ? await negotiateWithOllama(planRequest) : await negotiateTrip(planRequest));
     const source = demoOnly ? "demo" : cachedTrip ? "cache" : "live";
     if (!demoOnly && !cachedTrip) setCachedPlan(key, trip);
     if (request.headers.get("accept")?.includes("text/event-stream")) {

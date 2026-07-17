@@ -45,6 +45,17 @@ GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
+### Run a fully local, free model
+
+Tessera also supports an Ollama model running on the same machine. Install Ollama, pull a capable local model, start the Ollama service, then add its model name to `.env.local`:
+
+```dotenv
+OLLAMA_MODEL=llama3.2:3b
+OLLAMA_HOST=http://127.0.0.1:11434
+```
+
+When `GEMINI_API_KEY` is absent and `OLLAMA_MODEL` is set, `/api/plan` uses the local model. Tessera still validates its JSON and recomputes the budget. This local provider is intended for local development; a deployed Cloud Run service cannot access Ollama on your laptop.
+
 Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** Gemini or Maps calls. With no Gemini key, Tessera automatically stays in the same no-key judge mode.
 
 ## Deploy to Google Cloud Run
