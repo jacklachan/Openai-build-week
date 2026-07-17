@@ -252,7 +252,7 @@ export function PlanForm({
   }
 
   return (
-    <form className="planForm" onSubmit={handleSubmit}>
+    <form className="planForm" id="plan-form" onSubmit={handleSubmit}>
       <label htmlFor="destination">Destination</label>
       <input
         id="destination"

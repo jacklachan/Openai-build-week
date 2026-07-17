@@ -3253,3 +3253,61 @@ button {
   .decisionReplayActions { align-items: stretch; flex-direction: column; }
   .decisionReplayActions button { width: 100%; }
 }
+
+/* Chat exports are read locally first, so the input itself becomes part of the trust model. */
+.chatIntake {
+  display: grid;
+  gap: 0.72rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: var(--premium-pearl);
+  background: linear-gradient(145deg, rgba(64, 44, 114, 0.42), rgba(12, 30, 50, 0.56));
+  border: 1px solid rgba(203, 190, 255, 0.38);
+  border-radius: 0.85rem;
+}
+.chatIntake header { display: grid; gap: 0.14rem; }
+.chatIntake header p,
+.chatIntake header span,
+.chatIntakeResult > p,
+.chatSignalList span {
+  margin: 0;
+  color: #d6ccff;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.chatIntake header h2 { margin: 0; color: var(--premium-pearl); font-family: var(--font-playfair), Georgia, serif; font-size: 1.35rem; font-weight: 600; letter-spacing: -0.035em; }
+.chatIntake header span { color: #bfcbd9; font-weight: 500; }
+.chatIntakeActions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.chatIntakeActions button,
+.chatIntakeAnalyze,
+.chatIntakeApply {
+  min-height: 2.25rem;
+  padding: 0.45rem 0.7rem;
+  color: var(--premium-pearl);
+  background: rgba(248, 245, 240, 0.07);
+  border: 1px solid rgba(248, 245, 240, 0.26);
+  border-radius: 999px;
+  font-family: var(--font-archivo), sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+.chatIntakeActions button:first-of-type,
+.chatIntakeApply { color: #211744 !important; background: var(--premium-gold) !important; border-color: var(--premium-gold) !important; }
+.chatIntakeActions input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.chatIntakePaste { display: grid; gap: 0.36rem; color: #d9e0eb; font-size: 0.68rem; font-weight: 650; }
+.chatIntakePaste textarea { min-height: 5.4rem; padding: 0.65rem; resize: vertical; color: #e9edf5; background: rgba(4, 13, 25, 0.43); border: 1px solid rgba(248, 245, 240, 0.2); border-radius: 0.6rem; font: inherit; font-size: 0.68rem; line-height: 1.45; }
+.chatIntakeAnalyze { justify-self: start; }
+.chatIntakeError { margin: 0; color: #ffc9c3; font-size: 0.7rem; line-height: 1.4; }
+.chatIntakeResult { display: grid; gap: 0.65rem; padding-top: 0.7rem; border-top: 1px solid rgba(248, 245, 240, 0.16); }
+.chatSignalList { display: grid; gap: 0.42rem; }
+.chatSignalList article { display: grid; grid-template-columns: auto auto 1fr; gap: 0.36rem 0.48rem; align-items: baseline; padding: 0.55rem 0.62rem; background: rgba(7, 16, 30, 0.48); border-left: 2px solid #aa8dff; }
+.chatSignalList span { color: var(--premium-gold); font-size: 0.58rem; }
+.chatSignalList strong { color: var(--premium-pearl); font-size: 0.73rem; }
+.chatSignalList p { grid-column: 1 / -1; margin: 0; color: #d5deeb; font-size: 0.72rem; line-height: 1.4; }
+.chatIntakeApply { justify-self: start; }
+@media (max-width: 700px) {
+  .chatIntake { padding: 0.85rem; }
+  .chatIntakeActions button { flex: 1 1 10rem; }
+}

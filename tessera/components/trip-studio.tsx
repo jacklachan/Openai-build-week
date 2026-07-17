@@ -3,6 +3,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 
 import { AtlasMotion } from "./atlas-motion";
+import { ChatIntake } from "./chat-intake";
 import { DecisionReplay, type ReplayStep } from "./decision-replay";
 import { GroupAgreement } from "./group-agreement";
 import { ItineraryTray } from "./itinerary-tray";
@@ -412,6 +413,7 @@ export function TripStudio() {
               </button>
             </div>
             <p className="judgeModeIntro">No key needed · load → veto → audit</p>
+            <ChatIntake disabled={isGenerating} draft={planDraft} onDraftChange={setPlanDraft} />
           {isGenerating && pendingPlan ? (
             <TravelerChips phase="generating" travelers={pendingPlan.travelers} />
           ) : null}
