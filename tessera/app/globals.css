@@ -2207,6 +2207,10 @@ button {
 .disruptionCondition p,
 .disruptionHumanCost p,
 .disruptionDrillFooter p { margin: 0; color: #cfe0f4; font-size: 0.8rem; line-height: 1.45; }
+.disruptionScenarioPicker { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+.disruptionScenarioPicker button { padding: 0.4rem 0.58rem; color: #cfe0f4; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(211, 227, 246, 0.24); font-family: var(--font-jetbrains-mono); font-size: 0.59rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+.disruptionScenarioPicker button:hover,
+.disruptionScenarioPicker .disruptionScenario-active { color: #16111c; background: #ffc98c; border-color: #ffc98c; }
 .disruptionHumanCost { display: grid; gap: 0.26rem; padding: 0.78rem 0.9rem; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(211, 227, 246, 0.18); }
 .disruptionChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
 .disruptionChoice { display: grid; gap: 0.4rem; min-height: 8.5rem; padding: 0.85rem; color: #edf6ff; border: 1px solid rgba(211, 227, 246, 0.28); text-align: left; transition: transform 180ms ease, border-color 180ms ease; }

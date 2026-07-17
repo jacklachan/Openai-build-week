@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
+
 import { getDecisionReceipt } from "./decision-replay";
 import type { ProposalOption } from "../lib/proposal-arena";
-import { getDisruptionDrill } from "../lib/disruption";
+import { getDisruptionScenarios } from "../lib/disruption";
 import type { Trip } from "../lib/types";
 
 type DisruptionDrillProps = {
@@ -21,12 +25,14 @@ export function DisruptionDrill({
   onSelect,
   proposals,
 }: DisruptionDrillProps) {
-  const drill = getDisruptionDrill(baseTrip, proposals);
+  const scenarios = getDisruptionScenarios(baseTrip, proposals);
+  const [activeScenarioId, setActiveScenarioId] = useState<"budget" | "weather">("weather");
+  const drill = scenarios.find((scenario) => scenario.id === activeScenarioId) ?? scenarios[0];
 
   if (!drill) return null;
 
-  const receipt = drill.swapProposal
-    ? getDecisionReceipt(baseTrip, drill.swapProposal, currency)
+  const receipt = drill.solution
+    ? getDecisionReceipt(baseTrip, drill.solution, currency)
     : undefined;
 
   return (
@@ -45,6 +51,20 @@ export function DisruptionDrill({
         <p>{drill.question}</p>
       </div>
 
+      <div className="disruptionScenarioPicker" aria-label="Choose a disruption to test">
+        {scenarios.map((scenario) => (
+          <button
+            aria-pressed={scenario.id === drill.id}
+            className={scenario.id === drill.id ? "disruptionScenario-active" : undefined}
+            key={scenario.id}
+            onClick={() => setActiveScenarioId(scenario.id)}
+            type="button"
+          >
+            {scenario.label}
+          </button>
+        ))}
+      </div>
+
       <div className="disruptionHumanCost">
         <span>Who carries the cost?</span>
         <p>{drill.risk}</p>
@@ -56,10 +76,10 @@ export function DisruptionDrill({
           <strong>Keep {drill.affectedActivity}</strong>
           <small>The group accepts the weather risk rather than quietly taking away {drill.affectedTraveler}&apos;s promise.</small>
         </button>
-        {drill.swapProposal ? (
-          <button className="disruptionChoice disruptionChoice-swap" onClick={() => onSelect(drill.swapProposal!)} type="button">
+        {drill.solution ? (
+          <button className="disruptionChoice disruptionChoice-swap" onClick={() => onSelect(drill.solution!)} type="button">
             <span>Change the pact visibly</span>
-            <strong>Switch to {drill.swapProposal.summary}</strong>
+            <strong>Switch to {drill.solution.summary}</strong>
             <small>{receipt?.changed} {receipt?.budget}</small>
           </button>
         ) : null}

@@ -14,7 +14,7 @@ import { MapLibreItineraryMap } from "../components/maplibre-itinerary-map";
 import { getOsmViewport } from "../components/osm-itinerary-map";
 import { ProposalArena } from "../components/proposal-arena";
 import { getProposalOptions } from "../lib/proposal-arena";
-import { getDisruptionDrill } from "../lib/disruption";
+import { getDisruptionDrill, getDisruptionScenarios } from "../lib/disruption";
 import { getAgreementEntries, getVetoPreview } from "../lib/studio";
 import type { Trip } from "../lib/types";
 
@@ -172,6 +172,7 @@ test("turns a named promise into an honest, visible disruption drill", () => {
   assert.ok(drill);
   assert.equal(drill.affectedActivity, "Mount Takao summit trail");
   assert.equal(drill.affectedTraveler, "Ravi");
+  assert.deepEqual(getDisruptionScenarios(trip, proposals).map((scenario) => scenario.id), ["weather", "budget"]);
 
   const html = renderToStaticMarkup(
     createElement(DisruptionDrill, {
@@ -185,6 +186,8 @@ test("turns a named promise into an honest, visible disruption drill", () => {
   );
 
   assert.match(html, /SIMULATED DISRUPTION DRILL/);
+  assert.match(html, /Weather shift/);
+  assert.match(html, /Budget shock/);
   assert.match(html, /Nothing here is live weather data/);
   assert.match(html, /Who carries the cost/);
   assert.match(html, /Switch to Trade the hardest stop/);
