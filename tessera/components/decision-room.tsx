@@ -7,6 +7,7 @@ import { createPactCardSvg, getPactCardFilename } from "../lib/pact-card";
 import type { Trip } from "../lib/types";
 
 type Decision = "ready" | "needs-change" | "unanswered";
+type TimelineEvent = { id: number; kind: "accepted" | "concern" | "handoff"; message: string };
 
 function getDecisionLabel(decision: Decision) {
   if (decision === "ready") return "Ready";
@@ -89,19 +90,26 @@ export function DecisionRoom({
 }) {
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [shareStatus, setShareStatus] = useState("");
+  const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
   const summary = useMemo(() => getDecisionRoomSummary(agreement, decisions), [agreement, decisions]);
   const shareText = useMemo(() => createGroupShareText(trip, agreement), [agreement, trip]);
+
+  function recordEvent(kind: TimelineEvent["kind"], message: string) {
+    setTimeline((current) => [{ id: current.length + 1, kind, message }, ...current].slice(0, 5));
+  }
 
   async function sharePact() {
     try {
       if (navigator.share) {
         await navigator.share({ text: shareText, title: `Tessera pact — ${trip.constraints.destination}` });
         setShareStatus("Share sheet opened.");
+        recordEvent("handoff", "Pact sent to the device share sheet.");
         return;
       }
 
       await navigator.clipboard.writeText(shareText);
       setShareStatus("Pact summary copied.");
+      recordEvent("handoff", "Pact summary copied for the group.");
     } catch {
       setShareStatus("Sharing was cancelled. Download or copy the pact instead.");
     }
@@ -110,6 +118,7 @@ export function DecisionRoom({
   function shareToWhatsApp() {
     window.open(getWhatsAppShareUrl(shareText), "_blank", "noopener,noreferrer");
     setShareStatus("Choose the group in WhatsApp to send the pact.");
+    recordEvent("handoff", "Pact handed off to WhatsApp.");
   }
 
   return (
@@ -144,7 +153,10 @@ export function DecisionRoom({
                 <button
                   aria-pressed={decision === "ready"}
                   className={decision === "ready" ? "decisionButton decisionButton-active" : "decisionButton"}
-                  onClick={() => setDecisions((current) => ({ ...current, [entry.traveler.id]: "ready" }))}
+                  onClick={() => {
+                    setDecisions((current) => ({ ...current, [entry.traveler.id]: "ready" }));
+                    recordEvent("accepted", `${entry.traveler.name} accepted their promise.`);
+                  }}
                   type="button"
                 >
                   I&apos;m in
@@ -154,6 +166,7 @@ export function DecisionRoom({
                   className={decision === "needs-change" ? "decisionButton decisionButton-warning" : "decisionButton"}
                   onClick={() => {
                     setDecisions((current) => ({ ...current, [entry.traveler.id]: "needs-change" }));
+                    recordEvent("concern", `${entry.traveler.name} flagged a concern.`);
                     onRequestChange?.();
                   }}
                   type="button"
@@ -167,6 +180,17 @@ export function DecisionRoom({
         })}
       </div>
 
+      {timeline.length ? (
+        <section className="decisionTimeline" aria-label="Pact activity in this session" aria-live="polite">
+          <p>This session</p>
+          <ol>
+            {timeline.map((event) => (
+              <li className={`decisionTimeline-${event.kind}`} key={event.id}>{event.message}</li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
       <footer className="decisionRoomFooter">
         <p>
           {summary.needsChange
@@ -178,11 +202,17 @@ export function DecisionRoom({
         <div className="pactShareActions">
           <button className="briefButton" onClick={() => void sharePact()} type="button">Share with group</button>
           <button className="briefButton briefButton-whatsapp" onClick={shareToWhatsApp} type="button">WhatsApp</button>
-          <button className="briefButton" onClick={() => downloadAgreementBrief(trip, agreement)} type="button">
+          <button className="briefButton" onClick={() => {
+            downloadAgreementBrief(trip, agreement);
+            recordEvent("handoff", "Text pact downloaded.");
+          }} type="button">
             {summary.unanimous ? "Download signed pact" : "Download brief"}
           </button>
           {summary.unanimous ? (
-            <button className="briefButton briefButton-card" onClick={() => downloadPactCard(trip, agreement)} type="button">
+            <button className="briefButton briefButton-card" onClick={() => {
+              downloadPactCard(trip, agreement);
+              recordEvent("handoff", "Visual pact card downloaded.");
+            }} type="button">
               Download pact card
             </button>
           ) : null}

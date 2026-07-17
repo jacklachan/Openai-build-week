@@ -33,3 +33,10 @@ test("turns a chat intake into an editable group-planning draft", () => {
   assert.match(priya?.dealbreakers ?? "", /cannot do 6am starts/i);
   assert.ok(ravi?.interests.includes("adventure"));
 });
+
+test("parses a short browser voice-note transcript as an editable signal", () => {
+  const intake = analyzeChat(parseWhatsAppExport("Voice note: I cannot do early starts, but I really want one special dinner."));
+
+  assert.deepEqual(intake.participants, ["Voice note"]);
+  assert.equal(intake.signals[0]?.kind, "dealbreaker");
+});

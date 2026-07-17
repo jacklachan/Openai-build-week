@@ -24,11 +24,26 @@ const signalLabel = {
   preference: "Would like",
 } as const;
 
+type VoiceRecognition = {
+  continuous: boolean;
+  lang: string;
+  interimResults: boolean;
+  onend: (() => void) | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type VoiceRecognitionConstructor = new () => VoiceRecognition;
+
 export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntakeProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [intake, setIntake] = useState<ChatIntake | null>(null);
   const [error, setError] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<VoiceRecognition | null>(null);
   const decisionQuestion = intake ? getChatDecisionQuestion(intake) : null;
 
   function inspectChat(nextText: string) {
@@ -58,6 +73,42 @@ export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntak
     document.getElementById("plan-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function captureVoiceNote() {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      return;
+    }
+
+    const voiceWindow = window as Window & {
+      SpeechRecognition?: VoiceRecognitionConstructor;
+      webkitSpeechRecognition?: VoiceRecognitionConstructor;
+    };
+    const Recognition = voiceWindow.SpeechRecognition ?? voiceWindow.webkitSpeechRecognition;
+    if (!Recognition) {
+      setError("Voice capture is not available in this browser. Paste a voice-note transcript instead.");
+      return;
+    }
+
+    const recognition = new Recognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .flatMap((result) => Array.from(result))
+        .map((result) => result.transcript)
+        .join(" ")
+        .trim();
+      if (transcript) inspectChat(`${text}${text ? "\n" : ""}Voice note: ${transcript}`);
+    };
+    recognition.onerror = () => setError("Voice capture stopped. You can try again or paste a transcript.");
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition;
+    setError("");
+    setIsListening(true);
+    recognition.start();
+  }
+
   return (
     <section className="chatIntake" aria-labelledby="chat-intake-title">
       <header>
@@ -69,6 +120,7 @@ export function ChatIntake({ disabled = false, draft, onDraftChange }: ChatIntak
       <div className="chatIntakeActions">
         <button disabled={disabled} onClick={() => fileInput.current?.click()} type="button">Import WhatsApp .txt</button>
         <button disabled={disabled} onClick={() => inspectChat(TOKYO_GROUP_CHAT)} type="button">Try the Tokyo chat</button>
+        <button disabled={disabled} onClick={captureVoiceNote} type="button">{isListening ? "Stop voice note" : "Capture voice note"}</button>
         <input accept="text/plain,.txt" aria-label="Import a WhatsApp chat export" disabled={disabled} onChange={handleFile} ref={fileInput} type="file" />
       </div>
 

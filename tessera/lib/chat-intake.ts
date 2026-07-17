@@ -30,6 +30,7 @@ export const TOKYO_GROUP_CHAT = `[08/09/2026, 18:12] Ravi: Tokyo is locked. I re
 
 const androidMessage = /^\d{1,2}[/.\-]\d{1,2}[/.\-]\d{2,4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM|am|pm)?\s+-\s+([^:]+):\s*(.+)$/;
 const iosMessage = /^\[[^\]]+\]\s*([^:]+):\s*(.+)$/;
+const spokenMessage = /^([^:\n]{1,40}):\s*(.+)$/;
 const systemMessage = /(?:messages and calls are end-to-end encrypted|created group|added|removed|joined using)/i;
 
 const interestSignals: Record<Interest, RegExp> = {
@@ -59,7 +60,7 @@ export function parseWhatsAppExport(text: string): ChatMessage[] {
 
   for (const rawLine of text.replace(/\r\n/g, "\n").split("\n")) {
     const line = rawLine.replace(/^\u200e/, "").trim();
-    const match = androidMessage.exec(line) ?? iosMessage.exec(line);
+    const match = androidMessage.exec(line) ?? iosMessage.exec(line) ?? spokenMessage.exec(line);
     if (match) {
       const sender = match[1]!.trim();
       const message = match[2]!.trim();
