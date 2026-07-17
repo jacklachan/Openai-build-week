@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import type { AgreementEntry } from "../lib/studio";
 import { createPactCardSvg, getPactCardFilename } from "../lib/pact-card";
+import type { PactRoomCreated } from "../lib/pact-room";
 import type { Trip } from "../lib/types";
 
 type Decision = "ready" | "needs-change" | "unanswered";
@@ -91,6 +92,8 @@ export function DecisionRoom({
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
   const [shareStatus, setShareStatus] = useState("");
   const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
+  const [liveRoom, setLiveRoom] = useState<PactRoomCreated | null>(null);
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const summary = useMemo(() => getDecisionRoomSummary(agreement, decisions), [agreement, decisions]);
   const shareText = useMemo(() => createGroupShareText(trip, agreement), [agreement, trip]);
 
@@ -119,6 +122,36 @@ export function DecisionRoom({
     window.open(getWhatsAppShareUrl(shareText), "_blank", "noopener,noreferrer");
     setShareStatus("Choose the group in WhatsApp to send the pact.");
     recordEvent("handoff", "Pact handed off to WhatsApp.");
+  }
+
+  async function createLiveRoom() {
+    setIsCreatingRoom(true);
+    try {
+      const response = await fetch("/api/rooms", {
+        body: JSON.stringify({ agreement, trip }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const payload = await response.json() as PactRoomCreated & { error?: string };
+      if (!response.ok) throw new Error(payload.error ?? "Unable to create the private Pact Room.");
+      setLiveRoom(payload);
+      setShareStatus("Private room created. Send each traveler only their own invite.");
+      recordEvent("handoff", "Private Pact Room created with individual traveler invites.");
+    } catch (error) {
+      setShareStatus(error instanceof Error ? error.message : "Unable to create the private Pact Room.");
+    } finally {
+      setIsCreatingRoom(false);
+    }
+  }
+
+  async function copyInvite(label: string, url: string) {
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareStatus(`${label} invite copied.`);
+      recordEvent("handoff", `${label} received a private Pact Room invite.`);
+    } catch {
+      setShareStatus("Unable to copy the invite. Open it and copy the URL from the address bar.");
+    }
   }
 
   return (
@@ -202,6 +235,9 @@ export function DecisionRoom({
         <div className="pactShareActions">
           <button className="briefButton" onClick={() => void sharePact()} type="button">Share with group</button>
           <button className="briefButton briefButton-whatsapp" onClick={shareToWhatsApp} type="button">WhatsApp</button>
+          <button className="briefButton briefButton-liveRoom" disabled={isCreatingRoom} onClick={() => void createLiveRoom()} type="button">
+            {isCreatingRoom ? "Creating private room" : liveRoom ? "New private room" : "Create private room"}
+          </button>
           <button className="briefButton" onClick={() => {
             downloadAgreementBrief(trip, agreement);
             recordEvent("handoff", "Text pact downloaded.");
@@ -219,6 +255,22 @@ export function DecisionRoom({
           {shareStatus ? <span className="pactShareStatus" role="status">{shareStatus}</span> : null}
         </div>
       </footer>
+      {liveRoom ? (
+        <section className="liveRoomInvites" aria-label="Private Pact Room invites">
+          <div>
+            <p>PRIVATE PACT ROOM</p>
+            <strong>Invite each traveler as themselves.</strong>
+          </div>
+          <a href={liveRoom.organizerUrl} rel="noreferrer" target="_blank">Open organizer view</a>
+          <div className="liveRoomInviteList">
+            {liveRoom.invites.map((invite) => (
+              <button key={invite.travelerId} onClick={() => void copyInvite(invite.label, invite.url)} type="button">
+                Copy {invite.label}&apos;s invite
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

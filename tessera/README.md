@@ -25,6 +25,7 @@ Tessera is built around a group decision, not a prettier itinerary:
 3. **Make the pact inspectable.** The 3D route, explicit trade-offs, individual check-in, and veto are tied to the same trip contract.
 4. **Pressure-test reality.** The simulated disruption drill names who would lose if conditions change, then makes the alternative route and budget visible before the group agrees.
 5. **Take it back to the group.** Share uses the device share sheet, copy fallback, or a WhatsApp handoff; the user chooses the destination group and no WhatsApp credential is needed.
+6. **Open a private Pact Room (optional).** The organizer gets a private link and each traveler gets a distinct invite to record only their own yes or concern. These rooms persist on Supabase and refresh every five seconds.
 
 ## Run locally
 
@@ -57,6 +58,18 @@ OLLAMA_HOST=http://127.0.0.1:11434
 When `GEMINI_API_KEY` is absent and `OLLAMA_MODEL` is set, `/api/plan` uses the local model. Tessera still validates its JSON and recomputes the budget. This local provider is intended for local development; a deployed Cloud Run service cannot access Ollama on your laptop.
 
 Set `DEMO_ONLY=true` to serve the included, vetted demo plan and veto response with **zero** Gemini or Maps calls. With no Gemini key, Tessera automatically stays in the same no-key judge mode.
+
+### Enable free live Pact Rooms
+
+Live rooms are optional; the no-key judge demo does not depend on them. Create a free Supabase project, run [`supabase/migrations/001_pact_rooms.sql`](supabase/migrations/001_pact_rooms.sql) once in its SQL Editor, and add these values locally or in your hosting provider:
+
+```dotenv
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=
+APP_BASE_URL=http://localhost:3000
+```
+
+`SUPABASE_SERVICE_ROLE_KEY` is used only in server route handlers and must never be exposed as a `NEXT_PUBLIC_*` variable. The room gives the organizer and every traveler a separate 256-bit capability link; the raw token lives in the URL fragment so it is not sent in the first page request. The route verifies its SHA-256 hash before reading or writing. A traveler invite can record only that traveler's own acceptance or concern. The room polls every five seconds instead of claiming a realtime subscription it does not have.
 
 ## Deploy to Google Cloud Run
 
